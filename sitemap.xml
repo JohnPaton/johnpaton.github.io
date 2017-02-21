@@ -6,43 +6,43 @@
     xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
                         http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
  <url>
-  <loc>http://127.0.0.1:8000/</loc>
+  <loc>https://johnpaton.github.io/</loc>
   <lastmod>2017-02-21T20:18:00Z</lastmod>
  </url>
  <url>
-  <loc>http://127.0.0.1:8000/archive.html</loc>
-  <lastmod>2017-02-21T20:25:00Z</lastmod>
+  <loc>https://johnpaton.github.io/archive.html</loc>
+  <lastmod>2017-02-21T20:32:00Z</lastmod>
  </url>
  <url>
-  <loc>http://127.0.0.1:8000/categories/</loc>
+  <loc>https://johnpaton.github.io/categories/</loc>
   <lastmod>2017-02-21T20:18:00Z</lastmod>
  </url>
  <url>
-  <loc>http://127.0.0.1:8000/categories/language/</loc>
+  <loc>https://johnpaton.github.io/categories/language/</loc>
   <lastmod>2017-02-21T20:18:00Z</lastmod>
  </url>
  <url>
-  <loc>http://127.0.0.1:8000/categories/markov/</loc>
+  <loc>https://johnpaton.github.io/categories/markov/</loc>
   <lastmod>2017-02-21T20:18:00Z</lastmod>
  </url>
  <url>
-  <loc>http://127.0.0.1:8000/categories/nlp/</loc>
+  <loc>https://johnpaton.github.io/categories/nlp/</loc>
   <lastmod>2017-02-21T20:18:00Z</lastmod>
  </url>
  <url>
-  <loc>http://127.0.0.1:8000/categories/python/</loc>
+  <loc>https://johnpaton.github.io/categories/python/</loc>
   <lastmod>2017-02-21T20:18:00Z</lastmod>
  </url>
  <url>
-  <loc>http://127.0.0.1:8000/galleries/</loc>
+  <loc>https://johnpaton.github.io/galleries/</loc>
   <lastmod>2017-02-21T20:18:00Z</lastmod>
  </url>
  <url>
-  <loc>http://127.0.0.1:8000/listings/</loc>
+  <loc>https://johnpaton.github.io/listings/</loc>
   <lastmod>2017-02-21T20:20:00Z</lastmod>
  </url>
  <url>
-  <loc>http://127.0.0.1:8000/posts/engl_ish/</loc>
+  <loc>https://johnpaton.github.io/posts/engl_ish/</loc>
   <lastmod>2017-02-21T20:18:00Z</lastmod>
  </url>
 </urlset>
