@@ -238,5 +238,5 @@ Proportion of ;: 0.022163433274544387
 <p>The second drawback is a training issue: <code>engl_ish</code> is <em>slow</em>. Training the 4th order model on the NYT dataset took on the order of an hour, which is definitely a hindrance when you're trying to tweak and tune the model. This could be improved substantially by parallelizing the training process, since each sentence could in principle train an individual model and then these could be aggregated. It would also be faster to use a <code>numpy</code> array to store the distributions and markov models, and just map the indices to strings of letters.</p>
 <p>I would love to get to these things in the future, but if you're interested and would like to beat me to it, by all means go ahead!</p>
 <hr>
-<p>Want to know how <code>engl_ish</code> looks under the hood? Check it out on <a href="https://github.com/JohnPaton?tab=repositories">Github</a>!</p>
+<p>Want to know how <code>engl_ish</code> looks under the hood? Check it out on <a href="https://github.com/JohnPaton/engl_ish">Github</a>!</p>
 <p><em><a href="http://www.johnpaton.net">John Paton</a> is a theoretical physics student turned data science consultant, working at KPMG in Amstelveen, the Netherlands.</em></p>

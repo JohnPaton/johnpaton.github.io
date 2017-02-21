@@ -5,7 +5,7 @@
 .. tags: python, markov, nlp, language
 .. category: 
 .. link: https://johnpaton.github.io/posts/engl_ish/
-.. description: I made a Python script to simulate the feel of a language, to investigate how English looks to non-English readers.
+.. description: I made a character-level Markov-based model to simulate the feel of a language, to investigate how English looks to non-English readers.
 .. type: text
 .. author: John Paton
 -->
@@ -345,6 +345,6 @@ The second drawback is a training issue: `engl_ish` is *slow*. Training the 4th 
 I would love to get to these things in the future, but if you're interested and would like to beat me to it, by all means go ahead!
 
 ----
-Want to know how `engl_ish` looks under the hood? Check it out on [Github](https://github.com/JohnPaton?tab=repositories)!
+Want to know how `engl_ish` looks under the hood? Check it out on [Github](https://github.com/JohnPaton/engl_ish)!
 
 *[John Paton](http://www.johnpaton.net) is a theoretical physics student turned data science consultant, working at KPMG in Amstelveen, the Netherlands.*
