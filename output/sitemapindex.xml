@@ -6,31 +6,31 @@
     xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
                         http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
  <sitemap>
-  <loc>http://127.0.0.1:8000/categories/language.xml</loc>
-  <lastmod>2017-02-21T20:25:00Z</lastmod>
+  <loc>https://johnpaton.github.io/categories/language.xml</loc>
+  <lastmod>2017-02-21T20:32:00Z</lastmod>
  </sitemap>
  <sitemap>
-  <loc>http://127.0.0.1:8000/categories/markov.xml</loc>
-  <lastmod>2017-02-21T20:25:00Z</lastmod>
+  <loc>https://johnpaton.github.io/categories/markov.xml</loc>
+  <lastmod>2017-02-21T20:32:00Z</lastmod>
  </sitemap>
  <sitemap>
-  <loc>http://127.0.0.1:8000/categories/nlp.xml</loc>
-  <lastmod>2017-02-21T20:25:00Z</lastmod>
+  <loc>https://johnpaton.github.io/categories/nlp.xml</loc>
+  <lastmod>2017-02-21T20:32:00Z</lastmod>
  </sitemap>
  <sitemap>
-  <loc>http://127.0.0.1:8000/categories/python.xml</loc>
-  <lastmod>2017-02-21T20:25:00Z</lastmod>
+  <loc>https://johnpaton.github.io/categories/python.xml</loc>
+  <lastmod>2017-02-21T20:32:00Z</lastmod>
  </sitemap>
  <sitemap>
-  <loc>http://127.0.0.1:8000/galleries/rss.xml</loc>
-  <lastmod>2017-02-21T20:10:00Z</lastmod>
+  <loc>https://johnpaton.github.io/galleries/rss.xml</loc>
+  <lastmod>2017-02-21T20:32:00Z</lastmod>
  </sitemap>
  <sitemap>
-  <loc>http://127.0.0.1:8000/rss.xml</loc>
-  <lastmod>2017-02-21T20:25:00Z</lastmod>
+  <loc>https://johnpaton.github.io/rss.xml</loc>
+  <lastmod>2017-02-21T20:32:00Z</lastmod>
  </sitemap>
  <sitemap>
-  <loc>http://127.0.0.1:8000/sitemap.xml</loc>
-  <lastmod>2017-02-21T20:25:00Z</lastmod>
+  <loc>https://johnpaton.github.io/sitemap.xml</loc>
+  <lastmod>2017-02-21T20:32:00Z</lastmod>
  </sitemap>
 </sitemapindex>
