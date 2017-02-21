@@ -27,6 +27,9 @@ Skwerl gave me the idea to attempt to create a similar effect, but with reading 
 import engl_ish
 ```
 
+<!-- TEASER_END -->
+
+
 *If you don't care about what kind of sources I used or how I created the model, this is the point where you should [skip down to the Good Part™](#good_part).*
 
 <a id='source'></a>
