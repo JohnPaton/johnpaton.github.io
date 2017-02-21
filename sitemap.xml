@@ -7,118 +7,42 @@
                         http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
  <url>
   <loc>http://127.0.0.1:8000/</loc>
-  <lastmod>2017-02-21T19:38:00Z</lastmod>
- </url>
- <url>
-  <loc>http://127.0.0.1:8000/2017/</loc>
-  <lastmod>2017-02-21T19:38:00Z</lastmod>
+  <lastmod>2017-02-21T20:18:00Z</lastmod>
  </url>
  <url>
   <loc>http://127.0.0.1:8000/archive.html</loc>
-  <lastmod>2017-02-21T20:10:00Z</lastmod>
+  <lastmod>2017-02-21T20:25:00Z</lastmod>
  </url>
  <url>
   <loc>http://127.0.0.1:8000/categories/</loc>
-  <lastmod>2017-02-21T19:38:00Z</lastmod>
+  <lastmod>2017-02-21T20:18:00Z</lastmod>
  </url>
  <url>
   <loc>http://127.0.0.1:8000/categories/language/</loc>
-  <lastmod>2017-02-21T19:38:00Z</lastmod>
+  <lastmod>2017-02-21T20:18:00Z</lastmod>
  </url>
  <url>
   <loc>http://127.0.0.1:8000/categories/markov/</loc>
-  <lastmod>2017-02-21T19:38:00Z</lastmod>
+  <lastmod>2017-02-21T20:18:00Z</lastmod>
  </url>
  <url>
   <loc>http://127.0.0.1:8000/categories/nlp/</loc>
-  <lastmod>2017-02-21T19:38:00Z</lastmod>
+  <lastmod>2017-02-21T20:18:00Z</lastmod>
  </url>
  <url>
   <loc>http://127.0.0.1:8000/categories/python/</loc>
-  <lastmod>2017-02-21T19:38:00Z</lastmod>
+  <lastmod>2017-02-21T20:18:00Z</lastmod>
  </url>
  <url>
   <loc>http://127.0.0.1:8000/galleries/</loc>
-  <lastmod>2017-02-21T19:38:00Z</lastmod>
- </url>
- <url>
-  <loc>http://127.0.0.1:8000/galleries/demo/</loc>
-  <lastmod>2017-02-21T19:38:00Z</lastmod>
+  <lastmod>2017-02-21T20:18:00Z</lastmod>
  </url>
  <url>
   <loc>http://127.0.0.1:8000/listings/</loc>
-  <lastmod>2017-02-21T19:38:00Z</lastmod>
- </url>
- <url>
-  <loc>http://127.0.0.1:8000/listings/__pycache__/</loc>
-  <lastmod>2017-02-21T19:38:00Z</lastmod>
- </url>
- <url>
-  <loc>http://127.0.0.1:8000/listings/hello.py.html</loc>
-  <lastmod>2017-02-21T19:47:00Z</lastmod>
- </url>
- <url>
-  <loc>http://127.0.0.1:8000/pages/about-nikola/</loc>
-  <lastmod>2017-02-21T19:06:00Z</lastmod>
- </url>
- <url>
-  <loc>http://127.0.0.1:8000/pages/bootstrap-demo/</loc>
-  <lastmod>2017-02-21T19:06:00Z</lastmod>
- </url>
- <url>
-  <loc>http://127.0.0.1:8000/pages/charts/</loc>
-  <lastmod>2017-02-21T19:06:00Z</lastmod>
- </url>
- <url>
-  <loc>http://127.0.0.1:8000/pages/creating-a-theme/</loc>
-  <lastmod>2017-02-21T19:06:00Z</lastmod>
- </url>
- <url>
-  <loc>http://127.0.0.1:8000/pages/dr-nikolas-vendetta/</loc>
-  <lastmod>2017-02-21T19:06:00Z</lastmod>
- </url>
- <url>
-  <loc>http://127.0.0.1:8000/pages/extending/</loc>
-  <lastmod>2017-02-21T19:06:00Z</lastmod>
- </url>
- <url>
-  <loc>http://127.0.0.1:8000/pages/handbook/</loc>
-  <lastmod>2017-02-21T19:06:00Z</lastmod>
- </url>
- <url>
-  <loc>http://127.0.0.1:8000/pages/internals/</loc>
-  <lastmod>2017-02-21T19:06:00Z</lastmod>
- </url>
- <url>
-  <loc>http://127.0.0.1:8000/pages/listings-demo/</loc>
-  <lastmod>2017-02-21T19:06:00Z</lastmod>
- </url>
- <url>
-  <loc>http://127.0.0.1:8000/pages/path-handlers/</loc>
-  <lastmod>2017-02-21T19:06:00Z</lastmod>
- </url>
- <url>
-  <loc>http://127.0.0.1:8000/pages/quickref/</loc>
-  <lastmod>2017-02-21T19:06:00Z</lastmod>
- </url>
- <url>
-  <loc>http://127.0.0.1:8000/pages/quickstart/</loc>
-  <lastmod>2017-02-21T19:06:00Z</lastmod>
- </url>
- <url>
-  <loc>http://127.0.0.1:8000/pages/slides-demo/</loc>
-  <lastmod>2017-02-21T19:06:00Z</lastmod>
- </url>
- <url>
-  <loc>http://127.0.0.1:8000/pages/social_buttons/</loc>
-  <lastmod>2017-02-21T19:06:00Z</lastmod>
- </url>
- <url>
-  <loc>http://127.0.0.1:8000/pages/theming/</loc>
-  <lastmod>2017-02-21T19:06:00Z</lastmod>
+  <lastmod>2017-02-21T20:20:00Z</lastmod>
  </url>
  <url>
   <loc>http://127.0.0.1:8000/posts/engl_ish/</loc>
-  <lastmod>2017-02-21T19:38:00Z</lastmod>
+  <lastmod>2017-02-21T20:18:00Z</lastmod>
  </url>
 </urlset>
