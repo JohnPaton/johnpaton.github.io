@@ -145,7 +145,7 @@ THEME = "zen"
 
 NAVIGATION_LINKS = {
     DEFAULT_LANG: (
-        ('/index.html', 'Blog Home', 'icon-home'),
+        (SITE_URL, 'Blog Home', 'icon-home'),
         ('/archive.html', 'Archives', 'icon-folder-open-alt'),
         ('/categories/index.html', 'Tags', 'icon-tags'),
         ('http://www.johnpaton.net', 'About me', 'icon-user'),
