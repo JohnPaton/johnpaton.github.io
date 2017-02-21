@@ -5,12 +5,12 @@ STOP_RENDERING = runtime.STOP_RENDERING
 __M_dict_builtin = dict
 __M_locals_builtin = locals
 _magic_number = 10
-_modified_time = 1487708451.396997
+_modified_time = 1487708735.4672565
 _enable_loop = True
 _template_filename = 'themes/zen/templates/arusahni_helper.tmpl'
 _template_uri = 'arusahni_helper.tmpl'
 _source_encoding = 'utf-8'
-_exports = ['html_translations', 'html_tags', 'html_feedlinks', 'html_headstart', 'html_navigation_links', 'html_sourcelink', 'html_title', 'late_load_js', 'html_stylesheets']
+_exports = ['html_translations', 'html_navigation_links', 'html_tags', 'html_feedlinks', 'html_headstart', 'html_stylesheets', 'late_load_js', 'html_title', 'html_sourcelink']
 
 
 def render_body(context,**pageargs):
@@ -35,10 +35,10 @@ def render_body(context,**pageargs):
 def render_html_translations(context,post):
     __M_caller = context.caller_stack._push_frame()
     try:
-        translations = context.get('translations', UNDEFINED)
-        lang = context.get('lang', UNDEFINED)
         messages = context.get('messages', UNDEFINED)
         len = context.get('len', UNDEFINED)
+        lang = context.get('lang', UNDEFINED)
+        translations = context.get('translations', UNDEFINED)
         __M_writer = context.writer()
         __M_writer('\n')
         if len(translations) > 1:
@@ -56,11 +56,42 @@ def render_html_translations(context,post):
         context.caller_stack._pop_frame()
 
 
+def render_html_navigation_links(context):
+    __M_caller = context.caller_stack._push_frame()
+    try:
+        navigation_links = context.get('navigation_links', UNDEFINED)
+        permalink = context.get('permalink', UNDEFINED)
+        lang = context.get('lang', UNDEFINED)
+        rel_link = context.get('rel_link', UNDEFINED)
+        __M_writer = context.writer()
+        __M_writer('\n')
+        for url, text, icon in navigation_links[lang]:
+            if rel_link(permalink, url) == "#":
+                __M_writer('            <li><a href="')
+                __M_writer(str(url))
+                __M_writer('" title="')
+                __M_writer(str(text))
+                __M_writer('"><i class="')
+                __M_writer(str(icon))
+                __M_writer('"></i></a></li>\n')
+            else:
+                __M_writer('            <li><a href="')
+                __M_writer(str(url))
+                __M_writer('" title="')
+                __M_writer(str(text))
+                __M_writer('"><i class="')
+                __M_writer(str(icon))
+                __M_writer('"></i></a></li>\n')
+        return ''
+    finally:
+        context.caller_stack._pop_frame()
+
+
 def render_html_tags(context,post):
     __M_caller = context.caller_stack._push_frame()
     try:
-        messages = context.get('messages', UNDEFINED)
         _link = context.get('_link', UNDEFINED)
+        messages = context.get('messages', UNDEFINED)
         __M_writer = context.writer()
         __M_writer('\n')
         if post.tags:
@@ -82,11 +113,11 @@ def render_html_tags(context,post):
 def render_html_feedlinks(context):
     __M_caller = context.caller_stack._push_frame()
     try:
-        generate_rss = context.get('generate_rss', UNDEFINED)
-        rss_link = context.get('rss_link', UNDEFINED)
-        translations = context.get('translations', UNDEFINED)
-        len = context.get('len', UNDEFINED)
         _link = context.get('_link', UNDEFINED)
+        rss_link = context.get('rss_link', UNDEFINED)
+        generate_rss = context.get('generate_rss', UNDEFINED)
+        len = context.get('len', UNDEFINED)
+        translations = context.get('translations', UNDEFINED)
         __M_writer = context.writer()
         __M_writer('\n')
         if rss_link:
@@ -113,25 +144,25 @@ def render_html_feedlinks(context):
 def render_html_headstart(context):
     __M_caller = context.caller_stack._push_frame()
     try:
-        abs_link = context.get('abs_link', UNDEFINED)
-        use_cdn = context.get('use_cdn', UNDEFINED)
-        comment_system = context.get('comment_system', UNDEFINED)
-        is_rtl = context.get('is_rtl', UNDEFINED)
         comment_system_id = context.get('comment_system_id', UNDEFINED)
-        striphtml = context.get('striphtml', UNDEFINED)
-        title = context.get('title', UNDEFINED)
-        use_open_graph = context.get('use_open_graph', UNDEFINED)
-        lang = context.get('lang', UNDEFINED)
-        def html_stylesheets():
-            return render_html_stylesheets(context)
-        extra_head_data = context.get('extra_head_data', UNDEFINED)
         def html_feedlinks():
             return render_html_feedlinks(context)
-        favicons = context.get('favicons', UNDEFINED)
-        permalink = context.get('permalink', UNDEFINED)
-        blog_title = context.get('blog_title', UNDEFINED)
+        use_cdn = context.get('use_cdn', UNDEFINED)
+        use_open_graph = context.get('use_open_graph', UNDEFINED)
         twitter_card = context.get('twitter_card', UNDEFINED)
+        lang = context.get('lang', UNDEFINED)
+        favicons = context.get('favicons', UNDEFINED)
+        comment_system = context.get('comment_system', UNDEFINED)
+        def html_stylesheets():
+            return render_html_stylesheets(context)
+        title = context.get('title', UNDEFINED)
+        abs_link = context.get('abs_link', UNDEFINED)
+        extra_head_data = context.get('extra_head_data', UNDEFINED)
+        striphtml = context.get('striphtml', UNDEFINED)
+        is_rtl = context.get('is_rtl', UNDEFINED)
         description = context.get('description', UNDEFINED)
+        blog_title = context.get('blog_title', UNDEFINED)
+        permalink = context.get('permalink', UNDEFINED)
         __M_writer = context.writer()
         __M_writer('\n<!DOCTYPE html>\n<html\n')
         if use_open_graph or (twitter_card and twitter_card['use_twitter_cards']) or (comment_system == 'facebook'):
@@ -193,106 +224,14 @@ def render_html_headstart(context):
         context.caller_stack._pop_frame()
 
 
-def render_html_navigation_links(context):
-    __M_caller = context.caller_stack._push_frame()
-    try:
-        rel_link = context.get('rel_link', UNDEFINED)
-        navigation_links = context.get('navigation_links', UNDEFINED)
-        permalink = context.get('permalink', UNDEFINED)
-        lang = context.get('lang', UNDEFINED)
-        __M_writer = context.writer()
-        __M_writer('\n')
-        for url, text, icon in navigation_links[lang]:
-            if rel_link(permalink, url) == "#":
-                __M_writer('            <li><a href="')
-                __M_writer(str(url))
-                __M_writer('" title="')
-                __M_writer(str(text))
-                __M_writer('"><i class="')
-                __M_writer(str(icon))
-                __M_writer('"></i></a></li>\n')
-            else:
-                __M_writer('            <li><a href="')
-                __M_writer(str(url))
-                __M_writer('" title="')
-                __M_writer(str(text))
-                __M_writer('"><i class="')
-                __M_writer(str(icon))
-                __M_writer('"></i></a></li>\n')
-        return ''
-    finally:
-        context.caller_stack._pop_frame()
-
-
-def render_html_sourcelink(context):
-    __M_caller = context.caller_stack._push_frame()
-    try:
-        post = context.get('post', UNDEFINED)
-        messages = context.get('messages', UNDEFINED)
-        show_sourcelink = context.get('show_sourcelink', UNDEFINED)
-        __M_writer = context.writer()
-        __M_writer('\n')
-        if show_sourcelink:
-            __M_writer('        &nbsp;&nbsp;|&nbsp;&nbsp;\n        <a href="')
-            __M_writer(str(post.source_link()))
-            __M_writer('" id="sourcelink">')
-            __M_writer(str(messages("Source")))
-            __M_writer('</a>\n')
-        return ''
-    finally:
-        context.caller_stack._pop_frame()
-
-
-def render_html_title(context):
-    __M_caller = context.caller_stack._push_frame()
-    try:
-        title = context.get('title', UNDEFINED)
-        post = context.get('post', UNDEFINED)
-        __M_writer = context.writer()
-        __M_writer('\n')
-        if title and not post.meta('hidetitle'):
-            __M_writer('    <h1 class="p-name entry-title" itemprop="headline name">')
-            __M_writer(filters.html_escape(str(title)))
-            __M_writer('</h1>\n')
-        return ''
-    finally:
-        context.caller_stack._pop_frame()
-
-
-def render_late_load_js(context):
-    __M_caller = context.caller_stack._push_frame()
-    try:
-        social_buttons_code = context.get('social_buttons_code', UNDEFINED)
-        use_bundles = context.get('use_bundles', UNDEFINED)
-        use_cdn = context.get('use_cdn', UNDEFINED)
-        __M_writer = context.writer()
-        __M_writer('\n')
-        if use_bundles:
-            if use_cdn:
-                __M_writer('            <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>\n            <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-timeago/1.1.0/jquery.timeago.min.js"></script>\n')
-            else:
-                __M_writer('            <script src="/assets/js/all-nocdn.js" type="text/javascript"></script>\n')
-        else:
-            if use_cdn:
-                __M_writer('            <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>\n            <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-timeago/1.1.0/jquery.timeago.min.js"></script>\n')
-            else:
-                __M_writer('            <script src="/assets/js/jquery-1.10.2.min.js" type="text/javascript"></script>\n            <script src="/assets/js/jquery.timeago.js" type="text/javascript"></script>\n')
-        __M_writer('    ')
-        __M_writer(str(social_buttons_code))
-        __M_writer('\n')
-        return ''
-    finally:
-        context.caller_stack._pop_frame()
-
-
 def render_html_stylesheets(context):
     __M_caller = context.caller_stack._push_frame()
     try:
-        notes = context.get('notes', UNDEFINED)
-        use_cdn = context.get('use_cdn', UNDEFINED)
-        annotations = context.get('annotations', UNDEFINED)
         post = context.get('post', UNDEFINED)
+        use_cdn = context.get('use_cdn', UNDEFINED)
         use_bundles = context.get('use_bundles', UNDEFINED)
+        annotations = context.get('annotations', UNDEFINED)
+        notes = context.get('notes', UNDEFINED)
         has_custom_css = context.get('has_custom_css', UNDEFINED)
         __M_writer = context.writer()
         __M_writer('\n')
@@ -322,8 +261,69 @@ def render_html_stylesheets(context):
         context.caller_stack._pop_frame()
 
 
+def render_late_load_js(context):
+    __M_caller = context.caller_stack._push_frame()
+    try:
+        use_cdn = context.get('use_cdn', UNDEFINED)
+        use_bundles = context.get('use_bundles', UNDEFINED)
+        social_buttons_code = context.get('social_buttons_code', UNDEFINED)
+        __M_writer = context.writer()
+        __M_writer('\n')
+        if use_bundles:
+            if use_cdn:
+                __M_writer('            <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>\n            <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-timeago/1.1.0/jquery.timeago.min.js"></script>\n')
+            else:
+                __M_writer('            <script src="/assets/js/all-nocdn.js" type="text/javascript"></script>\n')
+        else:
+            if use_cdn:
+                __M_writer('            <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>\n            <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-timeago/1.1.0/jquery.timeago.min.js"></script>\n')
+            else:
+                __M_writer('            <script src="/assets/js/jquery-1.10.2.min.js" type="text/javascript"></script>\n            <script src="/assets/js/jquery.timeago.js" type="text/javascript"></script>\n')
+        __M_writer('    ')
+        __M_writer(str(social_buttons_code))
+        __M_writer('\n')
+        return ''
+    finally:
+        context.caller_stack._pop_frame()
+
+
+def render_html_title(context):
+    __M_caller = context.caller_stack._push_frame()
+    try:
+        title = context.get('title', UNDEFINED)
+        post = context.get('post', UNDEFINED)
+        __M_writer = context.writer()
+        __M_writer('\n')
+        if title and not post.meta('hidetitle'):
+            __M_writer('    <h1 class="p-name entry-title" itemprop="headline name">')
+            __M_writer(filters.html_escape(str(title)))
+            __M_writer('</h1>\n')
+        return ''
+    finally:
+        context.caller_stack._pop_frame()
+
+
+def render_html_sourcelink(context):
+    __M_caller = context.caller_stack._push_frame()
+    try:
+        messages = context.get('messages', UNDEFINED)
+        show_sourcelink = context.get('show_sourcelink', UNDEFINED)
+        post = context.get('post', UNDEFINED)
+        __M_writer = context.writer()
+        __M_writer('\n')
+        if show_sourcelink:
+            __M_writer('        &nbsp;&nbsp;|&nbsp;&nbsp;\n        <a href="')
+            __M_writer(str(post.source_link()))
+            __M_writer('" id="sourcelink">')
+            __M_writer(str(messages("Source")))
+            __M_writer('</a>\n')
+        return ''
+    finally:
+        context.caller_stack._pop_frame()
+
+
 """
 __M_BEGIN_METADATA
-{"source_encoding": "utf-8", "line_map": {"16": 0, "21": 57, "22": 85, "23": 105, "24": 119, "25": 129, "26": 143, "27": 150, "28": 161, "29": 168, "35": 152, "43": 152, "44": 153, "45": 154, "46": 155, "47": 156, "48": 156, "49": 156, "50": 156, "51": 156, "52": 157, "53": 157, "59": 132, "65": 132, "66": 133, "67": 134, "68": 136, "69": 136, "70": 137, "71": 138, "72": 138, "73": 138, "74": 138, "75": 138, "76": 140, "82": 107, "91": 107, "92": 108, "93": 109, "94": 109, "95": 109, "96": 110, "97": 111, "98": 112, "99": 113, "100": 113, "101": 113, "102": 113, "103": 113, "104": 115, "105": 116, "106": 116, "107": 116, "113": 3, "136": 3, "137": 7, "138": 8, "139": 9, "140": 10, "141": 12, "142": 13, "143": 15, "144": 16, "145": 18, "146": 21, "147": 22, "148": 25, "149": 25, "150": 25, "151": 28, "152": 29, "153": 29, "154": 29, "155": 31, "156": 32, "157": 32, "158": 32, "159": 32, "160": 34, "161": 34, "162": 35, "163": 35, "164": 36, "165": 37, "166": 37, "167": 37, "168": 39, "169": 40, "170": 41, "171": 42, "172": 42, "173": 42, "174": 42, "175": 42, "176": 42, "177": 42, "178": 45, "179": 46, "180": 47, "181": 47, "182": 47, "183": 49, "184": 50, "185": 51, "186": 52, "187": 53, "188": 55, "189": 56, "190": 56, "196": 121, "204": 121, "205": 122, "206": 123, "207": 124, "208": 124, "209": 124, "210": 124, "211": 124, "212": 124, "213": 124, "214": 125, "215": 126, "216": 126, "217": 126, "218": 126, "219": 126, "220": 126, "221": 126, "227": 163, "234": 163, "235": 164, "236": 165, "237": 166, "238": 166, "239": 166, "240": 166, "246": 146, "252": 146, "253": 147, "254": 148, "255": 148, "256": 148, "262": 87, "269": 87, "270": 88, "271": 89, "272": 90, "273": 92, "274": 93, "275": 95, "276": 96, "277": 97, "278": 99, "279": 100, "280": 104, "281": 104, "282": 104, "288": 59, "298": 59, "299": 60, "300": 61, "301": 62, "302": 64, "303": 65, "304": 67, "305": 68, "306": 69, "307": 70, "308": 71, "309": 73, "310": 76, "311": 77, "312": 80, "313": 81, "314": 81, "315": 81, "316": 82, "317": 83, "318": 83, "319": 83, "325": 319}, "uri": "arusahni_helper.tmpl", "filename": "themes/zen/templates/arusahni_helper.tmpl"}
+{"uri": "arusahni_helper.tmpl", "filename": "themes/zen/templates/arusahni_helper.tmpl", "source_encoding": "utf-8", "line_map": {"16": 0, "21": 57, "22": 85, "23": 105, "24": 119, "25": 129, "26": 143, "27": 150, "28": 161, "29": 168, "35": 152, "43": 152, "44": 153, "45": 154, "46": 155, "47": 156, "48": 156, "49": 156, "50": 156, "51": 156, "52": 157, "53": 157, "59": 121, "67": 121, "68": 122, "69": 123, "70": 124, "71": 124, "72": 124, "73": 124, "74": 124, "75": 124, "76": 124, "77": 125, "78": 126, "79": 126, "80": 126, "81": 126, "82": 126, "83": 126, "84": 126, "90": 132, "96": 132, "97": 133, "98": 134, "99": 136, "100": 136, "101": 137, "102": 138, "103": 138, "104": 138, "105": 138, "106": 138, "107": 140, "113": 107, "122": 107, "123": 108, "124": 109, "125": 109, "126": 109, "127": 110, "128": 111, "129": 112, "130": 113, "131": 113, "132": 113, "133": 113, "134": 113, "135": 115, "136": 116, "137": 116, "138": 116, "144": 3, "167": 3, "168": 7, "169": 8, "170": 9, "171": 10, "172": 12, "173": 13, "174": 15, "175": 16, "176": 18, "177": 21, "178": 22, "179": 25, "180": 25, "181": 25, "182": 28, "183": 29, "184": 29, "185": 29, "186": 31, "187": 32, "188": 32, "189": 32, "190": 32, "191": 34, "192": 34, "193": 35, "194": 35, "195": 36, "196": 37, "197": 37, "198": 37, "199": 39, "200": 40, "201": 41, "202": 42, "203": 42, "204": 42, "205": 42, "206": 42, "207": 42, "208": 42, "209": 45, "210": 46, "211": 47, "212": 47, "213": 47, "214": 49, "215": 50, "216": 51, "217": 52, "218": 53, "219": 55, "220": 56, "221": 56, "227": 59, "237": 59, "238": 60, "239": 61, "240": 62, "241": 64, "242": 65, "243": 67, "244": 68, "245": 69, "246": 70, "247": 71, "248": 73, "249": 76, "250": 77, "251": 80, "252": 81, "253": 81, "254": 81, "255": 82, "256": 83, "257": 83, "258": 83, "264": 87, "271": 87, "272": 88, "273": 89, "274": 90, "275": 92, "276": 93, "277": 95, "278": 96, "279": 97, "280": 99, "281": 100, "282": 104, "283": 104, "284": 104, "290": 146, "296": 146, "297": 147, "298": 148, "299": 148, "300": 148, "306": 163, "313": 163, "314": 164, "315": 165, "316": 166, "317": 166, "318": 166, "319": 166, "325": 319}}
 __M_END_METADATA
 """
