@@ -1,0 +1,4 @@
+Sitemap: http://127.0.0.1:8000/sitemapindex.xml
+
+User-Agent: *
+Host: 127.0.0.1:8000
