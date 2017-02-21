@@ -152,8 +152,11 @@ The basics of Markov models are very simple. The idea is that you have some sort
 In our case, we consider the 'states' to be letters and the evolving system to be the word: the probability of some letter appearing depends on the letters that came before. In `engl_ish`, the Markov approach is modified a bit to give special attention to the beginning and end of a word. 
 
 To be concrete, say we have a model of order 3. To start building a long word, we take the following approach:
+
 1. Draw the first 3 letters from the measured distribution of 3-letter blocks that appear at the start of words
+
 2. Use the trained Markov model to draw the next letter
+
 3. We now have a (hopefully non-profane) 4 letter word. Now we use the last 3 letters and our Markov model to determine the next letter
 
 ... and so on, until we start getting towards the end of the word. 

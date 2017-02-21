@@ -166,10 +166,18 @@ Proportion of ;: 0.022163433274544387
 <p>The real objects that give a language its feel are, of course, the words themselves. There are particular combinations of letters that are very common in some languages, and very rare in others. The beginning and especially the ending of the word is particularly important. No English word that I know of ends in <em>-ijk</em> or contains a double vowel <em>a</em>, but loads of Dutch words do. To capture this, we build a <em>Markov model</em>.</p>
 <p>The basics of Markov models are very simple. The idea is that you have some sort of system that evolves in a series of steps. In the discrete case, there are a finite number of states that the system can evolve into. The probability of evolving into the next state depends only on the current state. So, for each current state, there is an associated probability distribution from which the next state is drawn. This simplest Markov model can be extended to a <em>higher order</em> model by allowing the next state to depend on the last few states. The number of previous states that help determine the next one is called the <em>order</em> of the model. </p>
 <p>In our case, we consider the 'states' to be letters and the evolving system to be the word: the probability of some letter appearing depends on the letters that came before. In <code>engl_ish</code>, the Markov approach is modified a bit to give special attention to the beginning and end of a word. </p>
-<p>To be concrete, say we have a model of order 3. To start building a long word, we take the following approach:
-1. Draw the first 3 letters from the measured distribution of 3-letter blocks that appear at the start of words
-2. Use the trained Markov model to draw the next letter
-3. We now have a (hopefully non-profane) 4 letter word. Now we use the last 3 letters and our Markov model to determine the next letter</p>
+<p>To be concrete, say we have a model of order 3. To start building a long word, we take the following approach:</p>
+<ol>
+<li>
+<p>Draw the first 3 letters from the measured distribution of 3-letter blocks that appear at the start of words</p>
+</li>
+<li>
+<p>Use the trained Markov model to draw the next letter</p>
+</li>
+<li>
+<p>We now have a (hopefully non-profane) 4 letter word. Now we use the last 3 letters and our Markov model to determine the next letter</p>
+</li>
+</ol>
 <p>... and so on, until we start getting towards the end of the word. </p>
 <p>Once we start getting close to the end of a word, we need to consider word endings. To illustrate this, suppose we are using the simplest (1st order) model, and that the second last letter in our generated word is <em>o</em>. We would like to find a distribution from which to draw the last letter. <img alt="last letter after O" src="../../images/last_letters_O.png"></p>
 <p>As we can see, in the plain Markov model, some popular letters following <em>o</em> include <em>f</em>, <em>n</em>, <em>r</em>, and <em>u</em>. However, in English (or at least in the New York Times), words don't usually end in <em>f</em> or <em>u</em>. They do often end in <em>e</em>, but <em>e</em> almost never follows <em>o</em>. Combining these insights, we get the last distribution for the last letter of a word following the letter <em>o</em>. If our second-last letter is <em>o</em>, it's likely (about 35% with this model) that our word will end in <em>-on</em>, with <em>-or</em>, <em>-os</em>, or <em>-ot</em> also making a reasonably strong showing.</p>
