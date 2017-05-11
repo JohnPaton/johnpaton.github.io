@@ -5,7 +5,7 @@ STOP_RENDERING = runtime.STOP_RENDERING
 __M_dict_builtin = dict
 __M_locals_builtin = locals
 _magic_number = 10
-_modified_time = 1487712483.184672
+_modified_time = 1494531910.2740488
 _enable_loop = True
 _template_filename = 'themes/zen/templates/index.tmpl'
 _template_uri = 'index.tmpl'
@@ -20,11 +20,11 @@ def _mako_get_namespace(context, name):
         _mako_generate_namespaces(context)
         return context.namespaces[(__name__, name)]
 def _mako_generate_namespaces(context):
-    ns = runtime.TemplateNamespace('comments', context._clean_inheritance_tokens(), templateuri='comments_helper.tmpl', callables=None,  calling_uri=_template_uri)
-    context.namespaces[(__name__, 'comments')] = ns
-
     ns = runtime.TemplateNamespace('arusahni', context._clean_inheritance_tokens(), templateuri='arusahni_helper.tmpl', callables=None,  calling_uri=_template_uri)
     context.namespaces[(__name__, 'arusahni')] = ns
+
+    ns = runtime.TemplateNamespace('comments', context._clean_inheritance_tokens(), templateuri='comments_helper.tmpl', callables=None,  calling_uri=_template_uri)
+    context.namespaces[(__name__, 'comments')] = ns
 
     ns = runtime.TemplateNamespace('helper', context._clean_inheritance_tokens(), templateuri='index_helper.tmpl', callables=None,  calling_uri=_template_uri)
     context.namespaces[(__name__, 'helper')] = ns
@@ -38,24 +38,24 @@ def render_body(context,**pageargs):
         __M_locals = __M_dict_builtin(pageargs=pageargs)
         _import_ns = {}
         _mako_get_namespace(context, 'arusahni')._populate(_import_ns, ['*'])
+        def content():
+            return render_content(context._locals(__M_locals))
+        index_teasers = _import_ns.get('index_teasers', context.get('index_teasers', UNDEFINED))
+        posts = _import_ns.get('posts', context.get('posts', UNDEFINED))
+        helper = _mako_get_namespace(context, 'helper')
         arusahni = _mako_get_namespace(context, 'arusahni')
         comments = _mako_get_namespace(context, 'comments')
         date_format = _import_ns.get('date_format', context.get('date_format', UNDEFINED))
-        posts = _import_ns.get('posts', context.get('posts', UNDEFINED))
-        helper = _mako_get_namespace(context, 'helper')
-        index_teasers = _import_ns.get('index_teasers', context.get('index_teasers', UNDEFINED))
-        def content():
-            return render_content(context._locals(__M_locals))
         __M_writer = context.writer()
-        __M_writer('\n')
-        __M_writer('\n')
-        __M_writer('\n')
-        __M_writer('\n\n')
+        __M_writer('\r\n')
+        __M_writer('\r\n')
+        __M_writer('\r\n')
+        __M_writer('\r\n\r\n')
         if 'parent' not in context._data or not hasattr(context._data['parent'], 'content'):
             context['self'].content(**pageargs)
         
 
-        __M_writer('\n')
+        __M_writer('\r\n')
         return ''
     finally:
         context.caller_stack._pop_frame()
@@ -66,49 +66,49 @@ def render_content(context,**pageargs):
     try:
         _import_ns = {}
         _mako_get_namespace(context, 'arusahni')._populate(_import_ns, ['*'])
+        def content():
+            return render_content(context)
+        index_teasers = _import_ns.get('index_teasers', context.get('index_teasers', UNDEFINED))
+        posts = _import_ns.get('posts', context.get('posts', UNDEFINED))
+        helper = _mako_get_namespace(context, 'helper')
         arusahni = _mako_get_namespace(context, 'arusahni')
         comments = _mako_get_namespace(context, 'comments')
         date_format = _import_ns.get('date_format', context.get('date_format', UNDEFINED))
-        posts = _import_ns.get('posts', context.get('posts', UNDEFINED))
-        helper = _mako_get_namespace(context, 'helper')
-        index_teasers = _import_ns.get('index_teasers', context.get('index_teasers', UNDEFINED))
-        def content():
-            return render_content(context)
         __M_writer = context.writer()
-        __M_writer('\n')
+        __M_writer('\r\n')
         for post in posts:
-            __M_writer('        <div class="post">\n            <h1 class="title"><a href="')
+            __M_writer('        <div class="post">\r\n            <h1 class="title"><a href="')
             __M_writer(str(post.permalink()))
             __M_writer('">')
             __M_writer(str(post.title()))
-            __M_writer('</a></h1>\n            <div class="meta">\n                <div class="authordate">\n                    <time class="timeago" datetime="')
+            __M_writer('</a></h1>\r\n            <div class="meta">\r\n                <div class="authordate">\r\n                    <time class="timeago" datetime="')
             __M_writer(str(post.date.isoformat()))
             __M_writer('">')
             __M_writer(str(post.formatted_date(date_format)))
-            __M_writer('</time>\n                </div>\n                <div class="stats">\n')
+            __M_writer('</time>\r\n                </div>\r\n                <div class="stats">\r\n')
             if not post.meta('nocomments'):
                 __M_writer('                    ')
                 __M_writer(str(comments.comment_link(post.permalink(), post.base_path)))
-                __M_writer('\n')
-            __M_writer('                </div>\n            ')
+                __M_writer('\r\n')
+            __M_writer('                </div>\r\n            ')
             __M_writer(str(arusahni.html_tags(post)))
-            __M_writer('\n            </div>\n            <div class="body">\n')
+            __M_writer('\r\n            </div>\r\n            <div class="body">\r\n')
             if index_teasers:
                 __M_writer('                ')
                 __M_writer(str(post.text(teaser_only=True)))
-                __M_writer('\n')
+                __M_writer('\r\n')
             else:
                 __M_writer('                ')
                 __M_writer(str(post.text(teaser_only=False)))
-                __M_writer('\n')
-            __M_writer('            </div>\n        </div>\n')
+                __M_writer('\r\n')
+            __M_writer('            </div>\r\n        </div>\r\n')
         __M_writer('    ')
         __M_writer(str(helper.html_pager()))
-        __M_writer('\n    ')
+        __M_writer('\r\n    ')
         __M_writer(str(comments.comment_link_script()))
-        __M_writer('\n    ')
+        __M_writer('\r\n    ')
         __M_writer(str(helper.mathjax_script(posts)))
-        __M_writer('\n')
+        __M_writer('\r\n')
         return ''
     finally:
         context.caller_stack._pop_frame()
@@ -116,6 +116,6 @@ def render_content(context,**pageargs):
 
 """
 __M_BEGIN_METADATA
-{"line_map": {"23": 4, "26": 2, "29": 3, "35": 0, "50": 2, "51": 3, "52": 4, "53": 5, "58": 34, "64": 7, "78": 7, "79": 8, "80": 9, "81": 10, "82": 10, "83": 10, "84": 10, "85": 13, "86": 13, "87": 13, "88": 13, "89": 16, "90": 17, "91": 17, "92": 17, "93": 19, "94": 20, "95": 20, "96": 23, "97": 24, "98": 24, "99": 24, "100": 25, "101": 26, "102": 26, "103": 26, "104": 28, "105": 31, "106": 31, "107": 31, "108": 32, "109": 32, "110": 33, "111": 33, "117": 111}, "source_encoding": "utf-8", "filename": "themes/zen/templates/index.tmpl", "uri": "index.tmpl"}
+{"source_encoding": "utf-8", "uri": "index.tmpl", "filename": "themes/zen/templates/index.tmpl", "line_map": {"23": 2, "26": 4, "29": 3, "35": 0, "50": 2, "51": 3, "52": 4, "53": 5, "58": 34, "64": 7, "78": 7, "79": 8, "80": 9, "81": 10, "82": 10, "83": 10, "84": 10, "85": 13, "86": 13, "87": 13, "88": 13, "89": 16, "90": 17, "91": 17, "92": 17, "93": 19, "94": 20, "95": 20, "96": 23, "97": 24, "98": 24, "99": 24, "100": 25, "101": 26, "102": 26, "103": 26, "104": 28, "105": 31, "106": 31, "107": 31, "108": 32, "109": 32, "110": 33, "111": 33, "117": 111}}
 __M_END_METADATA
 """

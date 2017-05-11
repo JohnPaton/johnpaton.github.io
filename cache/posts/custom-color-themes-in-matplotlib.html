@@ -1,0 +1,37 @@
+<p>At KPMG, like (I imagine) at most companies, we have a custom color palette that presentations and other materials are supposed to conform to. I actually quite like it when things I produce have a consistent look and feel, so I decided to find out how to make a custom color palette in <a href="https://matplotlib.org/">matplotlib</a>. Turns out that it's super easy.</p>
+<!-- TEASER_END -->
+
+<p>The first step is to create a <code>.mplstyle</code> file for your color scheme. These can contain a bunch of options, but you can download a sample <a href="http://matplotlib.org/_static/matplotlibrc">here</a>. Way down in line 337 (at the time of writing), you will find the following lines:</p>
+<pre class="code literal-block"><span></span><span class="c1">#axes.prop_cycle    : cycler(&#39;color&#39;,</span>
+<span class="c1">#                            [&#39;1f77b4&#39;, &#39;ff7f0e&#39;, &#39;2ca02c&#39;, &#39;d62728&#39;,</span>
+<span class="c1">#                              &#39;9467bd&#39;, &#39;8c564b&#39;, &#39;e377c2&#39;, &#39;7f7f7f&#39;,</span>
+<span class="c1">#                              &#39;bcbd22&#39;, &#39;17becf&#39;])</span>
+                                            <span class="c1"># color cycle for plot lines</span>
+                                            <span class="c1"># as list of string colorspecs:</span>
+                                            <span class="c1"># single letter, long name, or</span>
+                                            <span class="c1"># web-style hex</span>
+</pre>
+
+
+<p>This setting defines the cycle of colors that matplotlib uses for consecutive elements on plots when you don't specify the colors. Uncomment these lines and swap out the list for a list of your favorite (or corporately imposed) colors. As indicated by the comment, matplotlib will accept <a href="https://matplotlib.org/api/colors_api.html">single letter</a>, <a href="https://www.w3schools.com/colors/colors_names.asp">long name</a>, or hex colors. Use the HTML long name colors to get all your favorites like Gamboge, GrayTeaGreen, and PapayaWhip.</p>
+<p><a href="http://math.ubbcluj.ro/~sberinde/wingraph/main.html"><img alt="HTML long name colors vizualized" src="/images/long_names.gif"></a></p>
+<p>Once you've got your color theme specified, you need to save the file in the <code>stylelib</code> directory of your matplotlib <code>configdir</code>. You can find your <code>configdir</code> using</p>
+<pre class="code literal-block"><span></span><span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">matplotlib</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">get_configdir</span><span class="p">()</span>
+<span class="s1">&#39;C:</span><span class="se">\\</span><span class="s1">Users</span><span class="se">\\</span><span class="s1">johnpaton</span><span class="se">\\</span><span class="s1">.matplotlib&#39;</span>
+</pre>
+
+
+<p>Save the file as <code>&lt;configdir&gt;/stylelib/&lt;my_style_name&gt;.mplstyle</code>. I called mine <code>kpmg</code> since that's what I'm using it for. The filename is how you refer to the style in your code. You can now use your brand new color scheme to make pretty plots in the same way as you use built in styles:</p>
+<pre class="code literal-block"><span></span><span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;kpmg&#39;</span><span class="p">)</span>
+</pre>
+
+
+<p>Since all we've done is change the color scheme, you can also use it in combination with other styles and only change their colors. Just make sure your own style is the last one in the list:</p>
+<pre class="code literal-block"><span></span><span class="o">&gt;&gt;&gt;</span> <span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">([</span><span class="s1">&#39;ggplot&#39;</span><span class="p">,</span><span class="s1">&#39;kpmg&#39;</span><span class="p">])</span>
+</pre>
+
+
+<p>There are a <a href="http://matplotlib.org/users/customizing.html">bunch more settings</a> that you can define in the matplotlib style file, but since I'm a terrible designer I know I'll make bad choices, so I'll leave that to the experts. For now, I'm just happy to see the exponential growth of colors in my life.</p>
+<p><img alt="colors" src="/images/colors.png"></p>
