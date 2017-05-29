@@ -5,12 +5,12 @@ STOP_RENDERING = runtime.STOP_RENDERING
 __M_dict_builtin = dict
 __M_locals_builtin = locals
 _magic_number = 10
-_modified_time = 1496046521.745268
+_modified_time = 1496046951.451681
 _enable_loop = True
 _template_filename = 'themes/zen/templates/base.tmpl'
 _template_uri = 'base.tmpl'
 _source_encoding = 'utf-8'
-_exports = ['extra_js', 'content', 'extra_head']
+_exports = ['extra_head', 'extra_js', 'content']
 
 
 def _mako_get_namespace(context, name):
@@ -20,11 +20,11 @@ def _mako_get_namespace(context, name):
         _mako_generate_namespaces(context)
         return context.namespaces[(__name__, name)]
 def _mako_generate_namespaces(context):
-    ns = runtime.TemplateNamespace('annotations', context._clean_inheritance_tokens(), templateuri='annotation_helper.tmpl', callables=None,  calling_uri=_template_uri)
-    context.namespaces[(__name__, 'annotations')] = ns
-
     ns = runtime.TemplateNamespace('arusahni', context._clean_inheritance_tokens(), templateuri='arusahni_helper.tmpl', callables=None,  calling_uri=_template_uri)
     context.namespaces[(__name__, 'arusahni')] = ns
+
+    ns = runtime.TemplateNamespace('annotations', context._clean_inheritance_tokens(), templateuri='annotation_helper.tmpl', callables=None,  calling_uri=_template_uri)
+    context.namespaces[(__name__, 'annotations')] = ns
 
     ns = runtime.TemplateNamespace('footer', context._clean_inheritance_tokens(), templateuri='base_footer.tmpl', callables=None,  calling_uri=_template_uri)
     context.namespaces[(__name__, 'footer')] = ns
@@ -36,22 +36,22 @@ def render_body(context,**pageargs):
         _import_ns = {}
         _mako_get_namespace(context, 'arusahni')._populate(_import_ns, ['*'])
         _mako_get_namespace(context, 'footer')._populate(_import_ns, ['*'])
-        set_locale = _import_ns.get('set_locale', context.get('set_locale', UNDEFINED))
-        blog_title = _import_ns.get('blog_title', context.get('blog_title', UNDEFINED))
+        def extra_head():
+            return render_extra_head(context._locals(__M_locals))
         template_hooks = _import_ns.get('template_hooks', context.get('template_hooks', UNDEFINED))
-        def extra_js():
-            return render_extra_js(context._locals(__M_locals))
+        footer = _mako_get_namespace(context, 'footer')
+        set_locale = _import_ns.get('set_locale', context.get('set_locale', UNDEFINED))
+        arusahni = _mako_get_namespace(context, 'arusahni')
         _link = _import_ns.get('_link', context.get('_link', UNDEFINED))
+        abs_link = _import_ns.get('abs_link', context.get('abs_link', UNDEFINED))
         def content():
             return render_content(context._locals(__M_locals))
         body_end = _import_ns.get('body_end', context.get('body_end', UNDEFINED))
-        lang = _import_ns.get('lang', context.get('lang', UNDEFINED))
-        arusahni = _mako_get_namespace(context, 'arusahni')
-        abs_link = _import_ns.get('abs_link', context.get('abs_link', UNDEFINED))
-        footer = _mako_get_namespace(context, 'footer')
-        def extra_head():
-            return render_extra_head(context._locals(__M_locals))
+        def extra_js():
+            return render_extra_js(context._locals(__M_locals))
+        blog_title = _import_ns.get('blog_title', context.get('blog_title', UNDEFINED))
         logo_url = _import_ns.get('logo_url', context.get('logo_url', UNDEFINED))
+        lang = _import_ns.get('lang', context.get('lang', UNDEFINED))
         __M_writer = context.writer()
         __M_writer('\r\n')
         __M_writer('\r\n')
@@ -101,6 +101,21 @@ def render_body(context,**pageargs):
         context.caller_stack._pop_frame()
 
 
+def render_extra_head(context,**pageargs):
+    __M_caller = context.caller_stack._push_frame()
+    try:
+        _import_ns = {}
+        _mako_get_namespace(context, 'arusahni')._populate(_import_ns, ['*'])
+        _mako_get_namespace(context, 'footer')._populate(_import_ns, ['*'])
+        def extra_head():
+            return render_extra_head(context)
+        __M_writer = context.writer()
+        __M_writer('\r\n')
+        return ''
+    finally:
+        context.caller_stack._pop_frame()
+
+
 def render_extra_js(context,**pageargs):
     __M_caller = context.caller_stack._push_frame()
     try:
@@ -130,23 +145,8 @@ def render_content(context,**pageargs):
         context.caller_stack._pop_frame()
 
 
-def render_extra_head(context,**pageargs):
-    __M_caller = context.caller_stack._push_frame()
-    try:
-        _import_ns = {}
-        _mako_get_namespace(context, 'arusahni')._populate(_import_ns, ['*'])
-        _mako_get_namespace(context, 'footer')._populate(_import_ns, ['*'])
-        def extra_head():
-            return render_extra_head(context)
-        __M_writer = context.writer()
-        __M_writer('\r\n')
-        return ''
-    finally:
-        context.caller_stack._pop_frame()
-
-
 """
 __M_BEGIN_METADATA
-{"line_map": {"67": 9, "68": 10, "69": 10, "70": 15, "71": 16, "72": 17, "73": 17, "74": 18, "75": 18, "76": 18, "77": 18, "78": 22, "79": 22, "80": 22, "90": 32, "85": 27, "86": 28, "23": 4, "88": 31, "89": 31, "26": 2, "91": 32, "92": 33, "29": 3, "133": 7, "32": 0, "98": 40, "87": 28, "104": 34, "148": 142, "142": 7, "93": 33, "113": 34, "119": 27, "56": 2, "57": 3, "58": 4, "59": 5, "60": 5, "61": 6, "62": 6}, "source_encoding": "utf-8", "uri": "base.tmpl", "filename": "themes/zen/templates/base.tmpl"}
+{"source_encoding": "utf-8", "line_map": {"128": 34, "67": 9, "68": 10, "69": 10, "70": 15, "71": 16, "72": 17, "73": 17, "74": 18, "75": 18, "76": 18, "77": 18, "78": 22, "79": 22, "80": 22, "90": 32, "85": 27, "86": 28, "23": 2, "88": 31, "89": 31, "26": 4, "91": 32, "92": 33, "29": 3, "32": 0, "98": 40, "87": 28, "134": 27, "104": 7, "148": 134, "93": 33, "113": 7, "119": 34, "56": 2, "57": 3, "58": 4, "59": 5, "60": 5, "61": 6, "62": 6}, "uri": "base.tmpl", "filename": "themes/zen/templates/base.tmpl"}
 __M_END_METADATA
 """
