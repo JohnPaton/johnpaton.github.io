@@ -1,10 +1,10 @@
 <!-- 
-.. title: Custom color themes in Matplotlib
-.. slug: matplotlib_colors
+.. title: Custom color schemes in Matplotlib
+.. slug: custom-color-schemes-in-matplotlib
 .. date: 2017-05-011 20:00:00 UTC+01:00
 .. tags: python, dataviz, matplotlib
 .. category: 
-.. link: https://johnpaton.github.io/posts/matplotlib_colors/
+.. link: https://johnpaton.github.io/posts/custom-color-schemes-in-matplotlib/
 .. description: Making custome color schemes available in Matplotlib is super easy
 .. type: text
 .. author: John Paton
