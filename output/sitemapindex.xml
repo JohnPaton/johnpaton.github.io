@@ -7,7 +7,7 @@
                         http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
  <sitemap>
   <loc>https://johnpaton.github.io/categories/dataviz.xml</loc>
-  <lastmod>2017-05-11T19:40:00Z</lastmod>
+  <lastmod>2017-05-29T08:28:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://johnpaton.github.io/categories/language.xml</loc>
@@ -19,7 +19,7 @@
  </sitemap>
  <sitemap>
   <loc>https://johnpaton.github.io/categories/matplotlib.xml</loc>
-  <lastmod>2017-05-11T19:40:00Z</lastmod>
+  <lastmod>2017-05-29T08:28:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://johnpaton.github.io/categories/nlp.xml</loc>
@@ -27,14 +27,14 @@
  </sitemap>
  <sitemap>
   <loc>https://johnpaton.github.io/categories/python.xml</loc>
-  <lastmod>2017-05-11T19:40:00Z</lastmod>
+  <lastmod>2017-05-29T08:28:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://johnpaton.github.io/rss.xml</loc>
-  <lastmod>2017-05-11T19:40:00Z</lastmod>
+  <lastmod>2017-05-29T08:28:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://johnpaton.github.io/sitemap.xml</loc>
-  <lastmod>2017-05-11T19:40:00Z</lastmod>
+  <lastmod>2017-05-29T08:28:00Z</lastmod>
  </sitemap>
 </sitemapindex>
