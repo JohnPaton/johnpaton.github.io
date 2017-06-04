@@ -7,50 +7,58 @@
                         http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
  <url>
   <loc>https://johnpaton.github.io/</loc>
-  <lastmod>2017-05-11T18:55:00Z</lastmod>
+  <lastmod>2017-06-04T12:05:00Z</lastmod>
  </url>
  <url>
   <loc>https://johnpaton.github.io/archive.html</loc>
-  <lastmod>2017-05-29T08:28:00Z</lastmod>
+  <lastmod>2017-06-04T12:21:00Z</lastmod>
  </url>
  <url>
   <loc>https://johnpaton.github.io/categories/</loc>
-  <lastmod>2017-05-11T19:01:00Z</lastmod>
+  <lastmod>2017-06-04T12:05:00Z</lastmod>
  </url>
  <url>
   <loc>https://johnpaton.github.io/categories/dataviz/</loc>
-  <lastmod>2017-05-11T19:01:00Z</lastmod>
+  <lastmod>2017-06-04T12:05:00Z</lastmod>
  </url>
  <url>
   <loc>https://johnpaton.github.io/categories/language/</loc>
-  <lastmod>2017-05-11T18:55:00Z</lastmod>
+  <lastmod>2017-02-21T20:18:00Z</lastmod>
  </url>
  <url>
   <loc>https://johnpaton.github.io/categories/markov/</loc>
-  <lastmod>2017-05-11T18:55:00Z</lastmod>
+  <lastmod>2017-02-21T20:18:00Z</lastmod>
  </url>
  <url>
   <loc>https://johnpaton.github.io/categories/matplotlib/</loc>
-  <lastmod>2017-05-11T19:01:00Z</lastmod>
+  <lastmod>2017-06-04T12:05:00Z</lastmod>
  </url>
  <url>
   <loc>https://johnpaton.github.io/categories/nlp/</loc>
-  <lastmod>2017-05-11T18:55:00Z</lastmod>
+  <lastmod>2017-02-21T20:18:00Z</lastmod>
  </url>
  <url>
   <loc>https://johnpaton.github.io/categories/python/</loc>
-  <lastmod>2017-05-11T18:55:00Z</lastmod>
+  <lastmod>2017-06-04T12:05:00Z</lastmod>
+ </url>
+ <url>
+  <loc>https://johnpaton.github.io/galleries/</loc>
+  <lastmod>2017-06-04T12:21:00Z</lastmod>
+ </url>
+ <url>
+  <loc>https://johnpaton.github.io/listings/</loc>
+  <lastmod>2017-06-04T12:21:00Z</lastmod>
  </url>
  <url>
   <loc>https://johnpaton.github.io/posts/custom-color-schemes-in-matplotlib/</loc>
-  <lastmod>2017-05-29T08:28:00Z</lastmod>
+  <lastmod>2017-06-04T12:05:00Z</lastmod>
  </url>
  <url>
   <loc>https://johnpaton.github.io/posts/engl_ish/</loc>
-  <lastmod>2017-05-11T18:55:00Z</lastmod>
+  <lastmod>2017-06-04T12:05:00Z</lastmod>
  </url>
  <url>
   <loc>https://johnpaton.github.io/posts/matplotlib_colors/</loc>
-  <lastmod>2017-05-29T08:35:00Z</lastmod>
+  <lastmod>2017-06-04T12:05:00Z</lastmod>
  </url>
 </urlset>
