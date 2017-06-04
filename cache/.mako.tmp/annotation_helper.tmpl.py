@@ -5,9 +5,9 @@ STOP_RENDERING = runtime.STOP_RENDERING
 __M_dict_builtin = dict
 __M_locals_builtin = locals
 _magic_number = 10
-_modified_time = 1496046951.6860554
+_modified_time = 1496579012.7663956
 _enable_loop = True
-_template_filename = 'c:/users/johnpaton/appdata/local/programs/python/python35-32/lib/site-packages/nikola/data/themes/base/templates/annotation_helper.tmpl'
+_template_filename = 'c:/users/john paton/appdata/local/programs/python/python35-32/lib/site-packages/nikola/data/themes/base/templates/annotation_helper.tmpl'
 _template_uri = 'annotation_helper.tmpl'
 _source_encoding = 'ascii'
 _exports = ['code', 'css']
@@ -47,6 +47,6 @@ def render_css(context):
 
 """
 __M_BEGIN_METADATA
-{"source_encoding": "ascii", "line_map": {"16": 0, "32": 5, "21": 3, "22": 16, "48": 42, "42": 1, "38": 1, "28": 5}, "uri": "annotation_helper.tmpl", "filename": "c:/users/johnpaton/appdata/local/programs/python/python35-32/lib/site-packages/nikola/data/themes/base/templates/annotation_helper.tmpl"}
+{"uri": "annotation_helper.tmpl", "filename": "c:/users/john paton/appdata/local/programs/python/python35-32/lib/site-packages/nikola/data/themes/base/templates/annotation_helper.tmpl", "line_map": {"16": 0, "32": 5, "21": 3, "22": 16, "48": 42, "42": 1, "38": 1, "28": 5}, "source_encoding": "ascii"}
 __M_END_METADATA
 """

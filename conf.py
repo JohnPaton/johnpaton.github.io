@@ -149,8 +149,9 @@ NAVIGATION_LINKS = {
         ('/archive.html', 'Archives', 'icon-folder-open-alt'),
         ('/categories/index.html', 'Tags', 'icon-tags'),
         ('http://www.johnpaton.net', 'About me', 'icon-user'),
+        ('http://www.twitter.com/jd_paton', 'My Twitter', 'icon-twitter'),
         ('https://github.com/johnpaton', 'My Github', 'icon-github'),
-        ('http://linkedin.johnpaton.net','My LinkedIn', 'icon-linkedin'),
+        #('http://linkedin.johnpaton.net','My LinkedIn', 'icon-linkedin'),
         #('mailto:john@johnpaton.net', 'Get in touch', 'icon-envelope'),
         ('/rss.xml', 'Subscribe', 'icon-rss'),
     )
