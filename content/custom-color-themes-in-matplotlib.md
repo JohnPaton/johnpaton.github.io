@@ -26,7 +26,7 @@ The first step is to create a `.mplstyle` file for your color scheme. These can 
 
 This setting defines the cycle of colors that matplotlib uses for consecutive elements on plots when you don't specify the colors. Uncomment these lines and swap out the list for a list of your favorite (or corporately imposed) colors. As indicated by the comment, matplotlib will accept [single letter](https://matplotlib.org/api/colors_api.html), [long name](https://www.w3schools.com/colors/colors_names.asp), or hex colors. Use the HTML long name colors to get all your favorites like Gamboge, GrayTeaGreen, and PapayaWhip.
 
-[![HTML long name colors vizualized](output/images/long_names.gif)](http://math.ubbcluj.ro/~sberinde/wingraph/main.html)
+![HTML long name colors vizualized](output/images/long_names.gif)
 
 Once you've got your color theme specified, you need to save the file in the `stylelib` directory of your matplotlib `configdir`. You can find your `configdir` using
 
