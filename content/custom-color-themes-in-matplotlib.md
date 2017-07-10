@@ -9,6 +9,10 @@ type: text
 author: John Paton
 summary: At KPMG, like (I imagine) at most companies, we have a custom color palette that presentations and other materials are supposed to conform to. I actually quite like it when things I produce have a consistent look and feel, so I decided to find out how to make a custom color palette in [matplotlib](https://matplotlib.org/). Turns out that it's super easy.
 
+
+
+
+
 At KPMG, like (I imagine) at most companies, we have a custom color palette that presentations and other materials are supposed to conform to. I actually quite like it when things I produce have a consistent look and feel, so I decided to find out how to make a custom color palette in [matplotlib](https://matplotlib.org/). Turns out that it's super easy.
 
 The first step is to create a `.mplstyle` file for your color scheme. These can contain a bunch of options, but you can download a sample [here](http://matplotlib.org/_static/matplotlibrc). Way down in line 337 (at the time of writing), you will find the following lines:
@@ -26,7 +30,8 @@ The first step is to create a `.mplstyle` file for your color scheme. These can 
 
 This setting defines the cycle of colors that matplotlib uses for consecutive elements on plots when you don't specify the colors. Uncomment these lines and swap out the list for a list of your favorite (or corporately imposed) colors. As indicated by the comment, matplotlib will accept [single letter](https://matplotlib.org/api/colors_api.html), [long name](https://www.w3schools.com/colors/colors_names.asp), or hex colors. Use the HTML long name colors to get all your favorites like Gamboge, GrayTeaGreen, and PapayaWhip.
 
-![HTML long name colors vizualized](output/images/long_names.gif)
+[![HTML long name colors vizualized](/images/long_names.gif)](http://math.ubbcluj.ro/~sberinde/wingraph/main.html)
+
 
 Once you've got your color theme specified, you need to save the file in the `stylelib` directory of your matplotlib `configdir`. You can find your `configdir` using
 
@@ -51,4 +56,4 @@ Since all we've done is change the color scheme, you can also use it in combinat
 
 There are a [bunch more settings](http://matplotlib.org/users/customizing.html) that you can define in the matplotlib style file, but since I'm a terrible designer I know I'll make bad choices, so I'll leave that to the experts. For now, I'm just happy to see the exponential growth of colors in my life.
 
-![colors](/output/images/colors.png)
+![colors](/images/colors.png)

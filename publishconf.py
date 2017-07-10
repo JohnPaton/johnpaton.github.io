@@ -13,6 +13,9 @@ from pelicanconf import *
 SITEURL = 'http://johnpaton.github.io'
 RELATIVE_URLS = False
 
+GOOGLE_ANALYTICS = 'UA-92349567-1'
+
+
 FEED_ALL_ATOM = 'feeds/all.atom.xml'
 CATEGORY_FEED_ATOM = 'feeds/%s.atom.xml'
 

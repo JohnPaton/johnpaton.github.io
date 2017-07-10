@@ -1,14 +1,14 @@
-<!-- 
-.. title: engl_ish: Simulate your language. ish.
-.. slug: engl_ish
-.. date: 2017-02-04 20:00:00 UTC+01:00
-.. tags: python, markov, nlp, language
-.. category: 
-.. link: https://johnpaton.github.io/posts/engl_ish/
-.. description: I made a character-level Markov-based model to simulate the feel of a language, to investigate how English looks to non-English readers.
-.. type: text
-.. author: John Paton
--->
+﻿title: engl_ish: Simulate your language. ish.
+slug: engl_ish
+date: 2017-02-04 20:00:00 UTC+01:00
+tags: python, markov, nlp, language
+category: 
+link: https://johnpaton.github.io/posts/engl_ish/
+description: I made a character-level Markov-based model to simulate the feel of a language, to investigate how English looks to non-English readers.
+type: text
+author: John Paton
+summary: Quite a while ago I saw a short film called [Skwerl](https://www.youtube.com/watch?v=Vt4Dfa4fOEY), meant to demonstrate "how English sounds to non-English speakers". As a native English speaker, watching it is quite surreal. The sounds and accents are totally familiar, and there are definitely words in there that you recognize, but there is no discernible overall meaning whatsoever. It's actually kind of hard to listen to. All you've got to hang onto is that what you're hearing somehow *feels* like English. And that's the point. Skwerl gave me the idea to attempt to create a similar effect, but with reading instead of listening. I wanted to see how English looks to non-English readers. And so I created `engl_ish`.
+
 
 Quite a while ago I saw a short film called [Skwerl](https://www.youtube.com/watch?v=Vt4Dfa4fOEY), meant to demonstrate "how English sounds to non-English speakers". As a native English speaker, watching it is quite surreal. The sounds and accents are totally familiar, and there are definitely words in there that you recognize, but there is no discernible overall meaning whatsoever. It's actually kind of hard to listen to. All you've got to hang onto is that what you're hearing somehow *feels* like English. And that's the point.
 
@@ -18,7 +18,7 @@ from IPython.display import YouTubeVideo
 YouTubeVideo('Vt4Dfa4fOEY')
 ``` 
 
-{{% media url="https://www.youtube.com/watch?v=Vt4Dfa4fOEY" %}}
+<iframe width="560" height="315" src="https://www.youtube.com/embed/Vt4Dfa4fOEY" frameborder="0" allowfullscreen></iframe>
 
 
 Skwerl gave me the idea to attempt to create a similar effect, but with reading instead of listening. I wanted to see how English looks to non-English readers. And so I created `engl_ish`.
@@ -26,8 +26,6 @@ Skwerl gave me the idea to attempt to create a similar effect, but with reading 
 ```python
 import engl_ish
 ```
-
-<!-- TEASER_END -->
 
 
 *If you don't care about what kind of sources I used or how I created the model, this is the point where you should [skip down to the Good Part™](#good_part).*
@@ -59,10 +57,11 @@ print(sentences[1])
 print(sentences[2])
 ```
 
+<pre>
     ['Donald', 'Trump', 'gave', 'two', 'major', 'interviews', 'this', 'week', 'in', 'which', 'he', 'set', 'out', 'more', 'details', 'of', 'his', 'policy', 'agenda', '.']
     ['Speaking', 'with', 'Fox', 'News’', 'Sean', 'Hannity', ',', 'a', 'well-known', 'supporter', 'of', 'the', 'new', 'US', 'President', ',', 'Mr', 'Trump', 'was', 'rarely', 'challenged', 'on', 'his', 'plans', 'for', 'government', '.']
     ['But', 'in', 'a', 'separate', 'interview', 'David', 'Muir', 'of', 'ABC', 'News’', ',', 'whose', 'network', 'Mr', 'Trump', 'considers', 'to', 'be', 'one', 'of', 'the', 'cabal', 'of', 'mainstream', 'organisations', 'that', 'cover', 'him', 'unfairly', ',', 'pressed', 'Mr', 'Trump', 'on', 'voter', 'fraud', 'and', 'the', 'Mexico', 'wall', '.']
-    
+</pre>    
 
 Great, apparently even in my happy simulated world I can't escape Donald Trump news. I guess there was no avoiding it.
 
@@ -94,11 +93,10 @@ for i in range(5):
     lengths.append(english_model.sent_lens.draw())
     
 print('Sample generated sentence lengths:', lengths)
-    
 ```
-
-    Sample generated sentence lengths: [12, 37, 22, 16, 15]
-    
+<pre>
+Sample generated sentence lengths: [12, 37, 22, 16, 15]
+</pre>
 
 Wow, so easy! Thing language simulation thing is a breeze.
 
@@ -127,17 +125,18 @@ for punctuation in english_model.mid_puncts.keys():
 
 ```
 
-    Sentence-ending punctuation:
-    Proportion of !: 0.0039657950179700086
-    Proportion of .: 0.9636468790019416
-    Proportion of ?: 0.0323873259800884
+<pre>
+Sentence-ending punctuation:
+Proportion of !: 0.0039657950179700086
+Proportion of .: 0.9636468790019416
+Proportion of ?: 0.0323873259800884
     
-    Mid-sentence capitalization probability: 0.13640990558456384
-    
-    Mid-sentence punctuation probability: 0.054136458247137226
-    Proportion of ,: 0.9778365667254556
-    Proportion of ;: 0.022163433274544387
-    
+Mid-sentence capitalization probability: 0.13640990558456384
+  
+Mid-sentence punctuation probability: 0.054136458247137226
+Proportion of ,: 0.9778365667254556
+Proportion of ;: 0.022163433274544387
+</pre>   
 
 So, unsurprisingly, we see here that the overwhelming majority of sentences end in periods, and the majority of mid-sentence punctuation consists of commas. Also, about 13.6% of words are capitalized mid-sentence, while only 5.4% are followed by a piece of punctuation. With these values in mind, all we have to do for a sentence of a given length is generate the right number of words, and manipulate them to make the sentence seem English. ish.
 
