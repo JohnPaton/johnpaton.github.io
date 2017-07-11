@@ -7,7 +7,7 @@ from __future__ import unicode_literals
 AUTHOR = 'John Paton'
 SITENAME = "John's Blog"
 SITEURL = 'http://localhost:8000'#'http://johnpaton.github.io'
-SITELOGO = '/images/headshot.jpg'
+SITELOGO = '/images/headshot.png'
 FAVICON = '/images/favicon.ico'
 
 SITETITLE = AUTHOR

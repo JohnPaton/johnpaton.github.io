@@ -4,98 +4,98 @@ xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitem
 xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
-<loc>http://localhost:8000/</loc>
-<lastmod>2017-07-11T15:30:08-00:00</lastmod>
+<loc>https://johnpaton.github.io/</loc>
+<lastmod>2017-07-11T15:46:23-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>http://localhost:8000/archives.html</loc>
-<lastmod>2017-07-11T15:30:08-00:00</lastmod>
+<loc>https://johnpaton.github.io/archives.html</loc>
+<lastmod>2017-07-11T15:46:23-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>http://localhost:8000/tags.html</loc>
-<lastmod>2017-07-11T15:30:08-00:00</lastmod>
+<loc>https://johnpaton.github.io/tags.html</loc>
+<lastmod>2017-07-11T15:46:23-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>http://localhost:8000/categories.html</loc>
-<lastmod>2017-07-11T15:30:08-00:00</lastmod>
+<loc>https://johnpaton.github.io/categories.html</loc>
+<lastmod>2017-07-11T15:46:23-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>http://localhost:8000/pages/about/</loc>
-<lastmod>2017-07-11T15:30:08-00:00</lastmod>
+<loc>https://johnpaton.github.io/pages/about/</loc>
+<lastmod>2017-07-11T15:46:23-00:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.6</priority>
 </url>
 
 <url>
-<loc>http://localhost:8000/posts/custom-color-schemes-in-matplotlib/</loc>
+<loc>https://johnpaton.github.io/posts/custom-color-schemes-in-matplotlib/</loc>
 <lastmod>2017-05-11T20:00:00-01:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.7</priority>
 </url>
 
 <url>
-<loc>http://localhost:8000/posts/engl_ish/</loc>
+<loc>https://johnpaton.github.io/posts/engl_ish/</loc>
 <lastmod>2017-02-04T20:00:00-01:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.7</priority>
 </url>
 
 <url>
-<loc>http://localhost:8000/category/misc.html</loc>
+<loc>https://johnpaton.github.io/category/misc.html</loc>
 <lastmod>2017-05-11T20:00:00+00:20</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>http://localhost:8000/tag/python.html</loc>
+<loc>https://johnpaton.github.io/tag/matplotlib.html</loc>
 <lastmod>2017-05-11T20:00:00+00:20</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>http://localhost:8000/tag/matplotlib.html</loc>
-<lastmod>2017-05-11T20:00:00+00:20</lastmod>
-<changefreq>daily</changefreq>
-<priority>0.5</priority>
-</url>
-
-<url>
-<loc>http://localhost:8000/tag/dataviz.html</loc>
-<lastmod>2017-05-11T20:00:00+00:20</lastmod>
-<changefreq>daily</changefreq>
-<priority>0.5</priority>
-</url>
-
-<url>
-<loc>http://localhost:8000/tag/nlp.html</loc>
+<loc>https://johnpaton.github.io/tag/nlp.html</loc>
 <lastmod>2017-02-04T20:00:00+00:20</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>http://localhost:8000/tag/markov.html</loc>
+<loc>https://johnpaton.github.io/tag/markov.html</loc>
 <lastmod>2017-02-04T20:00:00+00:20</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>http://localhost:8000/author/john-paton.html</loc>
+<loc>https://johnpaton.github.io/tag/python.html</loc>
+<lastmod>2017-05-11T20:00:00+00:20</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
+<loc>https://johnpaton.github.io/tag/dataviz.html</loc>
+<lastmod>2017-05-11T20:00:00+00:20</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
+<loc>https://johnpaton.github.io/author/john-paton.html</loc>
 <lastmod>2017-05-11T20:00:00+00:20</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
