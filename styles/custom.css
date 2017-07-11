@@ -3,7 +3,7 @@ body,html{width:100%;
 	
 h1,h2,h3,h4,h5,h6{font-weight:300;
 	line-height:1.1;
-	font-family:"Source Sans Pro",Verdana,sans-serif}
+	font-family:"Source Sans Pro","Trebuchet MS",sans-serif}
 
 
 h1{font-size:2.4em}
@@ -62,7 +62,7 @@ aside div p{margin:0 0 15px;
 aside nav ul li{display:inline;
 	line-height:1.6em;
 	font-size:1.28em;
-	font-family:"Source Sans Pro",Verdana,sans-serif;
+	font-family:"Source Sans Pro","Trebuchet MS",sans-serif;
 	text-transform:lowercase}
 	
 main nav{text-align:center;
