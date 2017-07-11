@@ -3,7 +3,7 @@ body,html{width:100%;
 	
 h1,h2,h3,h4,h5,h6{font-weight:300;
 	line-height:1.1;
-	font-family:"Source Sans Pro",Verdana,sans-serif}
+	font-family:"Source Sans Pro","Trebuchet MS",sans-serif}
 
 
 h1{font-size:2.4em}
@@ -62,7 +62,7 @@ aside div p{margin:0 0 15px;
 aside nav ul li{display:inline;
 	line-height:1.6em;
 	font-size:1.28em;
-	font-family:"Source Sans Pro",Verdana,sans-serif;
+	font-family:"Source Sans Pro","Trebuchet MS",sans-serif;
 	text-transform:lowercase}
 	
 main nav{text-align:center;
@@ -108,7 +108,8 @@ main article blockquote,main article pre{background-color:hsla(0,0%,50%,.05);
 	
 main article blockquote{padding:10px 20px;
 	font-weight:300;
-	font-size:1.1em}
+	font-size:1.1em;
+	border-left:8px solid #3aa500}
 
 	
 main article pre{padding:4px;
@@ -116,7 +117,7 @@ main article pre{padding:4px;
 	background-color:#4C4B41;
 	color:#F8F8F2;
 	overflow-x:auto,
-	font-family:Source Code Pro,Consolas,monospace}
+	font-family:"Source Code Pro",Consolas,monospace}
 
 
 main article samp{white-space:pre;

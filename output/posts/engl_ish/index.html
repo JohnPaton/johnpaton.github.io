@@ -9,12 +9,12 @@
   <link rel="stylesheet" type="text/css" href="http://localhost:8000/theme/pygments/monokai.min.css">
   <link rel="stylesheet" type="text/css" href="http://localhost:8000/theme/font-awesome/css/font-awesome.min.css">
 
-    <link href="http://localhost:8000/static/custom.css" rel="stylesheet">
+    <link href="http://localhost:8000//styles/custom.css" rel="stylesheet">
 
 
 
-    <link rel="shortcut icon" href="/content/images/favicon.ico" type="image/x-icon">
-    <link rel="icon" href="/content/images/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -23,18 +23,18 @@
     <meta name="robots" content="" />
 
     <!-- Chrome, Firefox OS and Opera -->
-    <meta name="theme-color" content="#333">
+    <meta name="theme-color" content="#3aa500">
     <!-- Windows Phone -->
-    <meta name="msapplication-navbutton-color" content="#333">
+    <meta name="msapplication-navbutton-color" content="#3aa500">
     <!-- iOS Safari -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <!-- Microsoft EDGE -->
-    <meta name="msapplication-TileColor" content="#333">
+    <meta name="msapplication-TileColor" content="#3aa500">
 
 <meta name="author" content="John Paton" />
 <meta name="description" content="Quite a while ago I saw a short film called Skwerl, meant to demonstrate &#34;how English sounds to non-English speakers&#34;. As a native English speaker, watching it is quite surreal. The sounds and accents are totally familiar, and there are definitely words in there that you recognize, but there is no discernible overall meaning whatsoever. It&#39;s actually kind of hard to listen to. All you&#39;ve got to hang onto is that what you&#39;re hearing somehow feels like English. And that&#39;s the point. Skwerl gave me the idea to attempt to create a similar effect, but with reading instead of listening. I wanted to see how English looks to non-English readers. And so I created engl_ish." />
-<meta name="keywords" content="python, markov, nlp, language">
+<meta name="keywords" content="python, markov, nlp">
 
 <meta property="og:site_name" content="John's Blog"/>
 <meta property="og:title" content="engl_ish: Simulate your language. ish."/>
@@ -49,8 +49,7 @@
 <meta property="article:tag" content="python"/>
 <meta property="article:tag" content="markov"/>
 <meta property="article:tag" content="nlp"/>
-<meta property="article:tag" content="language"/>
-<meta property="og:image" content="/content/images/headshot.jpg">
+<meta property="og:image" content="/images/headshot.jpg">
 
   <title>John's Blog &ndash; engl_ish: Simulate your language. ish.</title>
 
@@ -59,16 +58,16 @@
   <aside>
     <div>
       <a href="http://localhost:8000">
-        <img src="/content/images/headshot.jpg" alt="John Paton" title="John Paton">
+        <img src="/images/headshot.jpg" alt="John Paton" title="John Paton">
       </a>
       <h1><a href="http://localhost:8000">John Paton</a></h1>
 
-<p>Data Scientist <strong style="color:#3aa500;font-size:18px">|</strong> Consultant</p>
+<p>data scientist<b style="color:#3aa500;font-size:20px;word-spacing:0px"> | </b>consultant</p>
       <nav>
         <ul class="list">
 
-          <li><a href="http://localhost:8000/author">about me</a></li>
-          <li><a href="http://localhost:8000/tags">tags</a></li>
+          <li><a href="/pages/about">about me</a></li>
+          <li><a href="/tags">tags</a></li>
         </ul>
       </nav>
 
@@ -76,6 +75,7 @@
         <li><a class="sc-github" href="http://www.github.com/johnpaton" target="_blank"><i class="fa fa-github"></i></a></li>
         <li><a class="sc-twitter" href="http://www.twitter.com/jd_paton" target="_blank"><i class="fa fa-twitter"></i></a></li>
         <li><a class="sc-linkedin" href="http://linkedin.johnpaton.net" target="_blank"><i class="fa fa-linkedin"></i></a></li>
+        <li><a class="sc-rss" href="/feeds/all.atom.xml" target="_blank"><i class="fa fa-rss"></i></a></li>
       </ul>
     </div>
 
@@ -131,14 +131,10 @@
 
 
 <pre>
-    ['Donald', 'Trump', 'gave', 'two', 'major', 'interviews', 'this', 'week', 'in', 'which', 'he', 'set', 'out', 'more', 'details', 'of', 'his', 'policy', 'agenda', '.']
-    ['Speaking', 'with', 'Fox', 'News’', 'Sean', 'Hannity', ',', 'a', 'well-known', 'supporter', 'of', 'the', 'new', 'US', 'President', ',', 'Mr', 'Trump', 'was', 'rarely', 'challenged', 'on', 'his', 'plans', 'for', 'government', '.']
-    ['But', 'in', 'a', 'separate', 'interview', 'David', 'Muir', 'of', 'ABC', 'News’', ',', 'whose', 'network', 'Mr', 'Trump', 'considers', 'to', 'be', 'one', 'of', 'the', 'cabal', 'of', 'mainstream', 'organisations', 'that', 'cover', 'him', 'unfairly', ',', 'pressed', 'Mr', 'Trump', 'on', 'voter', 'fraud', 'and', 'the', 'Mexico', 'wall', '.']
+['Donald', 'Trump', 'gave', 'two', 'major', 'interviews', 'this', 'week', 'in', 'which', 'he', 'set', 'out', 'more', 'details', 'of', 'his', 'policy', 'agenda', '.']
+['Speaking', 'with', 'Fox', 'News’', 'Sean', 'Hannity', ',', 'a', 'well-known', 'supporter', 'of', 'the', 'new', 'US', 'President', ',', 'Mr', 'Trump', 'was', 'rarely', 'challenged', 'on', 'his', 'plans', 'for', 'government', '.']
+['But', 'in', 'a', 'separate', 'interview', 'David', 'Muir', 'of', 'ABC', 'News’', ',', 'whose', 'network', 'Mr', 'Trump', 'considers', 'to', 'be', 'one', 'of', 'the', 'cabal', 'of', 'mainstream', 'organisations', 'that', 'cover', 'him', 'unfairly', ',', 'pressed', 'Mr', 'Trump', 'on', 'voter', 'fraud', 'and', 'the', 'Mexico', 'wall', '.']
 </pre>
-
-<div class="highlight"><pre><span></span>
-</pre></div>
-
 
 <p>Great, apparently even in my happy simulated world I can't escape Donald Trump news. I guess there was no avoiding it.</p>
 <p>Anyway, now that I have some text in a convenient format, it's time to get modelling.</p>
@@ -348,7 +344,6 @@ Proportion of ;: 0.022163433274544387
       <a href="http://localhost:8000/tag/python.html">python</a>
       <a href="http://localhost:8000/tag/markov.html">markov</a>
       <a href="http://localhost:8000/tag/nlp.html">nlp</a>
-      <a href="http://localhost:8000/tag/language.html">language</a>
     </p>
   </div>
 
@@ -376,7 +371,7 @@ Proportion of ;: 0.022163433274544387
 
     <footer>
 <p>&copy; John Paton 2017</p>
-<p>    Powered by <a href="http://getpelican.com" target="_blank">Pelican</a> - Theme <a href="https://github.com/JohnPaton/flex-mod" target="_blank">modified</a> from <a href="https://github.com/alexandrevicenzi/flex" target="_blank">Flex</a> by <a href="http://alexandrevicenzi.com" target="_blank">Alexandre Vicenzi</a>
+<p>    Powered by <a href="http://getpelican.com" target="_blank">Pelican</a> - Theme <a href="https://github.com/JohnPaton/flex-mod" target="_blank">modified</a> from <a href="http://alexandrevicenzi.com" target="_blank">Alexandre Vicenzi</a>'s <a href="https://github.com/alexandrevicenzi/flex" target="_blank">Flex</a>
 </p>    </footer>
   </main>
 
@@ -400,7 +395,7 @@ Proportion of ;: 0.022163433274544387
   "@type" : "Blog",
   "name": " John's Blog ",
   "url" : "http://localhost:8000",
-  "image": "/content/images/headshot.jpg",
+  "image": "/images/headshot.jpg",
   "description": ""
 }
 </script>
