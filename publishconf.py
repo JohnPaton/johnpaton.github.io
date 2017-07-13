@@ -17,6 +17,8 @@ GOOGLE_ANALYTICS = 'UA-92349567-1'
 
 
 FEED_ALL_ATOM = 'feeds/all.atom.xml'
+FEED_ALL_RSS = 'feeds/all.rss.xml'
+
 #CATEGORY_FEED_ATOM = 'feeds/%s.atom.xml'
 
 DELETE_OUTPUT_DIRECTORY = True

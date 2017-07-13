@@ -5,35 +5,35 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>https://johnpaton.github.io/</loc>
-<lastmod>2017-07-12T21:24:23-00:00</lastmod>
+<lastmod>2017-07-13T21:45:34-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://johnpaton.github.io/archives.html</loc>
-<lastmod>2017-07-12T21:24:23-00:00</lastmod>
+<lastmod>2017-07-13T21:45:34-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://johnpaton.github.io/tags.html</loc>
-<lastmod>2017-07-12T21:24:23-00:00</lastmod>
+<lastmod>2017-07-13T21:45:34-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://johnpaton.github.io/categories.html</loc>
-<lastmod>2017-07-12T21:24:23-00:00</lastmod>
+<lastmod>2017-07-13T21:45:34-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://johnpaton.github.io/pages/about/</loc>
-<lastmod>2017-07-12T21:24:23-00:00</lastmod>
+<lastmod>2017-07-13T21:45:34-00:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.6</priority>
 </url>
@@ -67,7 +67,7 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 </url>
 
 <url>
-<loc>https://johnpaton.github.io/tag/python.html</loc>
+<loc>https://johnpaton.github.io/tag/matplotlib.html</loc>
 <lastmod>2017-05-11T20:00:00+00:20</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
@@ -81,7 +81,7 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 </url>
 
 <url>
-<loc>https://johnpaton.github.io/tag/matplotlib.html</loc>
+<loc>https://johnpaton.github.io/tag/python.html</loc>
 <lastmod>2017-05-11T20:00:00+00:20</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
