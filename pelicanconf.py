@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*- #
 from __future__ import unicode_literals
 
-# to do: get rid of /output/ in URL, make about me (and other) pages
 
 AUTHOR = 'John Paton'
 SITENAME = "John's Blog"
@@ -16,6 +15,8 @@ SITESUBTITLE = 'data scientist'+\
                'consultant'
 
 PATH = 'content'
+
+#OUTPUT_PATH = 'output/'
 
 TIMEZONE = 'Europe/Amsterdam'
 

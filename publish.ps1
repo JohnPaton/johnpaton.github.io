@@ -9,3 +9,4 @@ git commit -m "Pelican publish"
 echo "Pushing..."
 git push
 cd ..\johnpaton.github.io\
+echo "Don't forget to push the source!"
