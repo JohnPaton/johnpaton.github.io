@@ -154,6 +154,20 @@ main article table td,main article table th{padding:8px;
 	line-height:20px;
 	vertical-align:top;
 	border-top:1px solid #ddd}
+
+
+main article table.dataframe{
+  margin-left: 0;
+  display:block;
+  border:0px;
+  overflow-x:auto}
+
+main article table.dataframe thead:first-child tr:first-child th{border-top:1px solid}
+main article table.dataframe tr:nth-child(even) {background: #fff}
+main article table.dataframe tr:nth-child(odd) {background: #d7ffc2}
+main article table.dataframe tr:hover{background:#C0C0C0}
+
+
 	
 main footer{padding-top:4px;
 	border-top:1px solid #eee}
