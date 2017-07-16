@@ -98,15 +98,17 @@ main article header .translations{float:right}
 
 main article header .translations .active{font-weight:600}
 
-main article code,main article kbd,main article pre,main article samp{font-family:Source Code Pro,Consolas,monospace}
+main article code,main article kbd,main article pre,main article samp{font-family:"Source Code Pro",Consolas,monospace}
 
-main article blockquote,main article pre{background-color:hsla(0,0%,50%,.05);
-	border-top-right-radius:5px;
+main article blockquote,main article pre{border-top-right-radius:5px;
 	border-bottom-right-radius:5px;
-	border-left:8px solid hsla(0,0%,50%,.075);
+	/*border-left:8px solid hsla(0,0%,50%,.075);*/
 	border-left-width:10px}
 	
-main article blockquote{padding:10px 20px;
+main article blockquote{background-color:hsla(0,0%,50%,.05);
+	padding:10px 10px;
+	margin-left: 20px;
+    margin-right: 0px;
 	font-weight:300;
 	font-size:1.1em;
 	border-left:8px solid #3aa500}
@@ -116,8 +118,7 @@ main article pre{padding:4px;
 	font-size:.9em;
 	background-color:#4C4B41;
 	color:#F8F8F2;
-	overflow-x:auto,
-	font-family:"Source Code Pro",Consolas,monospace}
+	overflow-x:auto}
 
 
 main article samp{white-space:pre;
@@ -156,8 +157,7 @@ main article table td,main article table th{padding:8px;
 	border-top:1px solid #ddd}
 
 
-main article table.dataframe{
-  margin-left: 0;
+main article table.dataframe{margin-left: 0;
   display:block;
   border:0px;
   overflow-x:auto}
