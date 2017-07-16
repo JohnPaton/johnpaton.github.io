@@ -105,7 +105,7 @@ main article blockquote,main article pre{border-top-right-radius:5px;
 	/*border-left:8px solid hsla(0,0%,50%,.075);*/
 	border-left-width:10px}
 	
-main article blockquote{background-color:#d7ffc2;
+main article blockquote{background-color:hsla(0,0%,50%,.05);
 	padding:10px 10px;
 	margin-left: 20px;
     margin-right: 0px;
