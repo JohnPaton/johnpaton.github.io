@@ -14,6 +14,8 @@ SITEURL = 'https://johnpaton.github.io'
 RELATIVE_URLS = False
 
 GOOGLE_ANALYTICS = 'UA-92349567-1'
+DISQUS_SITENAME = 'johnpatonblog'
+
 
 
 FEED_ALL_ATOM = 'feeds/all.atom.xml'

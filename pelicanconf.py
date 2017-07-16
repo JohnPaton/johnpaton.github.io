@@ -32,7 +32,7 @@ SUMMARY_MAX_LENGTH = 50
 THEME = 'themes/flex-mod'
 USE_LESS = False
 
-GOOGLE_ANALYTICS = 'UA-92349567-1'
+#GOOGLE_ANALYTICS = 'UA-92349567-1'
 
 COPYRIGHT_YEAR = 2017
 COPYRIGHT_NAME = 'John Paton'
@@ -57,7 +57,7 @@ TRANSLATION_FEED_ATOM = None
 AUTHOR_FEED_ATOM = None
 AUTHOR_FEED_RSS = None
 
-DISQUS_SITENAME = 'johnpatonblog'
+#DISQUS_SITENAME = 'johnpatonblog'
 
 # Blogroll
 # MENU_ITEMS = [('Item 1','http://www.google.com')]
@@ -95,7 +95,7 @@ RELATIVE_URLS = False
 
 # Plugins
 PLUGIN_PATHS = ['../pelican-plugins']
-PLUGINS=['sitemap', 'render_math']
+PLUGINS=['sitemap', 'render_math', 'post_stats']
 
 SITEMAP = {
     'format': 'xml',
