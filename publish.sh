@@ -2,9 +2,9 @@ echo "Building site..."
 pelican -d -s ./publishconf.py
 echo "Updating content..."
 cd ../jp.gh.io-master
-git pull
+git reset --hard origin/master
 rm -r *
-cp -r ../output/* .
+cp -r ../johnpaton.github.io/output/* .
 git add *
 git commit -m "Pelican publish"
 echo "Pushing..."
