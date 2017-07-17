@@ -63,7 +63,7 @@
       <a href="https://johnpaton.github.io">
         <img src="/images/headshot.png" alt="John Paton" title="John Paton">
       </a>
-      <h1><a href="https://johnpaton.github.io/pages/about">John Paton</a></h1>
+      <h1><a href="https://johnpaton.github.io">John Paton</a></h1>
 
 <p>data scientist<b style="color:#3aa500;font-size:20px;word-spacing:0px"> | </b>consultant</p>
       <nav>
@@ -96,6 +96,7 @@
           Posted on Sat 15 July 2017
 
 
+        &#8226; 4 min read
     </p>
   </header>
 
@@ -376,7 +377,7 @@ dtype: float64
 </pre></div>
 
 
-<p>Now we forward fill the values in <code>resets</code> using <code>.fillna(method='pad')</code>. That will give us a series of constant values, which step up by some amount at each index where there was an accident in <code>amsterdam_low</code>. This series will act as a baseline which we can subtract from <code>count</code>, so that at each accident the resulting series will reset to zero and then start counting up again. The first values before the first accident in the dataset will still be NaN, which is the desired behavious because we don't know what these values should be. </p>
+<p>Now we forward fill the values in <code>resets</code> using <code>.fillna(method='pad')</code>. That will give us a series of constant values, which step up by some amount at each index where there was an accident in <code>amsterdam_low</code>. This series will act as a baseline which we can subtract from <code>count</code>, so that at each accident the resulting series will reset to zero and then start counting up again. The first values before the first accident in the dataset will still be NaN, which is the desired behaviour because we don't know what these values should be. </p>
 <div class="highlight"><pre><span></span><span class="n">resets</span> <span class="o">=</span> <span class="n">resets</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;pad&#39;</span><span class="p">)</span>
 <span class="n">resets</span>
 </pre></div>
