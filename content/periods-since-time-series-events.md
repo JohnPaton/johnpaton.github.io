@@ -326,7 +326,7 @@ resets
 
 
 
-Now we forward fill the values in `resets` using `.fillna(method='pad')`. That will give us a series of constant values, which step up by some amount at each index where there was an accident in `amsterdam_low`. This series will act as a baseline which we can subtract from `count`, so that at each accident the resulting series will reset to zero and then start counting up again. The first values before the first accident in the dataset will still be NaN, which is the desired behavious because we don't know what these values should be. 
+Now we forward fill the values in `resets` using `.fillna(method='pad')`. That will give us a series of constant values, which step up by some amount at each index where there was an accident in `amsterdam_low`. This series will act as a baseline which we can subtract from `count`, so that at each accident the resulting series will reset to zero and then start counting up again. The first values before the first accident in the dataset will still be NaN, which is the desired behaviour because we don't know what these values should be. 
 
 
 ```python
