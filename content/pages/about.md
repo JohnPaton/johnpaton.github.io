@@ -1,6 +1,6 @@
 title: About me
 slug: about
-link: https://johnpaton.github.io/pages/about/
+link: https://johnpaton.github.io/about/
 type: text
 author: John Paton
 

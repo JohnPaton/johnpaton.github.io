@@ -68,7 +68,7 @@ DISPLAY_CATEGORIES_ON_MENU = False
 
 LINKS = (('blog home','/'),
          ('tags', '/tags'),
-         ('about me', '/pages/about'),
+         ('about me', '/about'),
          )
 
 
@@ -83,8 +83,8 @@ SOCIAL = (('github', 'http://www.github.com/johnpaton'),
 ARTICLE_URL = 'posts/{slug}/'
 ARTICLE_SAVE_AS = 'posts/{slug}/index.html'
 DISABLE_URL_HASH = True
-PAGE_URL = 'pages/{slug}/'
-PAGE_SAVE_AS = 'pages/{slug}/index.html'
+PAGE_URL = '{slug}/'
+PAGE_SAVE_AS = '{slug}/index.html'
 
 DEFAULT_PAGINATION = 10
 
