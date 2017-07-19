@@ -389,7 +389,7 @@ plt.ylabel('periods'); plt.xlabel('date'); plt.title('Periods since severity 1 a
 ![png](/images/periods-since-time-series-events_20_0.png)
 
 
-We've done it! What's nice about this trick is that we don't have to loop over all the accidents, so it scales well to larger data sets. To finish up, we do the same for all the accident types.
+We've done it! What's nice about this trick is that we don't have to loop over all the accidents, so it scales well to larger data sets. To finish up, we do a [groupby without aggregation](/posts/groupby-without-aggregation/) to get the same information for all the accident types.
 
 
 ```python
