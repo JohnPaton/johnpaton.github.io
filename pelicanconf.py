@@ -7,6 +7,8 @@ AUTHOR = 'John Paton'
 SITENAME = "John Paton"
 SITEURL = 'http://localhost:8000'#'http://johnpaton.github.io'
 SITELOGO = '/images/headshot.png'
+SITE_PREVIEW_IMAGE = '/images/headshot_wide.jpg'
+
 FAVICON = '/images/favicon.ico'
 
 SITETITLE = AUTHOR
