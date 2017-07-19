@@ -11,9 +11,9 @@
 
     <link href="https://johnpaton.github.io//styles/custom.css" rel="stylesheet">
 
-    <link href="https://johnpaton.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="John's Blog Atom">
+    <link href="https://johnpaton.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="John Paton Atom">
 
-    <link href="https://johnpaton.github.io/feeds/all.rss.xml" type="application/rss+xml" rel="alternate" title="John's Blog RSS">
+    <link href="https://johnpaton.github.io/feeds/all.rss.xml" type="application/rss+xml" rel="alternate" title="John Paton RSS">
 
     <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon">
     <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
@@ -38,7 +38,7 @@
 <meta name="description" content="This is a cute trick I discovered the other day for quickly computing the time since an event on regularly spaced time series data (like monthly reporting), without looping over the data." />
 <meta name="keywords" content="python, pandas, data, time series">
 
-<meta property="og:site_name" content="John's Blog"/>
+<meta property="og:site_name" content="John Paton"/>
 <meta property="og:title" content="Counting the number of periods since time-series events with Pandas"/>
 <meta property="og:description" content="This is a cute trick I discovered the other day for quickly computing the time since an event on regularly spaced time series data (like monthly reporting), without looping over the data."/>
 <meta property="og:locale" content="en_US"/>
@@ -54,7 +54,7 @@
 <meta property="article:tag" content="time series"/>
 <meta property="og:image" content="/images/headshot.png">
 
-  <title>John's Blog &ndash; Counting the number of periods since time-series events with Pandas</title>
+  <title>John Paton &ndash; Counting the number of periods since time-series events with Pandas</title>
 
 </head>
 <body>
@@ -426,7 +426,7 @@ dtype: float64
 
 
 <p><img alt="png" src="/images/periods-since-time-series-events_20_0.png"></p>
-<p>We've done it! What's nice about this trick is that we don't have to loop over all the accidents, so it scales well to larger data sets. To finish up, we do the same for all the accident types.</p>
+<p>We've done it! What's nice about this trick is that we don't have to loop over all the accidents, so it scales well to larger data sets. To finish up, we do a <a href="/posts/groupby-without-aggregation/">groupby without aggregation</a> to get the same information for all the accident types.</p>
 <div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">periods_since_accident</span><span class="p">(</span><span class="n">group</span><span class="p">):</span>
     <span class="n">g</span> <span class="o">=</span> <span class="n">group</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
     <span class="n">count</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">g</span><span class="p">)))</span>
@@ -569,7 +569,7 @@ dtype: float64
 {
   "@context" : "http://schema.org",
   "@type" : "Blog",
-  "name": " John's Blog ",
+  "name": " John Paton ",
   "url" : "https://johnpaton.github.io",
   "image": "/images/headshot.png",
   "description": ""
