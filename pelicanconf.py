@@ -16,6 +16,9 @@ SITESUBTITLE = 'data scientist'+\
                '<b style="color:#3aa500;font-size:20px;word-spacing:0px"> | </b>'+\
                'consultant'
 
+SITEDESCRIPTION = "John's deep musings and cheap tricks for "\
+                  +"Python, data science, machine learning, and more."
+
 PATH = 'content'
 
 #OUTPUT_PATH = 'output/'
