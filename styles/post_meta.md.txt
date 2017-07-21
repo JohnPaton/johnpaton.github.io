@@ -3,7 +3,8 @@ slug:
 date: YYYY-MM-DD HH:00:00 UTC+01:00
 tags: 
 category: 
-link: https://johnpaton.github.io/posts/engl_ish/
+link: 
+status:
 description:
 type: text
 author: John Paton

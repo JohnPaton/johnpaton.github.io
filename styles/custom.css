@@ -167,7 +167,6 @@ main article table.dataframe tr:nth-child(even) {background: #fff}
 main article table.dataframe tr:nth-child(odd) {background: #d7ffc2}
 main article table.dataframe tr:hover{background:#C0C0C0}
 
-
 	
 main footer{padding-top:4px;
 	border-top:1px solid #eee}
@@ -189,6 +188,38 @@ main footer p{margin:2px;
 	border-radius:.25em}
 	
 .tag-cloud a:hover{background-color:#3eb200}
+
+main article div table#tags{
+	margin-top:1em;
+	width:90%;
+}
+
+main article div table#tags td{
+	padding:3px;
+}
+
+
+main article td.tag{
+  text-align:right;
+  border:0;
+  min-width:6em;
+  vertical-align: middle;
+  font-size: 1.1em;
+}
+
+main article td.tagbarcol{
+  width:100%;
+  padding: 0;
+  vertical-align: middle;
+  border:0;
+}
+
+main article div.tagbar{
+  background-color:#3aa500;
+  color:#fff;
+  padding: 0.1em 0 0.12em 0.2em;
+}
+
 
 a.btn{background-color:#3aa500;
 	padding:.6em;
