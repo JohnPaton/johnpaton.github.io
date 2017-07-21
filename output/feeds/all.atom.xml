@@ -1,5 +1,138 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>John Paton</title><link href="https://johnpaton.github.io/" rel="alternate"></link><link href="https://johnpaton.github.io/feeds/all.atom.xml" rel="self"></link><id>https://johnpaton.github.io/</id><updated>2017-07-17T20:00:00-01:00</updated><entry><title>Groupby without aggregation in Pandas</title><link href="https://johnpaton.github.io/posts/groupby-without-aggregation/" rel="alternate"></link><published>2017-07-17T20:00:00-01:00</published><updated>2017-07-17T20:00:00-01:00</updated><author><name>John Paton</name></author><id>tag:johnpaton.github.io,2017-07-17:/posts/groupby-without-aggregation/</id><summary type="html">&lt;p&gt;Pandas has a useful feature that I didn't appreciate enough when I first started using it: &lt;code&gt;groupby&lt;/code&gt;s without aggregation. What do I mean by that? Let's look at an example.&lt;/p&gt;</summary><content type="html">&lt;p&gt;Pandas has a useful feature that I didn't appreciate enough when I first started using it: &lt;code&gt;groupby&lt;/code&gt;s without aggregation. What do I mean by that? Let's look at an example.&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>John Paton</title><link href="https://johnpaton.github.io/" rel="alternate"></link><link href="https://johnpaton.github.io/feeds/all.atom.xml" rel="self"></link><id>https://johnpaton.github.io/</id><updated>2017-07-21T23:30:00-01:00</updated><entry><title>Creating a responsive bar chart for my tags</title><link href="https://johnpaton.github.io/posts/responsive-bar-chart/" rel="alternate"></link><published>2017-07-21T23:30:00-01:00</published><updated>2017-07-21T23:30:00-01:00</updated><author><name>John Paton</name></author><id>tag:johnpaton.github.io,2017-07-21:/posts/responsive-bar-chart/</id><summary type="html">&lt;p&gt;Today I decided that, since I'm a data kind of guy, I would like my tags page to show a bar chart of how many posts per tag I've made. The idea was to basically have a list of tags on the left, with a bar chart on the right showing how many articles are tagged with that tag, and the bars scaling to the window size. It turned out to be more complicated than I was expecting.&lt;/p&gt;</summary><content type="html">&lt;p&gt;Today I decided that, since I'm a data kind of guy, I would like my &lt;a href="/tags"&gt;tags page&lt;/a&gt; to show a bar chart of how many posts per tag I've made. The idea was to basically have a list of tags on the left, with a bar chart on the right showing how many articles are tagged with that tag. Obviously the bars should scale to the size of the window. If you were too lazy to click the link, the result I came up with (at the time of writing) looks like this:&lt;/p&gt;
+&lt;p&gt;&lt;img alt="The graph" src="/images/tag-graph.png"&gt;&lt;/p&gt;
+&lt;p&gt;It turned out to be more complicated than I was expecting since I had to work around the constraints of a static site. My solution basically consists of 3 parts:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;An extra setting in my Pelican configuration so I can turn the graph back off if I get bored of it&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;CSS to render a responsive bar chart&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Modification of the jinja2 template for my tags page&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h1&gt;Setting the Pelican configuration&lt;/h1&gt;
+&lt;p&gt;I literally just added the variable &lt;code&gt;TAG_GRAPH = True&lt;/code&gt; to my &lt;a href="https://github.com/JohnPaton/johnpaton.github.io/blob/dev/pelicanconf.py"&gt;configuration file&lt;/a&gt;, which is basically a file with a bunch of Python variables that tells Pelican what to do. This is going great!&lt;/p&gt;
+&lt;p&gt;I also needed to add one more line making an extension available to jinja:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;JINJA_ENVIRONMENT&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;extensions&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;jinja2.ext.do&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;We'll get to what it's used for further on.&lt;/p&gt;
+&lt;h1&gt;Setting up the CSS&lt;/h1&gt;
+&lt;p&gt;This is only the second time I've tried to actually accomplish something in CSS, so it was a bit of a struggle. &lt;a href="https://codepen.io/"&gt;Codepen.io&lt;/a&gt; and &lt;a href="https://developer.chrome.com/devtools#dom-and-styles"&gt;Chrome's Inspect tool&lt;/a&gt; both turned out to be very handy (thanks for the tip, &lt;a href="https://davideberdin.github.io/"&gt;Davide&lt;/a&gt;). I did a bunch of tweaking to get everything looking how I wanted it to, but I'll just include the basics here to get something up and running. If you're implementing it you can look at this site's stylesheet for all the dirty details.&lt;/p&gt;
+&lt;p&gt;What I ended up doing was making a &lt;code&gt;table&lt;/code&gt; with one column to contain the tag name and a second column for the bars. I set up a few different element classes:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;code&gt;table#tags&lt;/code&gt; to set the size of everything&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;td.tag&lt;/code&gt; for the tag names&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;td.tagbarcol&lt;/code&gt; to contain the bars&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;div.tagbar&lt;/code&gt; to act as the bars&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;We give the whole table a bit of a margin to keep it away from the page title, and make it take up 90% of the available width:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nt"&gt;table&lt;/span&gt;&lt;span class="p"&gt;#&lt;/span&gt;&lt;span class="nn"&gt;tags&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;margin-top&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="kt"&gt;em&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="k"&gt;width&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="mi"&gt;90&lt;/span&gt;&lt;span class="kt"&gt;%&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;The tag column needs the text to be right-justified, and it also gets a minimum width so that the tag names aren't too cramped. Keep this small enough that there is enough room for the bars, even on a phone screen.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nt"&gt;td&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nc"&gt;tag&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+  &lt;span class="k"&gt;text-align&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="kc"&gt;right&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+  &lt;span class="k"&gt;min-width&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="mi"&gt;6&lt;/span&gt;&lt;span class="kt"&gt;em&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;We give the column for the bars a width of 100% so that it will take up all the horizontal space not used by the tag names:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nt"&gt;td&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nc"&gt;tagbarcol&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+  &lt;span class="k"&gt;width&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="mi"&gt;100&lt;/span&gt;&lt;span class="kt"&gt;%&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Finally we give the &lt;code&gt;div&lt;/code&gt;'s background the color we want to use for the bars, set the text to white for our data labels, and give it a bit of padding so that the labels aren't too cramped:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nt"&gt;div&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nc"&gt;tagbar&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+  &lt;span class="k"&gt;background-color&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="mh"&gt;#3aa500&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+  &lt;span class="k"&gt;color&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="mh"&gt;#fff&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+  &lt;span class="k"&gt;padding&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="mf"&gt;0.1&lt;/span&gt;&lt;span class="kt"&gt;em&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;The structure of the table is as follows:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;table&lt;/span&gt; &lt;span class="na"&gt;id&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;tags&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;tr&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+        &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;td&lt;/span&gt; &lt;span class="na"&gt;class&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;tag&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+            tag1
+        &lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;td&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+        &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;td&lt;/span&gt; &lt;span class="na"&gt;class&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;tagbarcol&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+            &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;div&lt;/span&gt; &lt;span class="na"&gt;class&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;tagbar&amp;quot;&lt;/span&gt; &lt;span class="na"&gt;style&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;width:100%&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+                5 &lt;span class="c"&gt;&amp;lt;!-- data label --&amp;gt;&lt;/span&gt;
+            &lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;div&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+        &lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;td&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;tr&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;tr&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+        &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;td&lt;/span&gt; &lt;span class="na"&gt;class&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;tag&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+            tag2
+        &lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;td&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+        &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;td&lt;/span&gt; &lt;span class="na"&gt;class&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;tagbarcol&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+            &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;div&lt;/span&gt; &lt;span class="na"&gt;class&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;tagbar&amp;quot;&lt;/span&gt; &lt;span class="na"&gt;style&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;width:40%&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+                2
+            &lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;div&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+        &lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;td&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;tr&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;table&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;strong&gt;The trick is that we set the width of the &lt;code&gt;tagbar&lt;/code&gt; div individually for each bar, making the largest value 100% and everything else a fraction of that.&lt;/strong&gt; That way the longest bar will take up all of &lt;code&gt;tagbarcol&lt;/code&gt;, reaching out to the edge of your table, and smaller columns are proportionally shorter. The width of &lt;code&gt;tagbar&lt;/code&gt; is relative to &lt;code&gt;tagbarcol&lt;/code&gt;, &lt;code&gt;tagbarcol&lt;/code&gt; is relative to the table, and the table is relative to the screen (or whatever container it's in), so that as long as the outermost container is responsive, the bars will scale nicely. &lt;/p&gt;
+&lt;p&gt;The above bare-bones example yields the following responsive bar chart:&lt;/p&gt;
+&lt;iframe src=/static/bar-chart-demo.html width=100% height=80px style="border:none;"&gt;&lt;/iframe&gt;
+
+&lt;p&gt;You can play with this setup yourself in &lt;a href="https://codepen.io/JohnPaton/pen/PKYbgw?editors=1100"&gt;this codepen&lt;/a&gt; I made. &lt;/p&gt;
+&lt;h1&gt;Making the jinja template&lt;/h1&gt;
+&lt;p&gt;This site is powered by &lt;a href="https://blog.getpelican.com/"&gt;Pelican&lt;/a&gt;, which uses &lt;a href="http://jinja.pocoo.org/"&gt;jinja&lt;/a&gt; to make a set of HTML templates that are filled with content I write whenever I regenerate the site. The template I care about in this case is the one that generates my tags page. The theme I'm using is a fork of &lt;a href="https://github.com/alexandrevicenzi/Flex"&gt;Flex&lt;/a&gt; that I'm &lt;a href="https://github.com/johnpaton/flex-mod"&gt;slowly hacking&lt;/a&gt; into something that suits my own whimsical desires.&lt;/p&gt;
+&lt;p&gt;To generate the table structure above, we need to know what the largest data value will be so that we can make everything else relative to that. Pelican provides a variable called &lt;code&gt;tags&lt;/code&gt; to jinja that as best I can tell is a list of tuples in the form of &lt;code&gt;(tag, [list of articles])&lt;/code&gt;. The existing Flex template looped through this, using the values of &lt;code&gt;tag&lt;/code&gt; and &lt;code&gt;articles|count&lt;/code&gt; to get the number of articles for each tag. Unfortunately jinja doesn't seem to have a maximum function, so I realized I would have to loop through the tags and find the largest count myself. However, jinja also doesn't seem to let you assign variables dynamically within a loop; you can only call methods on them. In the end I settled on the following ghetto solution:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;{% set max_articles = [0] %}
+{% for tag, articles in tags %}
+  {% if articles|count &amp;gt; max_articles|last %}
+    {% do max_articles.append(articles|count) %}
+  {% endif %}
+{% endfor %}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;What I'm doing is looping through the articles and appending to a list (which you &lt;em&gt;can&lt;/em&gt; do in a jinja loop) every time I see a value larger than the one at the end of the list. The &lt;code&gt;|last&lt;/code&gt; filter accesses the last value in the list (obviously), so once this loop is done running, &lt;code&gt;max_articles|last&lt;/code&gt; is the value I want all my bars to be relative to. It's ugly, but it works (a very common theme in my life).&lt;/p&gt;
+&lt;p&gt;In order to use the &lt;code&gt;do&lt;/code&gt; statement, we need to make the &lt;code&gt;do&lt;/code&gt; extension available to jinja (don't worry, it comes included by default). Gaining access to this functionality was why I included &lt;code&gt;jinja2.ext.do&lt;/code&gt; in my jinja environment in my Pelican configuration.&lt;/p&gt;
+&lt;p&gt;Now that we know what value to use for our percentages, we can construct the table. I added an &lt;code&gt;if&lt;/code&gt; statement to my template file so that I can still return to my old theme's design just by changing the &lt;code&gt;TAG_GRAPH&lt;/code&gt; variable in my Pelican configuration file.&lt;/p&gt;
+&lt;p&gt;I ended up with the following in my template:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;{% if TAG_GRAPH %}
+  &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;table&lt;/span&gt; &lt;span class="na"&gt;id&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;tags&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+    {% for tag, articles in tags|sort %}
+      &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;tr&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+        &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;td&lt;/span&gt; &lt;span class="na"&gt;class&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;tag&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt; 
+          &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;a&lt;/span&gt; &lt;span class="na"&gt;href&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;{{ SITEURL }}/{{ tag.url }}&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;{{ tag }}&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;a&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+        &lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;td&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+        &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;td&lt;/span&gt; &lt;span class="na"&gt;class&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;tagbarcol&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;  
+         &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;div&lt;/span&gt; &lt;span class="na"&gt;class&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;tagbar&amp;quot;&lt;/span&gt; &lt;span class="na"&gt;style&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;width:{{ 100 * articles|count / max_articles|last }}%&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+             {{ articles|count }} 
+          &lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;div&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt; 
+        &lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;td&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+      &lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;tr&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+    {% endfor %}
+  &lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;table&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+{% else %}
+    &lt;span class="c"&gt;&amp;lt;!-- The old theme --&amp;gt;&lt;/span&gt;
+{% endif%}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;The single table is set up, and then jinja loops through the tags. For each tag, it makes one row. It puts each tag name (and a link to that tag's articles) in the &lt;code&gt;tag&lt;/code&gt; column. It sets up the &lt;code&gt;tagbarcol&lt;/code&gt; column and puts a &lt;code&gt;tagbar&lt;/code&gt; inside it, with width &lt;code&gt;100 * &amp;lt;number of articles for that tag&amp;gt; / &amp;lt;maximum number of articles&amp;gt;&lt;/code&gt;, where the maximum number of articles comes from the hacky loop above.&lt;/p&gt;
+&lt;p&gt;And that's it! If you didn't click the link before but are now feeling inspired, &lt;a href="/tags"&gt;check out the tags page&lt;/a&gt;! It was a bit complex but I'm happy with the result. &lt;/p&gt;
+&lt;p&gt;Did I do something stupid? Would you have done something differently? Let me know!&lt;/p&gt;</content><category term="web"></category><category term="css"></category><category term="pelican"></category><category term="jinja"></category><category term="html"></category></entry><entry><title>Groupby without aggregation in Pandas</title><link href="https://johnpaton.github.io/posts/groupby-without-aggregation/" rel="alternate"></link><published>2017-07-17T20:00:00-01:00</published><updated>2017-07-17T20:00:00-01:00</updated><author><name>John Paton</name></author><id>tag:johnpaton.github.io,2017-07-17:/posts/groupby-without-aggregation/</id><summary type="html">&lt;p&gt;Pandas has a useful feature that I didn't appreciate enough when I first started using it: &lt;code&gt;groupby&lt;/code&gt;s without aggregation. What do I mean by that? Let's look at an example.&lt;/p&gt;</summary><content type="html">&lt;p&gt;Pandas has a useful feature that I didn't appreciate enough when I first started using it: &lt;code&gt;groupby&lt;/code&gt;s without aggregation. What do I mean by that? Let's look at an example.&lt;/p&gt;
 &lt;p&gt;We'll borrow the data structure from my previous post about &lt;a href="https://johnpaton.github.io/posts/periods-since-time-series-events/"&gt;counting the periods since an event&lt;/a&gt;: company accident data. We have a list of workplace accidents for some company since 1980, including the time and location of the accident (no it's not real, I generated it, please don't send your lawyers to investigate a data breach): &lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pandas&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;pd&lt;/span&gt;
 &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;numpy&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;np&lt;/span&gt;

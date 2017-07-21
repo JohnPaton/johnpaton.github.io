@@ -9,6 +9,8 @@ SITEURL = 'http://localhost:8000'#'http://johnpaton.github.io'
 SITELOGO = '/images/headshot.png'
 SITE_PREVIEW_IMAGE = '/images/headshot_wide.jpg'
 
+TAG_GRAPH = True
+
 FAVICON = '/images/favicon.ico'
 
 SITETITLE = AUTHOR
@@ -34,7 +36,7 @@ BROWSER_COLOR = '#3aa500'
 
 SUMMARY_MAX_LENGTH = 50
 
-THEME = 'themes/flex-mod'
+THEME = '../flex-mod'
 USE_LESS = False
 
 #GOOGLE_ANALYTICS = 'UA-92349567-1'
@@ -93,7 +95,8 @@ PAGE_SAVE_AS = '{slug}/index.html'
 
 DEFAULT_PAGINATION = 10
 
-STATIC_PATHS = ['images','styles']
+STATIC_PATHS = ['images','styles','static']
+ARTICLE_EXCLUDES  = STATIC_PATHS
 
 # Uncomment following line if you want document-relative URLs when developing
 RELATIVE_URLS = False
@@ -115,3 +118,5 @@ SITEMAP = {
         'pages': 'monthly'
     }
 }
+
+JINJA_ENVIRONMENT = {'extensions': ['jinja2.ext.do']}
