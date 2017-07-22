@@ -36,7 +36,7 @@ We'll get to what it's used for further on.
 
 # Setting up the CSS
 
-This is only the second time I've tried to actually accomplish something in CSS, so it was a bit of a struggle. [Codepen.io](https://codepen.io/) and [Chrome's Inspect tool](https://developer.chrome.com/devtools#dom-and-styles) both turned out to be very handy (thanks for the tip, [Davide](https://davideberdin.github.io/)). I did a bunch of tweaking to get everything looking how I wanted it to, but I'll just include the basics here to get something up and running. If you're implementing it you can look at this site's stylesheet for all the dirty details.
+This is only the second time I've tried to actually accomplish something in CSS, so it was a bit of a struggle. [Codepen.io](https://codepen.io/) and [Chrome's Inspect tool](https://developer.chrome.com/devtools#dom-and-styles) both turned out to be very handy (thanks for the tip, [Davide](https://davideberdin.github.io/)). I did a bunch of tweaking to get everything looking how I wanted it to, but I'll just include the basics here to get something up and running. If you're implementing it yourself you can look at this site's stylesheet for all the dirty details.
 
 What I ended up doing was making a `table` with one column to contain the tag name and a second column for the bars. I set up a few different element classes:
 
@@ -120,7 +120,7 @@ You can play with this setup yourself in [this codepen](https://codepen.io/JohnP
 
 This site is powered by [Pelican](https://blog.getpelican.com/), which uses [jinja](http://jinja.pocoo.org/) to make a set of HTML templates that are filled with content I write whenever I regenerate the site. The template I care about in this case is the one that generates my tags page. The theme I'm using is a fork of [Flex](https://github.com/alexandrevicenzi/Flex) that I'm [slowly hacking](https://github.com/johnpaton/flex-mod) into something that suits my own whimsical desires.
 
-To generate the table structure above, we need to know what the largest data value will be so that we can make everything else relative to that. Pelican provides a variable called `tags` to jinja that as best I can tell is a list of tuples in the form of `(tag, [list of articles])`. The existing Flex template looped through this, using the values of `tag` and `articles|count` to get the number of articles for each tag. Unfortunately jinja doesn't seem to have a maximum function, so I realized I would have to loop through the tags and find the largest count myself. However, jinja also doesn't seem to let you assign variables dynamically within a loop; you can only call methods on them. In the end I settled on the following ghetto solution:
+To generate the table structure above, we need to know what the largest data value will be so that we can make everything else relative to that. Pelican provides a variable called `tags` to jinja that as best I can tell is a dictionary in the form of `{tag: [list of articles]}`. The existing Flex template looped through this, using the values of `tag` and the length (in jinja: `|count`) of the articles list to get the number of articles for each tag. Unfortunately jinja doesn't seem to have a maximum function, so I realized I would have to loop through the tags and find the largest count myself. However, jinja also doesn't seem to let you assign variables dynamically within a loop; you can only call methods on them. In the end I settled on the following ghetto solution:
 
 ```html
 {% set max_articles = [0] %}
@@ -147,18 +147,18 @@ I ended up with the following in my template:
           <a href="{{ SITEURL }}/{{ tag.url }}">{{ tag }}</a>
         </td>
         <td class="tagbarcol">  
-         <div class="tagbar" style="width:{{ 100 * articles|count / max_articles|last }}%">
-             {{ articles|count }} 
+          <div class="tagbar" style="width:{{ 100 * articles|count / max_articles|last }}%">
+            {{ articles|count }} 
           </div> 
         </td>
       </tr>
     {% endfor %}
   </table>
 {% else %}
-	<!-- The old theme -->
+  <!-- The old theme -->
 {% endif%}
 ```
-The single table is set up, and then jinja loops through the tags. For each tag, it makes one row. It puts each tag name (and a link to that tag's articles) in the `tag` column. It sets up the `tagbarcol` column and puts a `tagbar` inside it, with width `100 * <number of articles for that tag> / <maximum number of articles>`, where the maximum number of articles comes from the hacky loop above.
+The single table is set up, and then jinja loops through the tags. For each tag, it makes one row. It puts each tag name (and a link to that tag's articles) in the `tag` column. It sets up the `tagbarcol` column and puts a `tagbar` inside it, with width `100` `*` `<number of articles for that tag>` `/` `<maximum number of articles>`, where the maximum number of articles comes from the hacky loop above.
 
 And that's it! If you didn't click the link before but are now feeling inspired, [check out the tags page](/tags)! It was a bit complex but I'm happy with the result. 
 
