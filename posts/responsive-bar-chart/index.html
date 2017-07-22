@@ -126,7 +126,7 @@
 
 <p>We'll get to what it's used for further on.</p>
 <h1>Setting up the CSS</h1>
-<p>This is only the second time I've tried to actually accomplish something in CSS, so it was a bit of a struggle. <a href="https://codepen.io/">Codepen.io</a> and <a href="https://developer.chrome.com/devtools#dom-and-styles">Chrome's Inspect tool</a> both turned out to be very handy (thanks for the tip, <a href="https://davideberdin.github.io/">Davide</a>). I did a bunch of tweaking to get everything looking how I wanted it to, but I'll just include the basics here to get something up and running. If you're implementing it you can look at this site's stylesheet for all the dirty details.</p>
+<p>This is only the second time I've tried to actually accomplish something in CSS, so it was a bit of a struggle. <a href="https://codepen.io/">Codepen.io</a> and <a href="https://developer.chrome.com/devtools#dom-and-styles">Chrome's Inspect tool</a> both turned out to be very handy (thanks for the tip, <a href="https://davideberdin.github.io/">Davide</a>). I did a bunch of tweaking to get everything looking how I wanted it to, but I'll just include the basics here to get something up and running. If you're implementing it yourself you can look at this site's stylesheet for all the dirty details.</p>
 <p>What I ended up doing was making a <code>table</code> with one column to contain the tag name and a second column for the bars. I set up a few different element classes:</p>
 <ol>
 <li><code>table#tags</code> to set the size of everything</li>
@@ -199,7 +199,7 @@
 <p>You can play with this setup yourself in <a href="https://codepen.io/JohnPaton/pen/PKYbgw?editors=1100">this codepen</a> I made. </p>
 <h1>Making the jinja template</h1>
 <p>This site is powered by <a href="https://blog.getpelican.com/">Pelican</a>, which uses <a href="http://jinja.pocoo.org/">jinja</a> to make a set of HTML templates that are filled with content I write whenever I regenerate the site. The template I care about in this case is the one that generates my tags page. The theme I'm using is a fork of <a href="https://github.com/alexandrevicenzi/Flex">Flex</a> that I'm <a href="https://github.com/johnpaton/flex-mod">slowly hacking</a> into something that suits my own whimsical desires.</p>
-<p>To generate the table structure above, we need to know what the largest data value will be so that we can make everything else relative to that. Pelican provides a variable called <code>tags</code> to jinja that as best I can tell is a list of tuples in the form of <code>(tag, [list of articles])</code>. The existing Flex template looped through this, using the values of <code>tag</code> and <code>articles|count</code> to get the number of articles for each tag. Unfortunately jinja doesn't seem to have a maximum function, so I realized I would have to loop through the tags and find the largest count myself. However, jinja also doesn't seem to let you assign variables dynamically within a loop; you can only call methods on them. In the end I settled on the following ghetto solution:</p>
+<p>To generate the table structure above, we need to know what the largest data value will be so that we can make everything else relative to that. Pelican provides a variable called <code>tags</code> to jinja that as best I can tell is a dictionary in the form of <code>{tag: [list of articles]}</code>. The existing Flex template looped through this, using the values of <code>tag</code> and the length (in jinja: <code>|count</code>) of the articles list to get the number of articles for each tag. Unfortunately jinja doesn't seem to have a maximum function, so I realized I would have to loop through the tags and find the largest count myself. However, jinja also doesn't seem to let you assign variables dynamically within a loop; you can only call methods on them. In the end I settled on the following ghetto solution:</p>
 <div class="highlight"><pre><span></span>{% set max_articles = [0] %}
 {% for tag, articles in tags %}
   {% if articles|count &gt; max_articles|last %}
@@ -221,20 +221,20 @@
           <span class="p">&lt;</span><span class="nt">a</span> <span class="na">href</span><span class="o">=</span><span class="s">&quot;{{ SITEURL }}/{{ tag.url }}&quot;</span><span class="p">&gt;</span>{{ tag }}<span class="p">&lt;/</span><span class="nt">a</span><span class="p">&gt;</span>
         <span class="p">&lt;/</span><span class="nt">td</span><span class="p">&gt;</span>
         <span class="p">&lt;</span><span class="nt">td</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;tagbarcol&quot;</span><span class="p">&gt;</span>  
-         <span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;tagbar&quot;</span> <span class="na">style</span><span class="o">=</span><span class="s">&quot;width:{{ 100 * articles|count / max_articles|last }}%&quot;</span><span class="p">&gt;</span>
-             {{ articles|count }} 
+          <span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;tagbar&quot;</span> <span class="na">style</span><span class="o">=</span><span class="s">&quot;width:{{ 100 * articles|count / max_articles|last }}%&quot;</span><span class="p">&gt;</span>
+            {{ articles|count }} 
           <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span> 
         <span class="p">&lt;/</span><span class="nt">td</span><span class="p">&gt;</span>
       <span class="p">&lt;/</span><span class="nt">tr</span><span class="p">&gt;</span>
     {% endfor %}
   <span class="p">&lt;/</span><span class="nt">table</span><span class="p">&gt;</span>
 {% else %}
-    <span class="c">&lt;!-- The old theme --&gt;</span>
+  <span class="c">&lt;!-- The old theme --&gt;</span>
 {% endif%}
 </pre></div>
 
 
-<p>The single table is set up, and then jinja loops through the tags. For each tag, it makes one row. It puts each tag name (and a link to that tag's articles) in the <code>tag</code> column. It sets up the <code>tagbarcol</code> column and puts a <code>tagbar</code> inside it, with width <code>100 * &lt;number of articles for that tag&gt; / &lt;maximum number of articles&gt;</code>, where the maximum number of articles comes from the hacky loop above.</p>
+<p>The single table is set up, and then jinja loops through the tags. For each tag, it makes one row. It puts each tag name (and a link to that tag's articles) in the <code>tag</code> column. It sets up the <code>tagbarcol</code> column and puts a <code>tagbar</code> inside it, with width <code>100</code> <code>*</code> <code>&lt;number of articles for that tag&gt;</code> <code>/</code> <code>&lt;maximum number of articles&gt;</code>, where the maximum number of articles comes from the hacky loop above.</p>
 <p>And that's it! If you didn't click the link before but are now feeling inspired, <a href="/tags">check out the tags page</a>! It was a bit complex but I'm happy with the result. </p>
 <p>Did I do something stupid? Would you have done something differently? Let me know!</p>
   </div>
