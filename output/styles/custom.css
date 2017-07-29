@@ -177,7 +177,7 @@ main footer p{margin:2px;
 	color:#999;
 	font-size:11px}
 	
-.tag-cloud a{background-color:#46c900;
+.tag-cloud a{background-color:#3aa500; 
 	padding:.2em .6em;
 	font-size:.74em;
 	line-height:1;
@@ -187,11 +187,11 @@ main footer p{margin:2px;
 	vertical-align:baseline;
 	border-radius:.25em}
 	
-.tag-cloud a:hover{background-color:#3eb200}
+.tag-cloud a:hover{background-color:#4cdb00}
 
 main article div table#tags{
 	margin-top:1em;
-	width:90%;
+	width:100%;
 }
 
 main article div table#tags td{
@@ -321,33 +321,39 @@ ul.social a.sc-xing{background-color:#007575}
 	height:70px;
 	margin-left:5%}
 	
-@media screen and (min-width:768px){aside{width:25%;
-	height:100%;
-	position:fixed;
-	top:0;
-	left:0;
-	overflow-y:auto}
+@media screen and (min-width:768px){
+
+    aside{width:25%;
+    	height:100%;
+    	position:fixed;
+    	top:0;
+    	left:0;
+    	overflow-y:auto}
 	
-aside div{padding:36px 18px}
+    aside div{padding:36px 18px}
 
-aside div nav ul li{padding:0!important;
-	display:block}
-	
-aside div ul.social{padding-top:32px}
+    aside div nav ul li{padding:0!important;
+    	display:block}
+    	
+    aside div ul.social{padding-top:32px}
 
-main{width:75%;
-	height:100%;
-	position:absolute;
-	top:0;
-	left:25%}
-	
-main article.single{min-height:80%}
+    main{width:75%;
+    	height:100%;
+    	position:absolute;
+    	top:0;
+    	left:25%}
+    	
+    main article.single{min-height:80%}
 
-main article ul.list li{padding:2px}
+    main article ul.list li{padding:2px}
 
-.ads-aside{height:250px}
+    main article div table#tags{
+        width:90%;
+    }
 
-.ads-responsive{height:90px}
+    .ads-aside{height:250px}
+
+    .ads-responsive{height:90px}
 
 }
 
