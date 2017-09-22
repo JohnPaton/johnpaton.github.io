@@ -11,7 +11,7 @@ summary: Since I've started using Apache Spark, one of the frequent annoyances I
 
 Since I've started using Apache Spark, one of the frequent annoyances I've come up against is having an idea that would be very easy to implement in Pandas, but turns out to require a really verbose workaround in Spark. Such is the price of scalability. But that does make it extra satisfying when I *do* manage to get done what I'm trying to do. 
 
-A recent example of this is doing a forward fill: filling `null` values with the last known non-`null` value, leaving leading `null`s alone. In Pandas, this is very easy. I used it in my [recent post](/posts/periods-since-time-series-events/) about efficiently finding the time since the last event in a time series. This post is basically an explanation of [this StackOverflow answer](https://stackoverflow.com/a/44953341) on doing these forward fills with PySpark. 
+A recent example of this is doing a forward fill: filling `null` values with the last known non-`null` value, leaving leading `null`s alone. In Pandas, this is very easy. I used it in my [recent post](/posts/periods-since-time-series-events/) about efficiently finding the time since the last event in a time series. This post is basically an explanation of [this StackOverflow answer](https://stackoverflow.com/a/44953341) on doing forward fills with PySpark. 
 
 Imagine you are measuring the temperature in two spots in your back yard, one in the shade and one in the sun. You record a measurement every half hour so you can compare them. However, you got the cheapest possible digital thermometer, so a lot of the measurements end up missing. Your data may look something like this:
 
@@ -91,7 +91,6 @@ In Pandas, this is easy. We just do a [groupby without aggregation](posts/groupb
 ```python
 df_filled = df.groupby('location')\
               .apply(lambda group: group.fillna(method='ffill'))
-    
 df_filled
 ```
 
@@ -167,7 +166,7 @@ In Spark, things get a bit trickier. The key ingredients are:
 
 1. The `pyspark.sql.Window` object. A window, which may be familiar if you use SQL, acts kind of like a group in a group by, except it slides over the data, allowing you to more easily return a value for every row (instead of doing an aggregation). A window is specified in PySpark with `.rowsBetween`, which takes the indices of the rows to include relative to the current row (where the value will be returned in the output). The rows in the window can be ordered using `.orderBy`, and partitioned using `.partitionBy`. Partitioning over a column ensures that only rows with the same value of that column will end up in a window together, acting similarly to a group by.
 
-2. The `pyspark.sql` window function `last`. As its name suggests, `last` returns the last value in the window (implying that the window must have a meaningful ordering). It takes an optional argument `ignorenulls` which, when set to true, causes `last` to return the last non-`null` value in the window, if such a value exists.
+2. The `pyspark.sql` window function `last`. As its name suggests, `last` returns the last value in the window (implying that the window must have a meaningful ordering). It takes an optional argument `ignorenulls` which, when set to `True`, causes `last` to return the last non-`null` value in the window, if such a value exists.
 
 The strategy to forward fill in Spark is as follows. First we define a window, which is ordered in time, and which includes all the rows from the beginning of time up until the current row. We achieve this here simply by selecting the rows in the window as being the `rowsBetween` `-sys.maxint` (the largest negative value possible), and `0` (the current row). Specifying too large of a value for the rows doesn't cause any errors, so we can just use a very large number to be sure our window reaches until the very beginning of the dataframe. If you need to optimize memory usage, you can make your job much more efficient by finding the maximal number of consecutive `null`s in your dataframe and only taking a large enough window to include all of those plus one non-`null` value. We partition the window by the `location` column to make sure that gaps only get filled with previous measurements from the same location.
  
