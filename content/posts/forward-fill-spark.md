@@ -172,7 +172,7 @@ The strategy to forward fill in Spark is as follows. First we define a window, w
  
 We act with `last` over the window we have defined, specifying `ignorenulls=True`. If the current row is non-`null`, then the output will just be the value of current row. However, if the current row *is* `null`, then the function will return the most recent (last) non-`null` value in the window.
 
-For a Spark data frame with the same data as we just saw in Pandas, the code looks like this:
+For a Spark dataframe with the same data as we just saw in Pandas, the code looks like this:
 
 
 ```python
