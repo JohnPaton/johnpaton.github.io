@@ -2,7 +2,7 @@ echo "Building site..."
 pelican -d -s ./publishconf.py
 echo "Updating content..."
 cd ../jp.gh.io-master
-git reset --hard origin/master
+git pull
 rm -r *
 cp -r ../johnpaton.github.io/output/* .
 git add *

@@ -95,7 +95,7 @@ PAGE_SAVE_AS = '{slug}/index.html'
 
 DEFAULT_PAGINATION = 10
 
-STATIC_PATHS = ['images','styles','static']
+STATIC_PATHS = ['images','styles','static', 'posts/*']
 ARTICLE_EXCLUDES  = STATIC_PATHS
 
 # Uncomment following line if you want document-relative URLs when developing
@@ -120,3 +120,6 @@ SITEMAP = {
 }
 
 JINJA_ENVIRONMENT = {'extensions': ['jinja2.ext.do']}
+
+#MATH_JAX = {'responsive':True,'linebreak_automatic':True}
+

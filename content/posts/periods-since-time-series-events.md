@@ -382,7 +382,8 @@ count.plot(figsize=(12,5))
 resets.plot()
 since_accident.plot()
 plt.legend(['count','baseline','periods since accident'],loc='best')
-plt.ylabel('periods'); plt.xlabel('date'); plt.title('Periods since severity 1 accident in Amsterdam');
+plt.ylabel('periods'); plt.xlabel('date'); 
+plt.title('Periods since severity 1 accident in Amsterdam');
 ```
 
 
@@ -406,9 +407,11 @@ def periods_since_accident(group):
 
 df_report = df_periodic.groupby(level=0).apply(periods_since_accident)
 
-report_cols = ['periods_since_severity_1','periods_since_severity_2','periods_since_severity_3']
+report_cols = ['periods_since_severity_1', 'periods_since_severity_2',
+               'periods_since_severity_3']
 df_report.loc['Amsterdam'][report_cols].plot(figsize=(12,5));
-plt.title('Periods since accident in Amsterdam'); plt.xlabel('date'); plt.ylabel('periods');
+plt.title('Periods since accident in Amsterdam'); 
+plt.xlabel('date'); plt.ylabel('periods');
 ```
 
 
