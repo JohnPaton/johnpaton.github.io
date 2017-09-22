@@ -87,7 +87,10 @@ main .pagination{margin:4% 8%;
 	
 main .social-share p{font-size:.8em}
 
-main article{margin:0 8% 2%}
+main article{margin:0 8% 2%;
+    max-width: 50em;
+    line-height: 1.5em
+}
 
 main article header h1,main article header h2{margin-bottom:0}
 
@@ -167,7 +170,17 @@ main article table.dataframe tr:nth-child(even) {background: #fff}
 main article table.dataframe tr:nth-child(odd) {background: #d7ffc2}
 main article table.dataframe tr:hover{background:#C0C0C0}
 
-	
+main article div.math{
+    overflow-x:auto;
+    overflow-y:hidden;
+}
+
+main article img{
+    margin-left:auto;
+    margin-right:auto;
+    display:block;
+}	
+
 main footer{padding-top:4px;
 	border-top:1px solid #eee}
 	

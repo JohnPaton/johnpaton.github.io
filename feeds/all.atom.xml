@@ -1,5 +1,221 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>John Paton</title><link href="https://johnpaton.github.io/" rel="alternate"></link><link href="https://johnpaton.github.io/feeds/all.atom.xml" rel="self"></link><id>https://johnpaton.github.io/</id><updated>2017-07-21T23:30:00-01:00</updated><entry><title>Creating a responsive bar chart for my tags</title><link href="https://johnpaton.github.io/posts/responsive-bar-chart/" rel="alternate"></link><published>2017-07-21T23:30:00-01:00</published><updated>2017-07-21T23:30:00-01:00</updated><author><name>John Paton</name></author><id>tag:johnpaton.github.io,2017-07-21:/posts/responsive-bar-chart/</id><summary type="html">&lt;p&gt;Today I decided that, since I'm a data kind of guy, I would like my tags page to show a bar chart of how many posts per tag I've made. The idea was to basically have a list of tags on the left, with a bar chart on the right showing how many articles are tagged with that tag, and the bars scaling to the window size. It turned out to be more complicated than I was expecting.&lt;/p&gt;</summary><content type="html">&lt;p&gt;Today I decided that, since I'm a data kind of guy, I would like my &lt;a href="/tags"&gt;tags page&lt;/a&gt; to show a bar chart of how many posts per tag I've made. The idea was to basically have a list of tags on the left, with a bar chart on the right showing how many articles are tagged with that tag. Obviously the bars should scale to the size of the window. If you were too lazy to click the link, the result I came up with (at the time of writing) looks like this:&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>John Paton</title><link href="https://johnpaton.github.io/" rel="alternate"></link><link href="https://johnpaton.github.io/feeds/all.atom.xml" rel="self"></link><id>https://johnpaton.github.io/</id><updated>2017-09-22T20:00:00-01:00</updated><entry><title>Forward-fill missing data in Spark</title><link href="https://johnpaton.github.io/posts/forward-fill-spark/" rel="alternate"></link><published>2017-09-22T20:00:00-01:00</published><updated>2017-09-22T20:00:00-01:00</updated><author><name>John Paton</name></author><id>tag:johnpaton.github.io,2017-09-22:/posts/forward-fill-spark/</id><summary type="html">&lt;p&gt;Since I've started using Apache Spark, one of the frequent annoyances I've come up against is having an idea that would be very easy to implement in Pandas, but turns out to require a really verbose workaround in Spark. A recent example of this is doing a forward fill (filling &lt;code&gt;null&lt;/code&gt; values with the last known non-&lt;code&gt;null&lt;/code&gt; value).&lt;/p&gt;</summary><content type="html">&lt;p&gt;Since I've started using Apache Spark, one of the frequent annoyances I've come up against is having an idea that would be very easy to implement in Pandas, but turns out to require a really verbose workaround in Spark. Such is the price of scalability. But that does make it extra satisfying when I &lt;em&gt;do&lt;/em&gt; manage to get done what I'm trying to do. &lt;/p&gt;
+&lt;p&gt;A recent example of this is doing a forward fill: filling &lt;code&gt;null&lt;/code&gt; values with the last known non-&lt;code&gt;null&lt;/code&gt; value, leaving leading &lt;code&gt;null&lt;/code&gt;s alone. In Pandas, this is very easy. I used it in my &lt;a href="/posts/periods-since-time-series-events/"&gt;recent post&lt;/a&gt; about efficiently finding the time since the last event in a time series. This post is basically an explanation of &lt;a href="https://stackoverflow.com/a/44953341"&gt;this StackOverflow answer&lt;/a&gt; on doing these forward fills with PySpark. &lt;/p&gt;
+&lt;p&gt;Imagine you are measuring the temperature in two spots in your back yard, one in the shade and one in the sun. You record a measurement every half hour so you can compare them. However, you got the cheapest possible digital thermometer, so a lot of the measurements end up missing. Your data may look something like this:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div&gt;
+&lt;table border="1" class="dataframe"&gt;
+  &lt;thead&gt;
+    &lt;tr style="text-align: right;"&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;time&lt;/th&gt;
+      &lt;th&gt;location&lt;/th&gt;
+      &lt;th&gt;temperature&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;th&gt;0&lt;/th&gt;
+      &lt;td&gt;2017-09-09 12:00:00&lt;/td&gt;
+      &lt;td&gt;shade&lt;/td&gt;
+      &lt;td&gt;18.830184&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;1&lt;/th&gt;
+      &lt;td&gt;2017-09-09 12:00:00&lt;/td&gt;
+      &lt;td&gt;sun&lt;/td&gt;
+      &lt;td&gt;NaN&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;2&lt;/th&gt;
+      &lt;td&gt;2017-09-09 12:30:00&lt;/td&gt;
+      &lt;td&gt;shade&lt;/td&gt;
+      &lt;td&gt;NaN&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;...&lt;/th&gt;
+      &lt;td&gt;...&lt;/td&gt;
+      &lt;td&gt;...&lt;/td&gt;
+      &lt;td&gt;...&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;189&lt;/th&gt;
+      &lt;td&gt;2017-09-11 11:00:00&lt;/td&gt;
+      &lt;td&gt;sun&lt;/td&gt;
+      &lt;td&gt;17.595510&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;190&lt;/th&gt;
+      &lt;td&gt;2017-09-11 11:30:00&lt;/td&gt;
+      &lt;td&gt;shade&lt;/td&gt;
+      &lt;td&gt;NaN&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;191&lt;/th&gt;
+      &lt;td&gt;2017-09-11 11:30:00&lt;/td&gt;
+      &lt;td&gt;sun&lt;/td&gt;
+      &lt;td&gt;18.630506&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;192 rows × 3 columns&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;img alt="png" src="/images/temps_unfilled.png"&gt;&lt;/p&gt;
+&lt;p&gt;To compare the measurements each half hour (or maybe to do some machine learning), we need a way of filling in the missing measurements. If the value we are measuring (in this case temperature) changes slowly with respect to how frequently we make a measurement, then a forward fill may be a reasonable choice. &lt;/p&gt;
+&lt;p&gt;In Pandas, this is easy. We just do a &lt;a href="posts/groupby-without-aggregation/"&gt;groupby without aggregation&lt;/a&gt;, and to each group apply the &lt;code&gt;.fillna&lt;/code&gt; method, specifying specifying &lt;code&gt;method='ffill'&lt;/code&gt;, also known as &lt;code&gt;method='pad'&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_filled&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;groupby&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;location&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;\
+              &lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;apply&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;lambda&lt;/span&gt; &lt;span class="n"&gt;group&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;group&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;fillna&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;method&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;ffill&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+
+&lt;span class="n"&gt;df_filled&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div&gt;
+&lt;table border="1" class="dataframe"&gt;
+  &lt;thead&gt;
+    &lt;tr style="text-align: right;"&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;time&lt;/th&gt;
+      &lt;th&gt;location&lt;/th&gt;
+      &lt;th&gt;temperature&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;th&gt;0&lt;/th&gt;
+      &lt;td&gt;2017-09-09 12:00:00&lt;/td&gt;
+      &lt;td&gt;shade&lt;/td&gt;
+      &lt;td&gt;18.830184&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;1&lt;/th&gt;
+      &lt;td&gt;2017-09-09 12:00:00&lt;/td&gt;
+      &lt;td&gt;sun&lt;/td&gt;
+      &lt;td&gt;NaN&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;2&lt;/th&gt;
+      &lt;td&gt;2017-09-09 12:30:00&lt;/td&gt;
+      &lt;td&gt;shade&lt;/td&gt;
+      &lt;td&gt;18.830184&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;...&lt;/th&gt;
+      &lt;td&gt;...&lt;/td&gt;
+      &lt;td&gt;...&lt;/td&gt;
+      &lt;td&gt;...&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;189&lt;/th&gt;
+      &lt;td&gt;2017-09-11 11:00:00&lt;/td&gt;
+      &lt;td&gt;sun&lt;/td&gt;
+      &lt;td&gt;17.595510&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;190&lt;/th&gt;
+      &lt;td&gt;2017-09-11 11:30:00&lt;/td&gt;
+      &lt;td&gt;shade&lt;/td&gt;
+      &lt;td&gt;18.226763&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;191&lt;/th&gt;
+      &lt;td&gt;2017-09-11 11:30:00&lt;/td&gt;
+      &lt;td&gt;sun&lt;/td&gt;
+      &lt;td&gt;18.630506&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;192 rows × 3 columns&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;p&gt;We can see the effect this had on the data by plotting. We hope to end up with nice, regular measurements without having distorted the overall shape too much:&lt;/p&gt;
+&lt;p&gt;&lt;img alt="png" src="/images/temps_filled.png"&gt;&lt;/p&gt;
+&lt;p&gt;In Spark, things get a bit trickier. The key ingredients are:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;The &lt;code&gt;pyspark.sql.Window&lt;/code&gt; object. A window, which may be familiar if you use SQL, acts kind of like a group in a group by, except it slides over the data, allowing you to more easily return a value for every row (instead of doing an aggregation). A window is specified in PySpark with &lt;code&gt;.rowsBetween&lt;/code&gt;, which takes the indices of the rows to include relative to the current row (where the value will be returned in the output). The rows in the window can be ordered using &lt;code&gt;.orderBy&lt;/code&gt;, and partitioned using &lt;code&gt;.partitionBy&lt;/code&gt;. Partitioning over a column ensures that only rows with the same value of that column will end up in a window together, acting similarly to a group by.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;The &lt;code&gt;pyspark.sql&lt;/code&gt; window function &lt;code&gt;last&lt;/code&gt;. As its name suggests, &lt;code&gt;last&lt;/code&gt; returns the last value in the window (implying that the window must have a meaningful ordering). It takes an optional argument &lt;code&gt;ignorenulls&lt;/code&gt; which, when set to true, causes &lt;code&gt;last&lt;/code&gt; to return the last non-&lt;code&gt;null&lt;/code&gt; value in the window, if such a value exists.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;The strategy to forward fill in Spark is as follows. First we define a window, which is ordered in time, and which includes all the rows from the beginning of time up until the current row. We achieve this here simply by selecting the rows in the window as being the &lt;code&gt;rowsBetween&lt;/code&gt; &lt;code&gt;-sys.maxint&lt;/code&gt; (the largest negative value possible), and &lt;code&gt;0&lt;/code&gt; (the current row). Specifying too large of a value for the rows doesn't cause any errors, so we can just use a very large number to be sure our window reaches until the very beginning of the dataframe. If you need to optimize memory usage, you can make your job much more efficient by finding the maximal number of consecutive &lt;code&gt;null&lt;/code&gt;s in your dataframe and only taking a large enough window to include all of those plus one non-&lt;code&gt;null&lt;/code&gt; value. We partition the window by the &lt;code&gt;location&lt;/code&gt; column to make sure that gaps only get filled with previous measurements from the same location.&lt;/p&gt;
+&lt;p&gt;We act with &lt;code&gt;last&lt;/code&gt; over the window we have defined, specifying &lt;code&gt;ignorenulls=True&lt;/code&gt;. If the current row is non-&lt;code&gt;null&lt;/code&gt;, then the output will just be the value of current row. However, if the current row &lt;em&gt;is&lt;/em&gt; &lt;code&gt;null&lt;/code&gt;, then the function will return the most recent (last) non-&lt;code&gt;null&lt;/code&gt; value in the window.&lt;/p&gt;
+&lt;p&gt;For a Spark data frame with the same data as we just saw in Pandas, the code looks like this:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# the same data as before&lt;/span&gt;
+&lt;span class="n"&gt;spark_df&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;show&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;10&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; 
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;+-------------------+--------+------------------+
+|               time|location|       temperature|
++-------------------+--------+------------------+
+|2017-09-09 12:00:00|   shade|18.830184076113213|
+|2017-09-09 12:00:00|     sun|              null|
+|2017-09-09 12:30:00|   shade|              null|
+|2017-09-09 12:30:00|     sun| 21.55237663805009|
+|2017-09-09 13:00:00|   shade| 18.59059750682235|
+|2017-09-09 13:00:00|     sun|              null|
+|2017-09-09 13:30:00|   shade|              null|
+|2017-09-09 13:30:00|     sun|22.587784977960474|
+|2017-09-09 14:00:00|   shade|19.101003724324197|
+|2017-09-09 14:00:00|     sun|20.548896316341516|
++-------------------+--------+------------------+
+only showing top 10 rows
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;pyspark.sql&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;Window&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;pyspark.sql.functions&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;last&lt;/span&gt;
+
+&lt;span class="c1"&gt;# define the window&lt;/span&gt;
+&lt;span class="n"&gt;window&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Window&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;partitionBy&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;location&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;\
+               &lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;orderBy&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;time&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;\
+               &lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;rowsBetween&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;maxsize&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="c1"&gt;# define the forward-filled column&lt;/span&gt;
+&lt;span class="n"&gt;filled_column&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;last&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;spark_df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;temperature&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;ignorenulls&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;over&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;window&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="c1"&gt;# do the fill&lt;/span&gt;
+&lt;span class="n"&gt;spark_df_filled&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;spark_df&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;withColumn&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;temp_filled_spark&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;filled_column&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="c1"&gt;# show off our glorious achievements&lt;/span&gt;
+&lt;span class="n"&gt;spark_df_filled&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;orderBy&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;time&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;location&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;show&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;10&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;      
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;+-------------------+--------+------------------+------------------+
+|               time|location|       temperature| temp_filled_spark|
++-------------------+--------+------------------+------------------+
+|2017-09-09 12:00:00|   shade|18.830184076113213|18.830184076113213|
+|2017-09-09 12:00:00|     sun|              null|              null|
+|2017-09-09 12:30:00|   shade|              null|18.830184076113213|
+|2017-09-09 12:30:00|     sun| 21.55237663805009| 21.55237663805009|
+|2017-09-09 13:00:00|   shade| 18.59059750682235| 18.59059750682235|
+|2017-09-09 13:00:00|     sun|              null| 21.55237663805009|
+|2017-09-09 13:30:00|   shade|              null| 18.59059750682235|
+|2017-09-09 13:30:00|     sun|22.587784977960474|22.587784977960474|
+|2017-09-09 14:00:00|   shade|19.101003724324197|19.101003724324197|
+|2017-09-09 14:00:00|     sun|20.548896316341516|20.548896316341516|
++-------------------+--------+------------------+------------------+
+only showing top 10 rows
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Success! Note that a backward-fill is achieved in a very similar way. The only changes are: &lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Define the window over all future rows instead of all past rows: &lt;code&gt;.rowsBetween(-sys.maxsize,0)&lt;/code&gt; becomes &lt;code&gt;.rowsBetween(0,sys.maxsize)&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Use &lt;code&gt;first&lt;/code&gt; from &lt;code&gt;pyspark.sql.functions&lt;/code&gt; instead of &lt;code&gt;last&lt;/code&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;That's it! Happy filling!&lt;/p&gt;</content><category term="python"></category><category term="spark"></category><category term="data"></category><category term="pandas"></category><category term="time series"></category></entry><entry><title>Creating a responsive bar chart for my tags</title><link href="https://johnpaton.github.io/posts/responsive-bar-chart/" rel="alternate"></link><published>2017-07-21T23:30:00-01:00</published><updated>2017-07-21T23:30:00-01:00</updated><author><name>John Paton</name></author><id>tag:johnpaton.github.io,2017-07-21:/posts/responsive-bar-chart/</id><summary type="html">&lt;p&gt;Today I decided that, since I'm a data kind of guy, I would like my tags page to show a bar chart of how many posts per tag I've made. The idea was to basically have a list of tags on the left, with a bar chart on the right showing how many articles are tagged with that tag, and the bars scaling to the window size. It turned out to be more complicated than I was expecting.&lt;/p&gt;</summary><content type="html">&lt;p&gt;Today I decided that, since I'm a data kind of guy, I would like my &lt;a href="/tags"&gt;tags page&lt;/a&gt; to show a bar chart of how many posts per tag I've made. The idea was to basically have a list of tags on the left, with a bar chart on the right showing how many articles are tagged with that tag. Obviously the bars should scale to the size of the window. If you were too lazy to click the link, the result I came up with (at the time of writing) looks like this:&lt;/p&gt;
 &lt;p&gt;&lt;img alt="The graph" src="/images/tag-graph.png"&gt;&lt;/p&gt;
 &lt;p&gt;It turned out to be more complicated than I was expecting since I had to work around the constraints of a static site. My solution basically consists of 3 parts:&lt;/p&gt;
 &lt;ol&gt;
@@ -672,7 +888,8 @@ dtype: float64
 &lt;span class="n"&gt;resets&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;plot&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
 &lt;span class="n"&gt;since_accident&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;plot&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
 &lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;legend&lt;/span&gt;&lt;span class="p"&gt;([&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;count&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;baseline&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;periods since accident&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt;&lt;span class="n"&gt;loc&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;best&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ylabel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;periods&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt; &lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;xlabel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;date&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt; &lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;title&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Periods since severity 1 accident in Amsterdam&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ylabel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;periods&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt; &lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;xlabel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;date&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt; 
+&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;title&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Periods since severity 1 accident in Amsterdam&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
@@ -691,9 +908,11 @@ dtype: float64
 
 &lt;span class="n"&gt;df_report&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;df_periodic&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;groupby&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;level&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;apply&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;periods_since_accident&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 
-&lt;span class="n"&gt;report_cols&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;periods_since_severity_1&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;periods_since_severity_2&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;periods_since_severity_3&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;span class="n"&gt;report_cols&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;periods_since_severity_1&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;periods_since_severity_2&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+               &lt;span class="s1"&gt;&amp;#39;periods_since_severity_3&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
 &lt;span class="n"&gt;df_report&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;loc&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Amsterdam&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;][&lt;/span&gt;&lt;span class="n"&gt;report_cols&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;plot&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;figsize&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;12&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="p"&gt;));&lt;/span&gt;
-&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;title&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Periods since accident in Amsterdam&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt; &lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;xlabel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;date&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt; &lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ylabel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;periods&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;title&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Periods since accident in Amsterdam&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt; 
+&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;xlabel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;date&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt; &lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ylabel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;periods&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
