@@ -215,7 +215,7 @@ main article div table#tags td{
 main article td.tag{
   text-align:right;
   border:0;
-  min-width:6em;
+  min-width:8em;
   vertical-align: middle;
   font-size: 1.1em;
 }

@@ -11,7 +11,7 @@ summary: At KPMG, like (I imagine) at most companies, we have a custom color pal
 
 
 
-
+*Update 03/10/2017: The axes.prop_cycle property is now only supported as a single line, no line breaks. This has not been updated in the downloadable template but may be fixed in a future release. See [the issue on GitHub](https://github.com/matplotlib/matplotlib/issues/9184) for more info.*
 
 At KPMG, like (I imagine) at most companies, we have a custom color palette that presentations and other materials are supposed to conform to. I actually quite like it when things I produce have a consistent look and feel, so I decided to find out how to make a custom color palette in [matplotlib](https://matplotlib.org/). Turns out that it's super easy.
 
