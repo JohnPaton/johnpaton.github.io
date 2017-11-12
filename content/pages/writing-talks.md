@@ -1,4 +1,4 @@
-title: Other writings and talks
+title: Other writing and talks
 slug: writing-talks
 type: text
 author: John Paton

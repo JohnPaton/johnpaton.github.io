@@ -73,10 +73,10 @@ AUTHOR_FEED_RSS = None
 DISPLAY_PAGES_ON_MENU = False
 DISPLAY_CATEGORIES_ON_MENU = False
 
-LINKS = (('blog home','/'),
+LINKS = (('blog home', '/'),
          ('tags', '/tags'),
          ('about me', '/about'),
-         ('writings & talks', '/writing-talks'),
+         ('writing & talks', '/writing-talks'),
          )
 
 
