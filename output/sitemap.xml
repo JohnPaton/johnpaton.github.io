@@ -5,42 +5,49 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>http://johnpaton.net/</loc>
-<lastmod>2017-10-04T20:15:49-00:00</lastmod>
+<lastmod>2017-11-12T14:23:54-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>http://johnpaton.net/archives.html</loc>
-<lastmod>2017-10-04T20:15:49-00:00</lastmod>
+<lastmod>2017-11-12T14:23:54-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>http://johnpaton.net/tags.html</loc>
-<lastmod>2017-10-04T20:15:49-00:00</lastmod>
+<lastmod>2017-11-12T14:23:54-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>http://johnpaton.net/categories.html</loc>
-<lastmod>2017-10-04T20:15:49-00:00</lastmod>
+<lastmod>2017-11-12T14:23:54-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>http://johnpaton.net/404.html</loc>
-<lastmod>2017-10-04T20:15:49-00:00</lastmod>
+<lastmod>2017-11-12T14:23:54-00:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.6</priority>
 </url>
 
 <url>
 <loc>http://johnpaton.net/about/</loc>
-<lastmod>2017-10-04T20:15:49-00:00</lastmod>
+<lastmod>2017-11-12T14:23:54-00:00</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.6</priority>
+</url>
+
+<url>
+<loc>http://johnpaton.net/writing-talks/</loc>
+<lastmod>2017-11-12T14:23:54-00:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.6</priority>
 </url>

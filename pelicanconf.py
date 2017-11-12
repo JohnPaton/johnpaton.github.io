@@ -76,6 +76,7 @@ DISPLAY_CATEGORIES_ON_MENU = False
 LINKS = (('blog home','/'),
          ('tags', '/tags'),
          ('about me', '/about'),
+         ('writings & talks', '/writing-talks'),
          )
 
 
@@ -83,7 +84,8 @@ LINKS = (('blog home','/'),
 SOCIAL = (('github', 'http://www.github.com/johnpaton'),
           ('twitter', 'http://www.twitter.com/jd_paton'),
           ('linkedin', 'http://linkedin.johnpaton.net'),
-          ('rss', '/feeds/all.atom.xml')
+          ('file-pdf-o', '/static/johnpaton-cv.pdf'),
+          ('rss', '/feeds/all.atom.xml'),
           )
 
 # URL settings

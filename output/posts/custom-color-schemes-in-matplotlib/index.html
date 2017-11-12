@@ -71,6 +71,7 @@
           <li><a href="/">blog home</a></li>
           <li><a href="/tags">tags</a></li>
           <li><a href="/about">about me</a></li>
+          <li><a href="/writing-talks">writings & talks</a></li>
         </ul>
       </nav>
 
@@ -78,6 +79,7 @@
         <li><a class="sc-github" href="http://www.github.com/johnpaton" target="_blank"><i class="fa fa-github"></i></a></li>
         <li><a class="sc-twitter" href="http://www.twitter.com/jd_paton" target="_blank"><i class="fa fa-twitter"></i></a></li>
         <li><a class="sc-linkedin" href="http://linkedin.johnpaton.net" target="_blank"><i class="fa fa-linkedin"></i></a></li>
+        <li><a class="sc-file-pdf-o" href="/static/johnpaton-cv.pdf" target="_blank"><i class="fa fa-file-pdf-o"></i></a></li>
         <li><a class="sc-rss" href="/feeds/all.atom.xml" target="_blank"><i class="fa fa-rss"></i></a></li>
       </ul>
     </div>
@@ -101,7 +103,7 @@
 
 
   <div>
-    <p><em>Update 03/10/2017: The axes.prop_cycle property is now only supported as a single line, no line breaks. This has not been updated in the downloadable template but may be fixed in a future release. See <a href="https://github.com/matplotlib/matplotlib/issues/9184">the issue on GitHub</a> for more info.</em></p>
+    <p><strong>Update 03/10/2017</strong>: The <code>axes.prop_cycle</code> property is now only supported as a single line, no line breaks. This has not been updated in the downloadable template but may be fixed in a future release. See <a href="https://github.com/matplotlib/matplotlib/issues/9184">the issue on GitHub</a> for more info.</p>
 <p>At KPMG, like (I imagine) at most companies, we have a custom color palette that presentations and other materials are supposed to conform to. I actually quite like it when things I produce have a consistent look and feel, so I decided to find out how to make a custom color palette in <a href="https://matplotlib.org/">matplotlib</a>. Turns out that it's super easy.</p>
 <p>The first step is to create a <code>.mplstyle</code> file for your color scheme. These can contain a bunch of options, but you can download a sample <a href="http://matplotlib.org/_static/matplotlibrc">here</a>. Way down in line 337 (at the time of writing), you will find the following lines:</p>
 <div class="highlight"><pre><span></span><span class="c1">#axes.prop_cycle    : cycler(&#39;color&#39;,</span>

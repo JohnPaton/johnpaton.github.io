@@ -89,9 +89,9 @@ What about at the first light? We want to know the expectation value of *the max
 
 The probability that the counter displays a waiting time is less than some time $t$ is given by
 
-$$ \tilde F(t) = P(t_{\text{count}} \le t) = \frac{t}{80}. $$
+$$ \tilde{F}(t) = P(t_{\text{count}} \le t) = \frac{t}{80}. $$
 
-$\tilde F(t)$ here is the Cumulative Density Function (CDF) for our uniformly distributed counter time. 
+$\tilde{F}(t)$ here is the Cumulative Density Function (CDF) for our uniformly distributed counter time. 
 
 Now, there is a 50% chance that the light will be green, in which case our waiting time is zero, regardless of the value displayed on the counter. This means that the probability of the waiting time being less than or equal to zero is already $1/2$, and it grows linearly to $1$ for a waiting time up to $80$ seconds. So including the chance of a green light, the CDF for our waiting time is
 
@@ -199,7 +199,7 @@ There are two questions to answer: What should the cutoff be for multiple uses o
 
 Let's begin with the cutoff. When Calvin comes to a red light, he must decide whether to use the wand or not. For a walk with $n$ lights, our strategy has been to consider the expected maximum wait encountered during the next $n-1$ lights. We can generalize by considering the expected maximum wait at the number of remaining lights we expect to wait at, including the current one. If Calvin has $w$ uses of his wand, then he can skip up to $w$ lights, meaning he has to wait at $n-w$ lights in total, including the current one. So the cutoff for using the wand can be generalized to
 
-$$ E_{\tilde n} = 80 \cdot \left(1 - \frac{2}{\tilde n+1}\left(1-\frac{1}{2^{\tilde n+1}}\right)\right),\ \tilde n = n - w. $$
+$$ E_{\tilde{n}} = 80 \cdot \left(1 - \frac{2}{\tilde{n}+1}\left(1-\frac{1}{2^{\tilde{n}+1}}\right)\right),\ \tilde{n} = n - w. $$
 
 This new cutoff is smaller than the previous one when $w>1$, which makes sense since we would then like to be more liberal with our wand usage.
 
@@ -230,11 +230,11 @@ def wait_time_exp(n_lights, n_wands):
     """Calculate Calvin's total expected wait time on his journey home.
     
     Args:
-        n_lights (INT): The number of lights on the journey
-        n_wands (INT): The number of times Calvin can use his wand
+        n_lights (int): The number of lights on the journey
+        n_wands (int): The number of times Calvin can use his wand
     
     Returns:
-        FLOAT: The total expected time spent waiting at lights
+        float: The total expected time spent waiting at lights
     """
     # maximum time per timer
     counter_max = 80
