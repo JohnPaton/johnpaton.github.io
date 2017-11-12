@@ -71,6 +71,7 @@
           <li><a href="/">blog home</a></li>
           <li><a href="/tags">tags</a></li>
           <li><a href="/about">about me</a></li>
+          <li><a href="/writing-talks">writings & talks</a></li>
         </ul>
       </nav>
 
@@ -78,6 +79,7 @@
         <li><a class="sc-github" href="http://www.github.com/johnpaton" target="_blank"><i class="fa fa-github"></i></a></li>
         <li><a class="sc-twitter" href="http://www.twitter.com/jd_paton" target="_blank"><i class="fa fa-twitter"></i></a></li>
         <li><a class="sc-linkedin" href="http://linkedin.johnpaton.net" target="_blank"><i class="fa fa-linkedin"></i></a></li>
+        <li><a class="sc-file-pdf-o" href="/static/johnpaton-cv.pdf" target="_blank"><i class="fa fa-file-pdf-o"></i></a></li>
         <li><a class="sc-rss" href="/feeds/all.atom.xml" target="_blank"><i class="fa fa-rss"></i></a></li>
       </ul>
     </div>
@@ -165,8 +167,8 @@
 <p>We've already shown that the cutoff at the second-to-last light should be 20 seconds, as this situation is the same one as in part a) (assuming the wand hasn't been used yet). </p>
 <p>What about at the first light? We want to know the expectation value of <em>the maximum of</em> the next two waiting times. </p>
 <p>The probability that the counter displays a waiting time is less than some time <span class="math">\(t\)</span> is given by</p>
-<div class="math">$$ \tilde F(t) = P(t_{\text{count}} \le t) = \frac{t}{80}. $$</div>
-<p><span class="math">\(\tilde F(t)\)</span> here is the Cumulative Density Function (CDF) for our uniformly distributed counter time. </p>
+<div class="math">$$ \tilde{F}(t) = P(t_{\text{count}} \le t) = \frac{t}{80}. $$</div>
+<p><span class="math">\(\tilde{F}(t)\)</span> here is the Cumulative Density Function (CDF) for our uniformly distributed counter time. </p>
 <p>Now, there is a 50% chance that the light will be green, in which case our waiting time is zero, regardless of the value displayed on the counter. This means that the probability of the waiting time being less than or equal to zero is already <span class="math">\(1/2\)</span>, and it grows linearly to <span class="math">\(1\)</span> for a waiting time up to <span class="math">\(80\)</span> seconds. So including the chance of a green light, the CDF for our waiting time is</p>
 <div class="math">$$ F(t) = P(t_{\text{wait}} \le t) = \frac{1}{2} + \frac{1}{2}\frac{t}{80} .$$</div>
 <p>We are interested in the maximum expected waiting time for the last 2 lights in Calvin's journey, so that he knows what his cutoff should be at the first light. What is the relevant CDF? If the maximum of two random variables is less than a time <span class="math">\(t\)</span>, then each of the variables must be less than <span class="math">\(t\)</span> individually. Since we are assuming that the waiting times are independent, their probabilities factor, and we get the CDF</p>
@@ -255,7 +257,7 @@
 <p>Now we want full generalization to any number of lights and wand uses. It should be clear from the reliance of the calculation in b) on the results from a) that we can use a recursive strategy to calculate the total waiting time.</p>
 <p>There are two questions to answer: What should the cutoff be for multiple uses of the wand? And what is the recursive pattern for calculating the expected wait time?</p>
 <p>Let's begin with the cutoff. When Calvin comes to a red light, he must decide whether to use the wand or not. For a walk with <span class="math">\(n\)</span> lights, our strategy has been to consider the expected maximum wait encountered during the next <span class="math">\(n-1\)</span> lights. We can generalize by considering the expected maximum wait at the number of remaining lights we expect to wait at, including the current one. If Calvin has <span class="math">\(w\)</span> uses of his wand, then he can skip up to <span class="math">\(w\)</span> lights, meaning he has to wait at <span class="math">\(n-w\)</span> lights in total, including the current one. So the cutoff for using the wand can be generalized to</p>
-<div class="math">$$ E_{\tilde n} = 80 \cdot \left(1 - \frac{2}{\tilde n+1}\left(1-\frac{1}{2^{\tilde n+1}}\right)\right),\ \tilde n = n - w. $$</div>
+<div class="math">$$ E_{\tilde{n}} = 80 \cdot \left(1 - \frac{2}{\tilde{n}+1}\left(1-\frac{1}{2^{\tilde{n}+1}}\right)\right),\ \tilde{n} = n - w. $$</div>
 <p>This new cutoff is smaller than the previous one when <span class="math">\(w&gt;1\)</span>, which makes sense since we would then like to be more liberal with our wand usage.</p>
 <p>Now that we have the cutoff, we need the recursive pattern. Again we have three scenarios. If we have <span class="math">\(n\)</span> lights and <span class="math">\(w\)</span> wands to go, then the scenarios are:</p>
 <ul>
@@ -291,11 +293,11 @@
     <span class="sd">&quot;&quot;&quot;Calculate Calvin&#39;s total expected wait time on his journey home.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        n_lights (INT): The number of lights on the journey</span>
-<span class="sd">        n_wands (INT): The number of times Calvin can use his wand</span>
+<span class="sd">        n_lights (int): The number of lights on the journey</span>
+<span class="sd">        n_wands (int): The number of times Calvin can use his wand</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        FLOAT: The total expected time spent waiting at lights</span>
+<span class="sd">        float: The total expected time spent waiting at lights</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># maximum time per timer</span>
     <span class="n">counter_max</span> <span class="o">=</span> <span class="mi">80</span>
