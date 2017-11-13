@@ -3,7 +3,7 @@ slug: writing-talks
 type: text
 author: John Paton
 
-A (probaly incomplete) list of other things I've written and said, which are now scattered around the internet.
+A (probably incomplete) list of other things I've written and said, which are now scattered around the internet.
 
 <hr>
 <h5>2017</h5>
