@@ -19,7 +19,7 @@
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;"Hold up," you say, "you're making it unnecessarily difficult on yourself. Just use the &lt;code&gt;f.udf&lt;/code&gt; as a decorator!" That is indeed an attractive option. The code then condenses to:&lt;/p&gt;
+&lt;p&gt;"Hold up," you say, "you're making it unnecessarily difficult for yourself. Just use the &lt;code&gt;f.udf&lt;/code&gt; as a decorator!" That is indeed an attractive option. The code then condenses to:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nd"&gt;@f.udf&lt;/span&gt;
 &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;increment&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
     &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;
