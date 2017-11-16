@@ -8,11 +8,11 @@ status:
 description:
 type: text
 author: John Paton
-summary: One of the handy features that makes (Py)Spark more flexible than database tools like Hive for working with tabular data is the ease of creating User Defined Functions (UDFs). However, one thing that still remains a little annoying is that you have to separately define a function and declare it as a UDF. With four lines of code you can clean those definitions right up.
+summary: One of the handy features that makes (Py)Spark more flexible than database tools like Hive even for just transforming tabular data is the ease of creating User Defined Functions (UDFs). However, one thing that still remains a little annoying is that you have to separately define a function and declare it as a UDF. With four lines of code you can clean those definitions right up.
 
 Alternate title: *Clean up your Spark jobs with this one weird trick! Apache will hate you!*
 
-One of the handy features that makes (Py)Spark more flexible than Hive even for just transforming tabular data is the ease of creating User Defined Functions (UDFs). Although this is [also possible in Hive directly](https://community.hortonworks.com/articles/72414/how-to-create-a-custom-udf-for-hive-using-python.html), the ability to define and call UDFs directly in the Python code of your job makes life a lot easier and provides context to what you're doing. However, one thing that still remains a little annoying is separately defining a Python function and then having to declare it as a Spark UDF.
+One of the handy features that makes (Py)Spark more flexible than database tools like Hive even for just transforming tabular data is the ease of creating User Defined Functions (UDFs). Although this is [also possible in Hive directly](https://community.hortonworks.com/articles/72414/how-to-create-a-custom-udf-for-hive-using-python.html), the ability to define and call UDFs directly in the Python code of your job makes life a lot easier and provides context to what you're doing. However, one thing that still remains a little annoying is separately defining a Python function and then having to declare it as a Spark UDF.
 
 Consider the trivial example of incrementing all the values in a Spark DataFrame column by 1. We begin by writing the function, and then make a "UDF-ified" version that we can actually use in Spark.
 
