@@ -44,7 +44,7 @@ def increment(x):
 df = df.withColumn('col_plus_1', increment('col'))
 ```
 
-This is a lot better looking, but it comes at the cost of flexibility. The function `f.udf` optionally takes as a second argument the type of the UDF's output (in terms of the [`pyspark.sql.types`](http://spark.apache.org/docs/latest/api/python/pyspark.sql.html#module-pyspark.sql.types) types). Spark will by default convert UDF outputs to strings, which can be a hassle, especially for complex data types (like arrays), or when the precision is important (float vs. double). To avoid this stringy fate, we have to return to our old pattern:
+This is a lot better looking, but it comes at the cost of flexibility. The function `f.udf` optionally takes as a second argument the type of the UDF's output (in terms of the `pyspark.sql.types` [types](http://spark.apache.org/docs/latest/api/python/pyspark.sql.html#module-pyspark.sql.types)). Spark will by default convert UDF outputs to strings, which can be a hassle, especially for complex data types (like arrays), or when the precision is important (float vs. double). To avoid this stringy fate, we have to return to our old pattern:
 
 ```python
 import pyspark.sql.types as t
