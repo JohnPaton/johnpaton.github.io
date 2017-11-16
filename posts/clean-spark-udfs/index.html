@@ -35,12 +35,12 @@
     <meta name="msapplication-TileColor" content="#3aa500">
 
 <meta name="author" content="John Paton" />
-<meta name="description" content="One of the handy features that makes (Py)Spark more flexible than database tools like Hive for working with tabular data is the ease of creating User Defined Functions (UDFs). However, one thing that still remains a little annoying is that you have to separately define a function and declare it as a UDF. With four lines of code you can clean those definitions right up." />
+<meta name="description" content="One of the handy features that makes (Py)Spark more flexible than database tools like Hive even for just transforming tabular data is the ease of creating User Defined Functions (UDFs). However, one thing that still remains a little annoying is that you have to separately define a function and declare it as a UDF. With four lines of code you can clean those definitions right up." />
 <meta name="keywords" content="spark, python, data, snippets">
 
 <meta property="og:site_name" content="John Paton"/>
 <meta property="og:title" content="Cleaner Spark UDF definitions with a little decorator"/>
-<meta property="og:description" content="One of the handy features that makes (Py)Spark more flexible than database tools like Hive for working with tabular data is the ease of creating User Defined Functions (UDFs). However, one thing that still remains a little annoying is that you have to separately define a function and declare it as a UDF. With four lines of code you can clean those definitions right up."/>
+<meta property="og:description" content="One of the handy features that makes (Py)Spark more flexible than database tools like Hive even for just transforming tabular data is the ease of creating User Defined Functions (UDFs). However, one thing that still remains a little annoying is that you have to separately define a function and declare it as a UDF. With four lines of code you can clean those definitions right up."/>
 <meta property="og:locale" content="en_US"/>
 <meta property="og:url" content="http://johnpaton.net/posts/clean-spark-udfs/"/>
 <meta property="og:type" content="article"/>
@@ -105,7 +105,7 @@
 
   <div>
     <p>Alternate title: <em>Clean up your Spark jobs with this one weird trick! Apache will hate you!</em></p>
-<p>One of the handy features that makes (Py)Spark more flexible than Hive even for just transforming tabular data is the ease of creating User Defined Functions (UDFs). Although this is <a href="https://community.hortonworks.com/articles/72414/how-to-create-a-custom-udf-for-hive-using-python.html">also possible in Hive directly</a>, the ability to define and call UDFs directly in the Python code of your job makes life a lot easier and provides context to what you're doing. However, one thing that still remains a little annoying is separately defining a Python function and then having to declare it as a Spark UDF.</p>
+<p>One of the handy features that makes (Py)Spark more flexible than database tools like Hive even for just transforming tabular data is the ease of creating User Defined Functions (UDFs). Although this is <a href="https://community.hortonworks.com/articles/72414/how-to-create-a-custom-udf-for-hive-using-python.html">also possible in Hive directly</a>, the ability to define and call UDFs directly in the Python code of your job makes life a lot easier and provides context to what you're doing. However, one thing that still remains a little annoying is separately defining a Python function and then having to declare it as a Spark UDF.</p>
 <p>Consider the trivial example of incrementing all the values in a Spark DataFrame column by 1. We begin by writing the function, and then make a "UDF-ified" version that we can actually use in Spark.</p>
 <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pyspark.sql.functions</span> <span class="kn">as</span> <span class="nn">f</span>
 
