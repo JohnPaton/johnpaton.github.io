@@ -34,7 +34,7 @@ We can now use our newly declared `increment_udf` to increment all the values in
 df = df.withColumn('col_plus_1', increment_udf('col'))
 ```
 
-"Hold up," you say, "you're making it unnecessarily difficult on yourself. Just use the `f.udf` as a decorator!" That is indeed an attractive option. The code then condenses to:
+"Hold up," you say, "you're making it unnecessarily difficult for yourself. Just use the `f.udf` as a decorator!" That is indeed an attractive option. The code then condenses to:
 
 ```python
 @f.udf
