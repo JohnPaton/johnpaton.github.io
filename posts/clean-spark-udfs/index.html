@@ -133,7 +133,7 @@
 </pre></div>
 
 
-<p>This is a lot better looking, but it comes at the cost of flexibility. The function <code>f.udf</code> optionally takes as a second argument the type of the UDF's output (in terms of the <a href="http://spark.apache.org/docs/latest/api/python/pyspark.sql.html#module-pyspark.sql.types"><code>pyspark.sql.types</code></a> types). Spark will by default convert UDF outputs to strings, which can be a hassle, especially for complex data types (like arrays), or when the precision is important (float vs. double). To avoid this stringy fate, we have to return to our old pattern:</p>
+<p>This is a lot better looking, but it comes at the cost of flexibility. The function <code>f.udf</code> optionally takes as a second argument the type of the UDF's output (in terms of the <code>pyspark.sql.types</code> <a href="http://spark.apache.org/docs/latest/api/python/pyspark.sql.html#module-pyspark.sql.types">types</a>). Spark will by default convert UDF outputs to strings, which can be a hassle, especially for complex data types (like arrays), or when the precision is important (float vs. double). To avoid this stringy fate, we have to return to our old pattern:</p>
 <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pyspark.sql.types</span> <span class="kn">as</span> <span class="nn">t</span>
 
 <span class="c1"># define the function</span>

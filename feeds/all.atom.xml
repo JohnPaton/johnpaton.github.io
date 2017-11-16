@@ -28,7 +28,7 @@
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;This is a lot better looking, but it comes at the cost of flexibility. The function &lt;code&gt;f.udf&lt;/code&gt; optionally takes as a second argument the type of the UDF's output (in terms of the &lt;a href="http://spark.apache.org/docs/latest/api/python/pyspark.sql.html#module-pyspark.sql.types"&gt;&lt;code&gt;pyspark.sql.types&lt;/code&gt;&lt;/a&gt; types). Spark will by default convert UDF outputs to strings, which can be a hassle, especially for complex data types (like arrays), or when the precision is important (float vs. double). To avoid this stringy fate, we have to return to our old pattern:&lt;/p&gt;
+&lt;p&gt;This is a lot better looking, but it comes at the cost of flexibility. The function &lt;code&gt;f.udf&lt;/code&gt; optionally takes as a second argument the type of the UDF's output (in terms of the &lt;code&gt;pyspark.sql.types&lt;/code&gt; &lt;a href="http://spark.apache.org/docs/latest/api/python/pyspark.sql.html#module-pyspark.sql.types"&gt;types&lt;/a&gt;). Spark will by default convert UDF outputs to strings, which can be a hassle, especially for complex data types (like arrays), or when the precision is important (float vs. double). To avoid this stringy fate, we have to return to our old pattern:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pyspark.sql.types&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;t&lt;/span&gt;
 
 &lt;span class="c1"&gt;# define the function&lt;/span&gt;
