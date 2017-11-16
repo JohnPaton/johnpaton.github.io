@@ -32,12 +32,12 @@ A (probably incomplete) list of other things I've written and said, which are no
 <h5>2014</h5>
 <dl>
 <dt>
-<strong>Determining the Optimal Path to Fusion at the Joint European Torus</strong> ([link](/static/Paton_Capstone.pdf))</dt>
+<strong>Determining the Optimal Path to Fusion at the Joint European Torus</strong> ([mirror](/static/Paton_Capstone.pdf))</dt>
 <dd>*Bachelor Thesis &#8212; Amsterdam University College & Dutch Institute for Fundamental Energy Research (DIFFER)* 
 
 </dd>
 <dt>
-<strong>Modeling the Joint European Torus Ramp-up in RAPTOR</strong> ([link](http://www.auc.nl/binaries/content/assets/projectsites/amsterdam-university-college/downloads/auc-journal-open-issue-vol.-4.pdf?2794926917290)|[mirror](/static/auc-journal-open-issue-vol.-4.pdf))</dt>
+<strong>Modeling the Joint European Torus Ramp-up in RAPTOR</strong> ([file download link](http://www.auc.nl/binaries/content/assets/projectsites/amsterdam-university-college/downloads/auc-journal-open-issue-vol.-4.pdf?2794926917290)|[mirror](/static/auc-journal-open-issue-vol.-4.pdf))</dt>
 <dd>*AUC Undergraduate Journal of Liberal Arts & Sciences - Open Issue Vol. 4 &#8212; Amsterdam University College* 
 
 </dd>
