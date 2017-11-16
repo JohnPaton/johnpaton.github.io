@@ -118,7 +118,7 @@
 </pre></div>
 
 
-<p>We can now use our newly declared <code>increment_udf</code> to increment all the values in a column of the DataFrame:</p>
+<p>By registering our function as a UDF, we tell Spark that this function should be applied to every value in whatever DataFrame column it is applied to, and Spark takes care of distributing the execution across the cluster when we submit our job. We can now use our newly declared <code>increment_udf</code> to increment all the values in a column:</p>
 <div class="highlight"><pre><span></span><span class="c1"># increment column &#39;col&#39; by 1</span>
 <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">withColumn</span><span class="p">(</span><span class="s1">&#39;col_plus_1&#39;</span><span class="p">,</span> <span class="n">increment_udf</span><span class="p">(</span><span class="s1">&#39;col&#39;</span><span class="p">))</span>
 </pre></div>

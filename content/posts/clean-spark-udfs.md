@@ -27,7 +27,7 @@ def increment(x):
 increment_udf = f.udf(increment)
 ```
 
-We can now use our newly declared `increment_udf` to increment all the values in a column of the DataFrame:
+By registering our function as a UDF, we tell Spark that this function should be applied to every value in whatever DataFrame column it is applied to, and Spark takes care of distributing the execution across the cluster when we submit our job. We can now use our newly declared `increment_udf` to increment all the values in a column:
 
 ```python
 # increment column 'col' by 1
