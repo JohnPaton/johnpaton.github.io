@@ -49,7 +49,7 @@
 
 
 &lt;p&gt;The function &lt;code&gt;typed_udf&lt;/code&gt; returns a new UDF decorator with the specified return type. We can think of it as a decorator that accepts an argument. For a more in depth overview of this pattern and decorators in general, see &lt;a href="https://www.thecodeship.com/patterns/guide-to-python-function-decorators/"&gt;this blog post from The Code Ship&lt;/a&gt;. &lt;/p&gt;
-&lt;p&gt;Now we once again have the nice, clean version of the code, with the added legibility bonus of the UDF's return type of being visible right beside its definition:&lt;/p&gt;
+&lt;p&gt;Now we once again have the nice, clean version of the code, with the added legibility bonus of the UDF's return type being visible right beside its definition:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nd"&gt;@typed_udf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;t&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;IntegerType&lt;/span&gt;&lt;span class="p"&gt;())&lt;/span&gt;
 &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;increment&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
     &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;

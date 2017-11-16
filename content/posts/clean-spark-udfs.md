@@ -68,7 +68,7 @@ def typed_udf(return_type):
 
 The function `typed_udf` returns a new UDF decorator with the specified return type. We can think of it as a decorator that accepts an argument. For a more in depth overview of this pattern and decorators in general, see [this blog post from The Code Ship](https://www.thecodeship.com/patterns/guide-to-python-function-decorators/). 
 
-Now we once again have the nice, clean version of the code, with the added legibility bonus of the UDF's return type of being visible right beside its definition:
+Now we once again have the nice, clean version of the code, with the added legibility bonus of the UDF's return type being visible right beside its definition:
 
 ```python
 @typed_udf(t.IntegerType())

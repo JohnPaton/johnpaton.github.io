@@ -154,7 +154,7 @@
 
 
 <p>The function <code>typed_udf</code> returns a new UDF decorator with the specified return type. We can think of it as a decorator that accepts an argument. For a more in depth overview of this pattern and decorators in general, see <a href="https://www.thecodeship.com/patterns/guide-to-python-function-decorators/">this blog post from The Code Ship</a>. </p>
-<p>Now we once again have the nice, clean version of the code, with the added legibility bonus of the UDF's return type of being visible right beside its definition:</p>
+<p>Now we once again have the nice, clean version of the code, with the added legibility bonus of the UDF's return type being visible right beside its definition:</p>
 <div class="highlight"><pre><span></span><span class="nd">@typed_udf</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">IntegerType</span><span class="p">())</span>
 <span class="k">def</span> <span class="nf">increment</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span>
