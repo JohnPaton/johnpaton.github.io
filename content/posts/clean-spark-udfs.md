@@ -34,7 +34,7 @@ By registering our function as a UDF, we tell Spark that this function should be
 df = df.withColumn('col_plus_1', increment_udf('col'))
 ```
 
-"Hold up," you say, "you're making it unnecessarily difficult for yourself. Just use the `f.udf` as a decorator!" That is indeed an attractive option. The code then condenses to:
+"Hold up," you say, "you're making it unnecessarily difficult for yourself. Just use the `f.udf` as a [decorator](https://www.python.org/dev/peps/pep-0318/)!" That is indeed an attractive option. The code then condenses to:
 
 ```python
 @f.udf
