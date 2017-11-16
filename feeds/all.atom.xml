@@ -13,7 +13,7 @@
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;We can now use our newly declared &lt;code&gt;increment_udf&lt;/code&gt; to increment all the values in a column of the DataFrame:&lt;/p&gt;
+&lt;p&gt;By registering our function as a UDF, we tell Spark that this function should be applied to every value in whatever DataFrame column it is applied to, and Spark takes care of distributing the execution across the cluster when we submit our job. We can now use our newly declared &lt;code&gt;increment_udf&lt;/code&gt; to increment all the values in a column:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# increment column &amp;#39;col&amp;#39; by 1&lt;/span&gt;
 &lt;span class="n"&gt;df&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;withColumn&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;col_plus_1&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;increment_udf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;col&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
