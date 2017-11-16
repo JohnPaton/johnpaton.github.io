@@ -1,5 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>John Paton</title><link href="http://johnpaton.net/" rel="alternate"></link><link href="http://johnpaton.net/feeds/all.atom.xml" rel="self"></link><id>http://johnpaton.net/</id><updated>2017-09-22T20:00:00-01:00</updated><entry><title>Forward-fill missing data in Spark</title><link href="http://johnpaton.net/posts/forward-fill-spark/" rel="alternate"></link><published>2017-09-22T20:00:00-01:00</published><updated>2017-09-22T20:00:00-01:00</updated><author><name>John Paton</name></author><id>tag:johnpaton.net,2017-09-22:/posts/forward-fill-spark/</id><summary type="html">&lt;p&gt;Since I've started using Apache Spark, one of the frequent annoyances I've come up against is having an idea that would be very easy to implement in Pandas, but turns out to require a really verbose workaround in Spark. A recent example of this is doing a forward fill (filling &lt;code&gt;null&lt;/code&gt; values with the last known non-&lt;code&gt;null&lt;/code&gt; value).&lt;/p&gt;</summary><content type="html">&lt;p&gt;Since I've started using Apache Spark, one of the frequent annoyances I've come up against is having an idea that would be very easy to implement in Pandas, but turns out to require a really verbose workaround in Spark. Such is the price of scalability. But that does make it extra satisfying when I &lt;em&gt;do&lt;/em&gt; manage to get done what I'm trying to do. &lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>John Paton</title><link href="http://johnpaton.net/" rel="alternate"></link><link href="http://johnpaton.net/feeds/all.atom.xml" rel="self"></link><id>http://johnpaton.net/</id><updated>2017-11-16T19:48:11-01:00</updated><entry><title>Cleaner Spark UDF definitions with a little decorator</title><link href="http://johnpaton.net/posts/clean-spark-udfs/" rel="alternate"></link><published>2017-11-16T19:48:11-01:00</published><updated>2017-11-16T19:48:11-01:00</updated><author><name>John Paton</name></author><id>tag:johnpaton.net,2017-11-16:/posts/clean-spark-udfs/</id><summary type="html">&lt;p&gt;One of the handy features that makes (Py)Spark more flexible than database tools like Hive for working with tabular data is the ease of creating User Defined Functions (UDFs). However, one thing that still remains a little annoying is that you have to separately define a function and declare it as a UDF. With four lines of code you can clean those definitions right up.&lt;/p&gt;</summary><content type="html">&lt;p&gt;Alternate title: &lt;em&gt;Clean up your Spark jobs with this one weird trick! Apache will hate you!&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;One of the handy features that makes (Py)Spark more flexible than Hive even for just transforming tabular data is the ease of creating User Defined Functions (UDFs). Although this is &lt;a href="https://community.hortonworks.com/articles/72414/how-to-create-a-custom-udf-for-hive-using-python.html"&gt;also possible in Hive directly&lt;/a&gt;, the ability to define and call UDFs directly in the Python code of your job makes life a lot easier and provides context to what you're doing. However, one thing that still remains a little annoying is separately defining a Python function and then having to declare it as a Spark UDF.&lt;/p&gt;
+&lt;p&gt;Consider the trivial example of incrementing all the values in a Spark DataFrame column by 1. We begin by writing the function, and then make a "UDF-ified" version that we can actually use in Spark.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pyspark.sql.functions&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;f&lt;/span&gt;
+
+&lt;span class="c1"&gt;# define the function&lt;/span&gt;
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;increment&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;
+
+&lt;span class="c1"&gt;# make the udf version&lt;/span&gt;
+&lt;span class="n"&gt;increment_udf&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;f&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;udf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;increment&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;We can now use our newly declared &lt;code&gt;increment_udf&lt;/code&gt; to increment all the values in a column of the DataFrame:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# increment column &amp;#39;col&amp;#39; by 1&lt;/span&gt;
+&lt;span class="n"&gt;df&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;withColumn&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;col_plus_1&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;increment_udf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;col&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;"Hold up," you say, "you're making it unnecessarily difficult on yourself. Just use the &lt;code&gt;f.udf&lt;/code&gt; as a decorator!" That is indeed an attractive option. The code then condenses to:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nd"&gt;@f.udf&lt;/span&gt;
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;increment&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;
+
+&lt;span class="n"&gt;df&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;withColumn&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;col_plus_1&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;increment&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;col&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;This is a lot better looking, but it comes at the cost of flexibility. The function &lt;code&gt;f.udf&lt;/code&gt; optionally takes as a second argument the type of the UDF's output (in terms of the &lt;a href="http://spark.apache.org/docs/latest/api/python/pyspark.sql.html#module-pyspark.sql.types"&gt;&lt;code&gt;pyspark.sql.types&lt;/code&gt;&lt;/a&gt; types). Spark will by default convert UDF outputs to strings, which can be a hassle, especially for complex data types (like arrays), or when the precision is important (float vs. double). To avoid this stringy fate, we have to return to our old pattern:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pyspark.sql.types&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;t&lt;/span&gt;
+
+&lt;span class="c1"&gt;# define the function&lt;/span&gt;
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;increment&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;
+
+&lt;span class="c1"&gt;# make a typed udf version&lt;/span&gt;
+&lt;span class="n"&gt;increment_udf&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;f&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;udf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;increment&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;t&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;IntegerType&lt;/span&gt;&lt;span class="p"&gt;())&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;To get back to our nice, clean decorator syntax, we can write a tiny but useful function to generate a UDF decorator that will cast the output to the appropriate type:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;typed_udf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;return_type&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;_typed_udf_wrapper&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;func&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;f&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;udf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;func&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;return_type&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;_typed_udf_wrapper&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;The function &lt;code&gt;typed_udf&lt;/code&gt; returns a new UDF decorator with the specified return type. We can think of it as a decorator that accepts an argument. For a more in depth overview of this pattern and decorators in general, see &lt;a href="https://www.thecodeship.com/patterns/guide-to-python-function-decorators/"&gt;this blog post from The Code Ship&lt;/a&gt;. &lt;/p&gt;
+&lt;p&gt;Now we once again have the nice, clean version of the code, with the added legibility bonus of the return type of the UDF being visible right beside its definition:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nd"&gt;@typed_udf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;t&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;IntegerType&lt;/span&gt;&lt;span class="p"&gt;())&lt;/span&gt;
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;increment&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;
+
+&lt;span class="n"&gt;df&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;withColumn&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;col_plus_1&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;increment&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;col&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Using a decorator instead of making two versions of every function isn't really necessary in this simple example, but if you are defining 20 UDFs your namespace will get awfully cluttered and it'll become harder to track what's going on. With four lines of code you can bring sanity back to your function naming scheme.&lt;/p&gt;
+&lt;p&gt;Finally, the code for DIY decorators is notoriously difficult to read, so if you're going to copy-paste, here is the snippet with a docstring (and a shameless plug):&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pyspark.sql.functions&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;f&lt;/span&gt;
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;typed_udf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;return_type&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;Make a UDF decorator with the given return type.&lt;/span&gt;
+
+&lt;span class="sd"&gt;    Example usage:&lt;/span&gt;
+
+&lt;span class="sd"&gt;    &amp;gt;&amp;gt;&amp;gt; @typed_udf(t.IntegerType())&lt;/span&gt;
+&lt;span class="sd"&gt;    ... def increment(x):&lt;/span&gt;
+&lt;span class="sd"&gt;    ...     return x + 1&lt;/span&gt;
+&lt;span class="sd"&gt;    ...&lt;/span&gt;
+&lt;span class="sd"&gt;    &amp;gt;&amp;gt;&amp;gt; df = df.withColumn(&amp;#39;col_plus_1&amp;#39;, increment(&amp;#39;col&amp;#39;))&lt;/span&gt;
+
+&lt;span class="sd"&gt;    See http://johnpaton.net/posts/clean-spark-udfs for more detail.&lt;/span&gt;
+
+&lt;span class="sd"&gt;    Args:&lt;/span&gt;
+&lt;span class="sd"&gt;        return_type (pyspark.sql.types type): the type that will be&lt;/span&gt;
+&lt;span class="sd"&gt;            output by the function being decorated&lt;/span&gt;
+
+&lt;span class="sd"&gt;    Returns:&lt;/span&gt;
+&lt;span class="sd"&gt;        function: Typed UDF decorator&lt;/span&gt;
+
+&lt;span class="sd"&gt;    &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;_typed_udf_wrapper&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;func&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;f&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;udf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;func&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;return_type&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;_typed_udf_wrapper&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;</content><category term="spark"></category><category term="python"></category><category term="data"></category><category term="snippets"></category></entry><entry><title>Forward-fill missing data in Spark</title><link href="http://johnpaton.net/posts/forward-fill-spark/" rel="alternate"></link><published>2017-09-22T20:00:00-01:00</published><updated>2017-09-22T20:00:00-01:00</updated><author><name>John Paton</name></author><id>tag:johnpaton.net,2017-09-22:/posts/forward-fill-spark/</id><summary type="html">&lt;p&gt;Since I've started using Apache Spark, one of the frequent annoyances I've come up against is having an idea that would be very easy to implement in Pandas, but turns out to require a really verbose workaround in Spark. A recent example of this is doing a forward fill (filling &lt;code&gt;null&lt;/code&gt; values with the last known non-&lt;code&gt;null&lt;/code&gt; value).&lt;/p&gt;</summary><content type="html">&lt;p&gt;Since I've started using Apache Spark, one of the frequent annoyances I've come up against is having an idea that would be very easy to implement in Pandas, but turns out to require a really verbose workaround in Spark. Such is the price of scalability. But that does make it extra satisfying when I &lt;em&gt;do&lt;/em&gt; manage to get done what I'm trying to do. &lt;/p&gt;
 &lt;p&gt;A recent example of this is doing a forward fill: filling &lt;code&gt;null&lt;/code&gt; values with the last known non-&lt;code&gt;null&lt;/code&gt; value, leaving leading &lt;code&gt;null&lt;/code&gt;s alone. In Pandas, this is very easy. I used it in my &lt;a href="/posts/periods-since-time-series-events/"&gt;recent post&lt;/a&gt; about efficiently finding the time since the last event in a time series. This post is basically an explanation of &lt;a href="https://stackoverflow.com/a/44953341"&gt;this StackOverflow answer&lt;/a&gt; on doing forward fills with PySpark. &lt;/p&gt;
 &lt;p&gt;Imagine you are measuring the temperature in two spots in your back yard, one in the shade and one in the sun. You record a measurement every half hour so you can compare them. However, you got the cheapest possible digital thermometer, so a lot of the measurements end up missing. Your data may look something like this:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;
