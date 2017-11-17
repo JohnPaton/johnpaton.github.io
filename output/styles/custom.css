@@ -26,7 +26,7 @@ body{margin:0;
 	font-family:Palatino,Georgia,serif;
 	font-size:1.02em;
 	line-height:1.2em}
-	
+
 a{color:#3aa500;
 	text-decoration:none}
 
@@ -92,6 +92,14 @@ main article{margin:0 8% 2%;
     line-height: 1.5em
 }
 
+::-moz-selection {
+    background: #95FF5C
+}
+
+::selection {
+    background: #95FF5C;
+}
+
 main article header h1,main article header h2{margin-bottom:0}
 
 main article header p{color:#999;
@@ -107,6 +115,9 @@ main article blockquote,main article pre{border-top-right-radius:5px;
 	border-bottom-right-radius:5px;
 	/*border-left:8px solid hsla(0,0%,50%,.075);*/
 	border-left-width:10px}
+
+main article pre::selection{color:#fff;
+}
 	
 main article blockquote{background-color:hsla(0,0%,50%,.05);
 	padding:10px 10px;
