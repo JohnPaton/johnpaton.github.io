@@ -1,5 +1,362 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>John Paton</title><link href="https://johnpaton.net/" rel="alternate"></link><link href="https://johnpaton.net/feeds/all.atom.xml" rel="self"></link><id>https://johnpaton.net/</id><updated>2017-11-16T19:48:11-01:00</updated><entry><title>Cleaner Spark UDF definitions with a little decorator</title><link href="https://johnpaton.net/posts/clean-spark-udfs/" rel="alternate"></link><published>2017-11-16T19:48:11-01:00</published><updated>2017-11-16T19:48:11-01:00</updated><author><name>John Paton</name></author><id>tag:johnpaton.net,2017-11-16:/posts/clean-spark-udfs/</id><summary type="html">&lt;p&gt;One of the handy features that makes (Py)Spark more flexible than database tools like Hive even for just transforming tabular data is the ease of creating User Defined Functions (UDFs). However, one thing that still remains a little annoying is that you have to separately define a function and declare it as a UDF. With four lines of code you can clean those definitions right up.&lt;/p&gt;</summary><content type="html">&lt;p&gt;Alternate title: &lt;em&gt;Clean up your Spark jobs with this one weird trick! Apache will hate you!&lt;/em&gt;&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>John Paton</title><link href="http://johnpaton.net/" rel="alternate"></link><link href="http://johnpaton.net/feeds/all.atom.xml" rel="self"></link><id>http://johnpaton.net/</id><updated>2017-12-02T19:34:00-01:00</updated><entry><title>Remapping the world with word vectors</title><link href="http://johnpaton.net/posts/remapping-the-world/" rel="alternate"></link><published>2017-12-02T19:34:00-01:00</published><updated>2017-12-02T19:34:00-01:00</updated><author><name>John Paton</name></author><id>tag:johnpaton.net,2017-12-02:/posts/remapping-the-world/</id><summary type="html">&lt;p&gt;Everyone is used to the map. Most people could make a reasonable attempt at drawing one from memory (well, &lt;a href="https://www.theatlantic.com/international/archive/2014/01/what-you-get-when-30-people-draw-a-world-map-from-memory/282901/"&gt;sort of&lt;/a&gt;). But what would it look like if we positioned the countries not by geographical location, but by our own perceived relationships between them? Armed with Conceptnet Numberbatch, I decided to try just that.&lt;/p&gt;</summary><content type="html">&lt;p&gt;Everyone is used to the map. Most people could make a reasonable attempt at drawing one from memory (well, &lt;a href="https://www.theatlantic.com/international/archive/2014/01/what-you-get-when-30-people-draw-a-world-map-from-memory/282901/"&gt;sort of&lt;/a&gt;). But what would it look like if we positioned the countries not by geographical location, but by our own perceived relationships between them? Armed with Conceptnet Numberbatch, I decided to try just that.&lt;/p&gt;
+&lt;p&gt;Contents:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="#word-vectors"&gt;Word Vectors&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#conceptnet-numberbatch"&gt;Conceptnet Numberbatch&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#countries-of-the-world"&gt;Countries of the world&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#countries-as-concept-vectors"&gt;Countries as concept vectors&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#remapping"&gt;Remapping the world&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#mapping-our-bias"&gt;Mapping our bias?&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;a name="word-vectors"&gt; &lt;/a&gt;&lt;/p&gt;
+&lt;h3&gt;Word Vectors&lt;/h3&gt;
+&lt;p&gt;In natural language processing, a big issue is the dimensionality of the data. Machine learning algorithms almost exclusively deal with vectors of numbers, whereas the atomic unit of natural language is the word. The natural way to encode words as feature vectors is to do what's called one-hot encoding: make a vector with only one element 1, and the rest 0, where the position of the 1 is determined by the word. This gives us a vector as long as the dictionary, with each entry representing one word, and there is a 1 at the position of the word we are trying to represent.&lt;/p&gt;
+&lt;p&gt;There are a few problems with this approach. For one thing, these vectors are very long. Large bodies of English text contain hundreds of thousands of unique words, so each vector has to have hundreds of thousands of entries. However, a more important issue is that these vectors don't encode any meaning. Each vector has magnitude 1, and they are all perpendicular to each other, so we lose all the relationships that we intuitively know words carry. &lt;/p&gt;
+&lt;p&gt;Word vectors are an attempt at a solution to both of these problems. The idea is to use an algorithm to &lt;em&gt;learn&lt;/em&gt; a set of numbers that are unique to each word, and such that "similar" words have vectors that are "close to" each other. Here we consider words to be similar if they are often used in the same context, and we compare vectors by the angle between them (cosine similarity). There are various implementations of this idea, including Stanford's &lt;a href="https://nlp.stanford.edu/projects/glove/"&gt;GloVe&lt;/a&gt;, two flavours of Google's &lt;a href="https://code.google.com/archive/p/word2vec/"&gt;word2vec&lt;/a&gt;, and Facebook's &lt;a href="https://research.fb.com/fasttext/"&gt;fastText&lt;/a&gt;. These approaches are very successful in their aims, even learning to encode abstract relationships between words, as demonstrated by this 2d projection of the GloVe vectors:&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://nlp.stanford.edu/projects/glove/images/comparative_superlative.jpg"&gt;&lt;img alt="superlative word vectors" src="/images/word_vectors_superlative.jpg"&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;It's worth mentioning that these vectors are the result of &lt;em&gt;unsupervised learning&lt;/em&gt;: nobody told the algorithms that loud should be to loudest as strong is to strongest. The relationships are learned purely from the contexts that the words are used in.&lt;/p&gt;
+&lt;p&gt;There are pre-trained vectors from all these implementations available online to download, and if you have a lot of data it's also possible to train your own. If you do decide to make your own word vectors, make sure you fit in with the cool kids by giving them a name with weird capitalization.&lt;/p&gt;
+&lt;p&gt;&lt;a name="conceptnet-numberbatch"&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h3&gt;Conceptnet Numberbatch&lt;/h3&gt;
+&lt;p&gt;The popular word vector sets are mostly just that: &lt;em&gt;word&lt;/em&gt; vectors. But what about singular concepts whose names happen to contain a space? If we split our text into individual words, it is difficult to reconstruct these concepts. The team at &lt;a href="http://conceptnet.io/"&gt;ConceptNet&lt;/a&gt; have done just that, combining several existing word vector sets and &lt;a href="https://arxiv.org/pdf/1604.01692.pdf"&gt;augmenting them&lt;/a&gt; with their own &lt;a href="https://en.wikipedia.org/wiki/Semantic_network"&gt;semantic network&lt;/a&gt; (a mapping of how concepts relate to each other). They also attempt to purposely &lt;a href="https://blog.conceptnet.io/2017/04/24/conceptnet-numberbatch-17-04-better-less-stereotyped-word-vectors/"&gt;de-bias their vectors&lt;/a&gt; so as not to encode relationships that are racist, sexist, etc. Their "concept vectors" are humorously called &lt;a href="https://blog.conceptnet.io/2016/05/25/conceptnet-numberbatch-a-new-name-for-the-best-word-embeddings-you-can-download/"&gt;Conceptnet Numberbatch&lt;/a&gt;. For this post I used the English-only subset, which contains 416,410 vectors.&lt;/p&gt;
+&lt;p&gt;By using the Conceptnet Numberbatch vectors we can compare not just words, but also concepts with each other for similarity. Of course, some words have a double meaning, and one similarity measure will never capture this. As an example, I sorted the concept vectors for similarity to "orange". The top few are mostly various subtypes of the citrus fruit, but at number 9 we get "yellowred", which is clearly related to the color:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;Top 20 most similar concepts to &amp;quot;orange&amp;quot;:
+   1. orange_tree          Similarity: 0.96476
+   2. orange_river         Similarity: 0.94728
+   3. sweet_orange         Similarity: 0.93845
+   4. citrus_sinensis      Similarity: 0.93466
+   5. valencia_orange      Similarity: 0.92221
+   6. sour_orange          Similarity: 0.91260
+   7. citrus_aurantium     Similarity: 0.88945
+   8. bitter_orange        Similarity: 0.88880
+   9. yellowred            Similarity: 0.86298
+  10. seville_orange       Similarity: 0.85275
+  11. temple_orange        Similarity: 0.85226
+  12. bigarade             Similarity: 0.84110
+  13. iyokan               Similarity: 0.83425
+  14. orangish             Similarity: 0.83299
+  15. secondary_colour     Similarity: 0.82235
+  16. tropaeolin           Similarity: 0.79860
+  17. orangelo             Similarity: 0.79785
+  18. orange_coloured      Similarity: 0.77347
+  19. tangor               Similarity: 0.77011
+  20. orangequat           Similarity: 0.76962
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;There are ways around this issue too, for example by &lt;a href="https://explosion.ai/blog/sense2vec-with-spacy"&gt;including word senses&lt;/a&gt; in the vectors, but this is overkill for our purposes.&lt;/p&gt;
+&lt;p&gt;Curious about my homeland, I tried out the same thing with "Canada". Hilariously, both "America's hat" and "Soviet Canuckistan" make the top 20:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;Top 20 most similar concepts to &amp;quot;canada&amp;quot;:
+   1. canada_west          Similarity: 0.97635
+   2. great_white_north    Similarity: 0.96604
+   3. laurentian_highlands Similarity: 0.96598
+   4. arctic_archipelago   Similarity: 0.96598
+   5. hydrofield           Similarity: 0.96262
+   6. ookpik               Similarity: 0.96262
+   7. canada_east          Similarity: 0.96223
+   8. central_provinces    Similarity: 0.95273
+   9. canadianist          Similarity: 0.94114
+  10. central_canada       Similarity: 0.94038
+  11. upper_canada         Similarity: 0.93867
+  12. lower_canada         Similarity: 0.93571
+  13. canadian_shield      Similarity: 0.93504
+  14. canadas              Similarity: 0.92199
+  15. america&amp;#39;s_hat        Similarity: 0.91242
+  16. hudson_bay           Similarity: 0.91084
+  17. canadian_studies     Similarity: 0.90770
+  18. in_north_america     Similarity: 0.90715
+  19. soviet_canuckistan   Similarity: 0.90083
+  20. eastern_canada       Similarity: 0.90079
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Note that the average similarity score in Canada's top 20 is much higher than in orange's. This is likely because "orange" is used in a more wide variety of contexts than "Canada", which dilutes its similarity to any given concept. &lt;/p&gt;
+&lt;p&gt;&lt;a name="countries-of-the-world"&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h3&gt;Countries of the world&lt;/h3&gt;
+&lt;p&gt;It turns out that getting standardized data about the countries of the world is surprisingly tricky. There are various definitions of attributes, character encoding issues, countries not recognizing each other, etc. Luckily, Mohammed Le Doze has painstakingly compiled a &lt;a href="https://mledoze.github.io/countries/"&gt;high quality set of country data&lt;/a&gt; in &lt;a href="https://github.com/mledoze/countries/tree/master/dist"&gt;various formats&lt;/a&gt;, allowing me to offload responsibility for any political sensitivities.&lt;/p&gt;
+&lt;p&gt;As a starting point, we can plot the locations of the countries as we expect to see them. The positions are given in latitude and longitude, but through the magic of &lt;a href="https://xkcd.com/977/"&gt;map projections&lt;/a&gt; (conveniently provided in this &lt;a href="http://wiki.openstreetmap.org/wiki/Mercator#Python_implementation"&gt;code snippet&lt;/a&gt; from OpenStreetMap), we can plot the positions on a flat plane. I creatively decided to represent the countries as blobs with size approximately related to the land area of the country, and immediately gained respect for people who are actually good at making maps:&lt;/p&gt;
+&lt;p&gt;&lt;img alt="The worst world map you ever did see." src="/images/world_map_merc.png"&gt;&lt;/p&gt;
+&lt;p&gt;Nailed it.&lt;/p&gt;
+&lt;p&gt;&lt;a name="countries-as-concept-vectors"&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h3&gt;Countries as concept vectors&lt;/h3&gt;
+&lt;p&gt;The countries dataset provides us with a "common English name" per country. We use this name to associate a concept vector to each country in the set, to the extent possible (some countries, such as French Southern and Antarctic Islands, and British Indian Ocean Territory, were not in Conceptnet Numberbatch. Sorry about that.).&lt;/p&gt;
+&lt;p&gt;Considering countries as concepts with associated vectors reveals some interesting structure. Using &lt;a href="https://en.wikipedia.org/wiki/Hierarchical_clustering"&gt;hierarchical clustering&lt;/a&gt;, we can sort the countries such that more similar countries are next to each other. Plotting the similarities as a heatmap visualizes the clusters of countries that have especially high similarity to each other (and it looks really cool):&lt;/p&gt;
+&lt;p&gt;&lt;a href="/images/countries_similarity_world_annotated2.png"&gt;&lt;img alt="clustered country similarity heatmap" src="/images/countries_similarity_world_annotated2.png"&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;I realize this is big and hard to read; you can click on the image to get the full sized one where the country names are actually legible. &lt;/p&gt;
+&lt;p&gt;The squares along the diagonal are the main clusters of similar countries which were identified by the clustering algorithm. I've tried to give semi-appropriate names to a few of them. We see for example the Arabian Peninsula (Saudi Arabia, Kuwait, Qatar, the UAE, Bahrain, and Oman), groups of nearby islands, and the Group Which Shall Not Be Named (Iraq, Jordan, Israel, Palestine, Lebanon, Iran, Syria, Egypt, and Libya). Thanks to our use of hierarchical clustering, we also see groups with substructure, like the Germanic countries, which visibly include the Nordic countries and BeNeLux.&lt;/p&gt;
+&lt;p&gt;On the off-diagonal we also see some structure. These are mostly primary clusters which have strong inter-group relationships. I've labeled three such groups: the Pacific and Caribbean Islands are quite strongly associated with each other, Spain/Portugal are similar to their (mainly South American) colonies, and many of the Arabic-speaking countries are also associated with each other.&lt;/p&gt;
+&lt;p&gt;It's interesting to note that the primary clusters seem to be mostly determined by geographical proximity, while the off-diagonal groups seem to be more influenced by culture/language.&lt;/p&gt;
+&lt;p&gt;Because the entire world is a bit hard to take in all at once, we will zoom in on Europe for a little bit. We end up with:&lt;/p&gt;
+&lt;p&gt;&lt;a href="/images/countries_similarity_eur.svg"&gt;&lt;img alt="clustered europe similarity heatmap" src="/images/countries_similarity_eur.svg"&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Now it seems that the Germanic world is much less pronounced, the Åland Islands have been split out from the rest of the Nordics, and the Channel Islands are basically separated entirely from the rest. Sorry about that, island nations.&lt;/p&gt;
+&lt;p&gt;&lt;a name="remapping"&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h3&gt;Remapping the world&lt;/h3&gt;
+&lt;p&gt;While the heatmaps are interesting, we started out on a mission to remap the world, and that's what we're going to do. To figure out the new placement of the countries, we visualize them as a &lt;a href="https://en.wikipedia.org/wiki/Graph_theory"&gt;network graph&lt;/a&gt;, simulated with &lt;a href="https://d3js.org/"&gt;d3.js&lt;/a&gt;. The nodes are our country blobs, and they will be connected by springy edges. The edges act with a force on the nodes, pulling more similar countries closer together, and pushing dissimilar ones apart. By initializing the simulation with the countries in their original position as plotted on the map above, we hope to end up with a layout that reflects geography as much as possible, so that we're sure any major changes are the result of taking into account the concept vector similarity. We'll begin with Europe, and connect each country to its top 10 most similar neighbors (to keep the complexity of the simulation down). Thanks to the magic of d3, we can make the map interactive, so if you aren't happy with where your country ended up, you can try to drag it somewhere else and see which other countries get pulled along too:&lt;/p&gt;
+&lt;div align="center"&gt;
+&lt;svg id="europe" width="600" height="500"&gt;&lt;/svg&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Now we're talking! The simulation isn't totally deterministic, so you might see something different, but when I run it I see the Faroes and Iceland get pulled into the interior of Northern Europe thanks to strong connections with the (rest of the) Nordics. The UK moves even further outside mainland Europe. France gains Ireland as a neighbour, but not because of any particularly strong relationship. Rather, Ireland has connections to fellow island nations Iceland (North), Malta (South), and the UK (West), so in balancing these it just happens to end up near France. The Vatican is ejected from mainland Europe due to its surprisingly weak connection to Italy. The Baltics move southeast to be closer to the former Yugoslav countries, which also causes Poland to be pulled south of Austria. &lt;/p&gt;
+&lt;p&gt;It's extremely addicting to play with this simulation and imagine the alternate histories that could have resulted. The Vatican Armada? The Polish-Faroese Empire? Delicious Irish cuisine? We will never know.&lt;/p&gt;
+&lt;p&gt;Just like with the heatmaps, the network graph for the entire world is a bit overwhelming. We simplify the simulation further by connecting each country to only its top 3 neighbors, and make it a bit taller to give them more room to spread out (feel free to drag them apart yourself to get an even better view):&lt;/p&gt;
+&lt;div align="center"&gt;
+&lt;svg id="world" width="600" height="800"&gt;&lt;/svg&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Dragging the countries around gives a good feel for who is connected to who. It's particularly interesting when countries from different continents are closely connected. Portugal and Spain are pulled into the midst of their South American colonies, which form an unusually rigid block. The US finds an unlikely neighbor in Georgia (undoubtedly caused by the US state of the same name). The Anglosphere makes its first appearance, linking the US, Canada, the UK, Australia, and New Zealand (and, dare I say, Ireland). Turkey and Central Asia are disconnected from the rest of Asia, preferring the company of Russia. Canada and the US decouple from the rest of the Americas. Chad is kept at a distance from the rest of Africa, probably because of its common usage as an English name diluting the strength of its connections (the "orange" effect), an issue which also plagues Réunion. The Falklands gain great strategic importance, forming a sole link between the Pacific Islands and the Caribbean. &lt;/p&gt;
+&lt;p&gt;Surprisingly, the entire world seems to remain connected (even if the connecting edges are so weak as to not be visible). Our simulation of so few connections made it possible for 3 or 4 countries to form an exclusive block, disconnected from the rest of the world, but as far as I can tell this did not happen.&lt;/p&gt;
+&lt;p&gt;&lt;a name="mapping-our-bias"&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h3&gt;Mapping our bias?&lt;/h3&gt;
+&lt;p&gt;We have spent quite some time considering the new (and old) groupings that show up when we consider the countries as concept vectors. However, it's also important to consider what is not present in the data, and how this may reveal underlying confounding factors.&lt;/p&gt;
+&lt;p&gt;Although a loosely-grouped Anglosphere formed in the world network graph, the relative strengths of the connections were largely weak enough to not show up in the clustering we performed to create the heat map. Conversely, Africa appeared in the heatmap as one giant block, despite great diversity across the continent (Somalia, Tunisia, and Zimbabwe in the same group?). &lt;/p&gt;
+&lt;p&gt;My hypothesis is that this is a result of using only the English subset of Conceptnet Numberbatch's concept vectors. We humans have a tendency to see differences between members of our "own group" (whatever that means), while seeing other groups as one cohesive unit. Wikipedia tells me this concept is known as &lt;a href="https://en.wikipedia.org/wiki/Out-group_homogeneity"&gt;out-group homogeneity&lt;/a&gt;, which can lead to stereotyping. In the &lt;em&gt;English&lt;/em&gt; concept vectors (which were trained on English text gathered from the Internet), the Anglosphere countries aren't frequently used in the exact same context, because they are more often perceived as the in-group by people who are speaking English. This (and not Brexit) would also explain the UK being pushed out of Europe and relatively far from Ireland in the Europe network graph. All of this happens in spite of ConceptNet actively working to remove bias from their vectors, showing just how tricky this issue really is.&lt;/p&gt;
+&lt;p&gt;It would be interesting to confirm this hypothesis by trying this experiment out with other language vectors, but this post is already long enough, so I will leave that for future exploration. For now, suffice it to say that unexamined factors in your data may lead to unexpected results. If you find yourself making sweeping generalizations or casually reporting on "Soviet Canuckistan", it may be time to reevaluate your assumptions.&lt;/p&gt;
+&lt;p&gt;Did you find any other interesting (missing) connections? Could I have improved the graphs (this is my first forray into d3)? Let me know below! &lt;/p&gt;
+&lt;script src="https://d3js.org/d3.v4.min.js"&gt;&lt;/script&gt;
+
+&lt;script&gt;
+
+var cmap = {"Americas":"#3aa500", "Asia":"#881166", "Africa":"#e34a6f", 
+            "Europe":"#0c5fd3", "Oceania":"#e8d214"};
+
+var svg_eur = d3.select("#europe"),
+    width_eur = +svg_eur.attr("width"),
+    height_eur = +svg_eur.attr("height");
+
+var svg_wor = d3.select("#world"),
+    width_wor = +svg_wor.attr("width"),
+    height_wor = +svg_wor.attr("height");
+
+var color = d3.scaleOrdinal(d3.schemeCategory10);
+
+var simulation_eur = d3.forceSimulation()
+    .force("charge", d3.forceManyBody().strength(-75))
+    .force("collide", d3.forceCollide().radius(rad))
+    .force("center", d3.forceCenter(width_eur / 2, height_eur / 2))
+    .velocityDecay(0.7);
+
+var simulation_wor = d3.forceSimulation()
+    .force("charge", d3.forceManyBody().strength(-5))
+    .force("collide", d3.forceCollide().radius(rad))
+    .force("center", d3.forceCenter(width_wor / 2, height_wor / 2))
+    .velocityDecay(0.7);
+
+
+function rad(d){
+    return Math.max(2, 25* Math.pow(d.area, 1/3));
+};
+
+d3.json("/static/europe.json", function(error, graph) {
+  if (error) throw error;
+
+  var link = svg_eur.append("g")
+      .attr("class", "links")
+    .selectAll("line")
+    .data(graph.links)
+    .enter().append("line")
+      .attr("stroke-width", 2)
+      .attr("stroke", "#999")
+      .attr("stroke-opacity", function(d) {return 0.5*Math.pow(d.strength, 2); });
+
+
+  // function(d) { return color(d.region); })
+
+  var node = svg_eur.append("g")
+      .attr("class", "nodes")
+      .selectAll(".node")
+      .data(graph.nodes)
+      .enter()
+      .append("g")
+        .attr("class","node")
+        .call(d3.drag()
+          .on("start", dragstarted_eur)
+          .on("drag", dragged_eur)
+          .on("end", dragended_eur));
+
+    node.append("circle")
+        .attr("r", rad)
+        .attr("fill", function(d) { return cmap[d.region]; })
+
+
+    node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+
+  //   .selectAll("circle")
+  //   .data(graph.nodes)
+  //   .enter().append("circle")
+  //     .attr("cx", function(d) {return d.x; })
+  //     .attr("cy", function(d) {return d.y; })
+  //     .attr("r", rad)
+  //     .attr("fill", "red")
+  //     .call(d3.drag()
+  //         .on("start", dragstarted)
+  //         .on("drag", dragged)
+  //         .on("end", dragended));
+
+  node.append("text")
+      .text(function(d) { return d.commonName; })
+        .attr("alignment-baseline","middle")
+        .attr("text-anchor", "right")
+        .attr("dx", rad)
+        .attr("font-family","sans-serif")
+        .attr("font-size","9pt")
+        .attr("opacity","0.5")
+
+  simulation_eur
+      .nodes(graph.nodes)
+      .on("tick", ticked);
+
+  simulation_eur.force("link", d3.forceLink()
+                             .links(graph.links)
+                             .strength(function(d) {return 5*(Math.pow(d.strength, 4)); })
+                             .distance(function(d) {return 200*(1-Math.pow(d.strength, 2)); }));
+
+    function boxx(d){
+        return Math.min(Math.max(rad(d), d.x), width_eur-rad(d)-100);
+    }
+
+    function boxy(d){
+        return Math.min(Math.max(rad(d), d.y), height_eur-rad(d)-5);
+    }
+
+  function ticked() {
+    link
+        .attr("x1", function(d) { return boxx(d.source); })
+        .attr("y1", function(d) { return boxy(d.source); })
+        .attr("x2", function(d) { return boxx(d.target); })
+        .attr("y2", function(d) { return boxy(d.target); });
+
+    node
+        .attr("transform", function(d) { return "translate(" + boxx(d) + "," + boxy(d) + ")"; })
+        .attr("cx", function(d) { boxx(d); })
+        .attr("cy", function(d) { boxy(d) });
+  }
+});
+
+
+
+d3.json("/static/world.json", function(error, graph) {
+  if (error) throw error;
+
+  var link = svg_wor.append("g")
+      .attr("class", "links")
+    .selectAll("line")
+    .data(graph.links)
+    .enter().append("line")
+      .attr("stroke-width", 2)
+      .attr("stroke", "#999")
+      .attr("stroke-opacity", function(d) {return 0.5*Math.pow(d.strength, 2); });
+
+
+  // function(d) { return color(d.region); })
+
+  var node = svg_wor.append("g")
+      .attr("class", "nodes")
+      .selectAll(".node")
+      .data(graph.nodes)
+      .enter()
+      .append("g")
+        .attr("class","node")
+        .call(d3.drag()
+          .on("start", dragstarted_wor)
+          .on("drag", dragged_wor)
+          .on("end", dragended_wor));
+
+    node.append("circle")
+        .attr("r", rad)
+        .attr("fill", function(d) { return cmap[d.region]; })
+
+
+    node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+
+  //   .selectAll("circle")
+  //   .data(graph.nodes)
+  //   .enter().append("circle")
+  //     .attr("cx", function(d) {return d.x; })
+  //     .attr("cy", function(d) {return d.y; })
+  //     .attr("r", rad)
+  //     .attr("fill", "red")
+  //     .call(d3.drag()
+  //         .on("start", dragstarted)
+  //         .on("drag", dragged)
+  //         .on("end", dragended));
+
+  node.append("text")
+      .text(function(d) { return d.commonName; })
+        .attr("alignment-baseline","middle")
+        .attr("text-anchor", "right")
+        .attr("dx", rad)
+        .attr("font-family","sans-serif")
+        .attr("font-size","9pt")
+        .attr("opacity","0.5")
+
+  simulation_wor
+      .nodes(graph.nodes)
+      .on("tick", ticked);
+
+  simulation_wor.force("link", d3.forceLink()
+                             .links(graph.links)
+                             .strength(function(d) {return 7*(Math.pow(d.strength, 4)); })
+                             .distance(function(d) {return 150*(1-Math.pow(d.strength, 2)); }));
+
+    function boxx(d){
+        return Math.min(Math.max(rad(d), d.x), width_wor-rad(d)-100);
+    }
+
+    function boxy(d){
+        return Math.min(Math.max(rad(d), d.y), height_wor-rad(d)-5);
+    }
+
+  function ticked() {
+    link
+        .attr("x1", function(d) { return boxx(d.source); })
+        .attr("y1", function(d) { return boxy(d.source); })
+        .attr("x2", function(d) { return boxx(d.target); })
+        .attr("y2", function(d) { return boxy(d.target); });
+
+    node
+        .attr("transform", function(d) { return "translate(" + boxx(d) + "," + boxy(d) + ")"; })
+        .attr("cx", function(d) { boxx(d); })
+        .attr("cy", function(d) { boxy(d) });
+  }
+});
+
+
+function dragstarted_eur(d) {
+  if (!d3.event.active) simulation_eur.alphaTarget(0.3).restart();
+  d.fx = d.x;
+  d.fy = d.y;
+}
+
+function dragged_eur(d) {
+  d.fx = d3.event.x;
+  d.fy = d3.event.y;
+}
+
+function dragended_eur(d) {
+  if (!d3.event.active) simulation_eur.alphaTarget(0);
+  d.fx = null;
+  d.fy = null;
+}
+
+function dragstarted_wor(d) {
+  if (!d3.event.active) simulation_wor.alphaTarget(0.3).restart();
+  d.fx = d.x;
+  d.fy = d.y;
+}
+
+function dragged_wor(d) {
+  d.fx = d3.event.x;
+  d.fy = d3.event.y;
+}
+
+function dragended_wor(d) {
+  if (!d3.event.active) simulation_wor.alphaTarget(0);
+  d.fx = null;
+  d.fy = null;
+}
+
+&lt;/script&gt;</content><category term="natural language"></category><category term="dataviz"></category><category term="d3.js"></category></entry><entry><title>Cleaner Spark UDF definitions with a little decorator</title><link href="http://johnpaton.net/posts/clean-spark-udfs/" rel="alternate"></link><published>2017-11-16T19:48:11-01:00</published><updated>2017-11-16T19:48:11-01:00</updated><author><name>John Paton</name></author><id>tag:johnpaton.net,2017-11-16:/posts/clean-spark-udfs/</id><summary type="html">&lt;p&gt;One of the handy features that makes (Py)Spark more flexible than database tools like Hive even for just transforming tabular data is the ease of creating User Defined Functions (UDFs). However, one thing that still remains a little annoying is that you have to separately define a function and declare it as a UDF. With four lines of code you can clean those definitions right up.&lt;/p&gt;</summary><content type="html">&lt;p&gt;Alternate title: &lt;em&gt;Clean up your Spark jobs with this one weird trick! Apache will hate you!&lt;/em&gt;&lt;/p&gt;
 &lt;p&gt;One of the handy features that makes (Py)Spark more flexible than database tools like Hive even for just transforming tabular data is the ease of creating User Defined Functions (UDFs). Although this is &lt;a href="https://community.hortonworks.com/articles/72414/how-to-create-a-custom-udf-for-hive-using-python.html"&gt;also possible in Hive directly&lt;/a&gt;, the ability to define and call UDFs directly in the Python code of your job makes life a lot easier and provides context to what you're doing. However, one thing that still remains a little annoying is separately defining a Python function and then having to declare it as a Spark UDF.&lt;/p&gt;
 &lt;p&gt;Consider the trivial example of incrementing all the values in a Spark DataFrame column by 1. We begin by writing the function, and then make a "UDF-ified" version that we can actually use in Spark.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pyspark.sql.functions&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;f&lt;/span&gt;
@@ -87,7 +444,7 @@
         &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;f&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;udf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;func&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;return_type&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 
     &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;_typed_udf_wrapper&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;</content><category term="spark"></category><category term="python"></category><category term="data"></category><category term="snippets"></category></entry><entry><title>Forward-fill missing data in Spark</title><link href="https://johnpaton.net/posts/forward-fill-spark/" rel="alternate"></link><published>2017-09-22T20:00:00-01:00</published><updated>2017-09-22T20:00:00-01:00</updated><author><name>John Paton</name></author><id>tag:johnpaton.net,2017-09-22:/posts/forward-fill-spark/</id><summary type="html">&lt;p&gt;Since I've started using Apache Spark, one of the frequent annoyances I've come up against is having an idea that would be very easy to implement in Pandas, but turns out to require a really verbose workaround in Spark. A recent example of this is doing a forward fill (filling &lt;code&gt;null&lt;/code&gt; values with the last known non-&lt;code&gt;null&lt;/code&gt; value).&lt;/p&gt;</summary><content type="html">&lt;p&gt;Since I've started using Apache Spark, one of the frequent annoyances I've come up against is having an idea that would be very easy to implement in Pandas, but turns out to require a really verbose workaround in Spark. Such is the price of scalability. But that does make it extra satisfying when I &lt;em&gt;do&lt;/em&gt; manage to get done what I'm trying to do. &lt;/p&gt;
+&lt;/pre&gt;&lt;/div&gt;</content><category term="spark"></category><category term="python"></category><category term="data"></category><category term="snippets"></category></entry><entry><title>Forward-fill missing data in Spark</title><link href="http://johnpaton.net/posts/forward-fill-spark/" rel="alternate"></link><published>2017-09-22T20:00:00-01:00</published><updated>2017-09-22T20:00:00-01:00</updated><author><name>John Paton</name></author><id>tag:johnpaton.net,2017-09-22:/posts/forward-fill-spark/</id><summary type="html">&lt;p&gt;Since I've started using Apache Spark, one of the frequent annoyances I've come up against is having an idea that would be very easy to implement in Pandas, but turns out to require a really verbose workaround in Spark. A recent example of this is doing a forward fill (filling &lt;code&gt;null&lt;/code&gt; values with the last known non-&lt;code&gt;null&lt;/code&gt; value).&lt;/p&gt;</summary><content type="html">&lt;p&gt;Since I've started using Apache Spark, one of the frequent annoyances I've come up against is having an idea that would be very easy to implement in Pandas, but turns out to require a really verbose workaround in Spark. Such is the price of scalability. But that does make it extra satisfying when I &lt;em&gt;do&lt;/em&gt; manage to get done what I'm trying to do. &lt;/p&gt;
 &lt;p&gt;A recent example of this is doing a forward fill: filling &lt;code&gt;null&lt;/code&gt; values with the last known non-&lt;code&gt;null&lt;/code&gt; value, leaving leading &lt;code&gt;null&lt;/code&gt;s alone. In Pandas, this is very easy. I used it in my &lt;a href="/posts/periods-since-time-series-events/"&gt;recent post&lt;/a&gt; about efficiently finding the time since the last event in a time series. This post is basically an explanation of &lt;a href="https://stackoverflow.com/a/44953341"&gt;this StackOverflow answer&lt;/a&gt; on doing forward fills with PySpark. &lt;/p&gt;
 &lt;p&gt;Imagine you are measuring the temperature in two spots in your back yard, one in the shade and one in the sun. You record a measurement every half hour so you can compare them. However, you got the cheapest possible digital thermometer, so a lot of the measurements end up missing. Your data may look something like this:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;
@@ -302,7 +659,7 @@ only showing top 10 rows
 &lt;p&gt;Use &lt;code&gt;first&lt;/code&gt; from &lt;code&gt;pyspark.sql.functions&lt;/code&gt; instead of &lt;code&gt;last&lt;/code&gt;.&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ol&gt;
-&lt;p&gt;That's it! Happy filling!&lt;/p&gt;</content><category term="python"></category><category term="spark"></category><category term="data"></category><category term="pandas"></category><category term="time series"></category></entry><entry><title>Creating a responsive bar chart for my tags</title><link href="https://johnpaton.net/posts/responsive-bar-chart/" rel="alternate"></link><published>2017-07-21T23:30:00-01:00</published><updated>2017-07-21T23:30:00-01:00</updated><author><name>John Paton</name></author><id>tag:johnpaton.net,2017-07-21:/posts/responsive-bar-chart/</id><summary type="html">&lt;p&gt;Today I decided that, since I'm a data kind of guy, I would like my tags page to show a bar chart of how many posts per tag I've made. The idea was to basically have a list of tags on the left, with a bar chart on the right showing how many articles are tagged with that tag, and the bars scaling to the window size. It turned out to be more complicated than I was expecting.&lt;/p&gt;</summary><content type="html">&lt;p&gt;Today I decided that, since I'm a data kind of guy, I would like my &lt;a href="/tags"&gt;tags page&lt;/a&gt; to show a bar chart of how many posts per tag I've made. The idea was to basically have a list of tags on the left, with a bar chart on the right showing how many articles are tagged with that tag. Obviously the bars should scale to the size of the window. If you were too lazy to click the link, the result I came up with (at the time of writing) looks like this:&lt;/p&gt;
+&lt;p&gt;That's it! Happy filling!&lt;/p&gt;</content><category term="python"></category><category term="spark"></category><category term="data"></category><category term="pandas"></category><category term="time series"></category></entry><entry><title>Creating a responsive bar chart for my tags</title><link href="http://johnpaton.net/posts/responsive-bar-chart/" rel="alternate"></link><published>2017-07-21T23:30:00-01:00</published><updated>2017-07-21T23:30:00-01:00</updated><author><name>John Paton</name></author><id>tag:johnpaton.net,2017-07-21:/posts/responsive-bar-chart/</id><summary type="html">&lt;p&gt;Today I decided that, since I'm a data kind of guy, I would like my tags page to show a bar chart of how many posts per tag I've made. The idea was to basically have a list of tags on the left, with a bar chart on the right showing how many articles are tagged with that tag, and the bars scaling to the window size. It turned out to be more complicated than I was expecting.&lt;/p&gt;</summary><content type="html">&lt;p&gt;Today I decided that, since I'm a data kind of guy, I would like my &lt;a href="/tags"&gt;tags page&lt;/a&gt; to show a bar chart of how many posts per tag I've made. The idea was to basically have a list of tags on the left, with a bar chart on the right showing how many articles are tagged with that tag. Obviously the bars should scale to the size of the window. If you were too lazy to click the link, the result I came up with (at the time of writing) looks like this:&lt;/p&gt;
 &lt;p&gt;&lt;img alt="The graph" src="/images/tag-graph.png"&gt;&lt;/p&gt;
 &lt;p&gt;It turned out to be more complicated than I was expecting since I had to work around the constraints of a static site. My solution basically consists of 3 parts:&lt;/p&gt;
 &lt;ol&gt;
@@ -435,7 +792,7 @@ only showing top 10 rows
 
 &lt;p&gt;The single table is set up, and then jinja loops through the tags. For each tag, it makes one row. It puts each tag name (and a link to that tag's articles) in the &lt;code&gt;tag&lt;/code&gt; column. It sets up the &lt;code&gt;tagbarcol&lt;/code&gt; column and puts a &lt;code&gt;tagbar&lt;/code&gt; inside it, with width &lt;code&gt;100&lt;/code&gt; &lt;code&gt;*&lt;/code&gt; &lt;code&gt;&amp;lt;number of articles for that tag&amp;gt;&lt;/code&gt; &lt;code&gt;/&lt;/code&gt; &lt;code&gt;&amp;lt;maximum number of articles&amp;gt;&lt;/code&gt;, where the maximum number of articles comes from the hacky loop above.&lt;/p&gt;
 &lt;p&gt;And that's it! If you didn't click the link before but are now feeling inspired, &lt;a href="/tags"&gt;check out the tags page&lt;/a&gt;! It was a bit complex but I'm happy with the result. &lt;/p&gt;
-&lt;p&gt;Did I do something stupid? Would you have done something differently? Let me know!&lt;/p&gt;</content><category term="web"></category><category term="css"></category><category term="pelican"></category><category term="jinja"></category><category term="html"></category></entry><entry><title>Groupby without aggregation in Pandas</title><link href="https://johnpaton.net/posts/groupby-without-aggregation/" rel="alternate"></link><published>2017-07-17T20:00:00-01:00</published><updated>2017-07-17T20:00:00-01:00</updated><author><name>John Paton</name></author><id>tag:johnpaton.net,2017-07-17:/posts/groupby-without-aggregation/</id><summary type="html">&lt;p&gt;Pandas has a useful feature that I didn't appreciate enough when I first started using it: &lt;code&gt;groupby&lt;/code&gt;s without aggregation. What do I mean by that? Let's look at an example.&lt;/p&gt;</summary><content type="html">&lt;p&gt;Pandas has a useful feature that I didn't appreciate enough when I first started using it: &lt;code&gt;groupby&lt;/code&gt;s without aggregation. What do I mean by that? Let's look at an example.&lt;/p&gt;
+&lt;p&gt;Did I do something stupid? Would you have done something differently? Let me know!&lt;/p&gt;</content><category term="web"></category><category term="css"></category><category term="pelican"></category><category term="jinja"></category><category term="html"></category></entry><entry><title>Groupby without aggregation in Pandas</title><link href="http://johnpaton.net/posts/groupby-without-aggregation/" rel="alternate"></link><published>2017-07-17T20:00:00-01:00</published><updated>2017-07-17T20:00:00-01:00</updated><author><name>John Paton</name></author><id>tag:johnpaton.net,2017-07-17:/posts/groupby-without-aggregation/</id><summary type="html">&lt;p&gt;Pandas has a useful feature that I didn't appreciate enough when I first started using it: &lt;code&gt;groupby&lt;/code&gt;s without aggregation. What do I mean by that? Let's look at an example.&lt;/p&gt;</summary><content type="html">&lt;p&gt;Pandas has a useful feature that I didn't appreciate enough when I first started using it: &lt;code&gt;groupby&lt;/code&gt;s without aggregation. What do I mean by that? Let's look at an example.&lt;/p&gt;
 &lt;p&gt;We'll borrow the data structure from my previous post about &lt;a href="https://johnpaton.github.io/posts/periods-since-time-series-events/"&gt;counting the periods since an event&lt;/a&gt;: company accident data. We have a list of workplace accidents for some company since 1980, including the time and location of the accident (no it's not real, I generated it, please don't send your lawyers to investigate a data breach): &lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pandas&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;pd&lt;/span&gt;
 &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;numpy&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;np&lt;/span&gt;
@@ -656,7 +1013,7 @@ only showing top 10 rows
 &lt;/table&gt;
 &lt;/div&gt;
 
-&lt;p&gt;We see that our dataframe maintains its original structure, but we now have information about each location that was calculated using only other datapoints from that location.&lt;/p&gt;</content><category term="python"></category><category term="pandas"></category><category term="data"></category><category term="time series"></category></entry><entry><title>Counting the number of periods since time-series events with Pandas</title><link href="https://johnpaton.net/posts/periods-since-time-series-events/" rel="alternate"></link><published>2017-07-15T20:00:00-01:00</published><updated>2017-07-15T20:00:00-01:00</updated><author><name>John Paton</name></author><id>tag:johnpaton.net,2017-07-15:/posts/periods-since-time-series-events/</id><summary type="html">&lt;p&gt;This is a cute trick I discovered the other day for quickly computing the time since an event on regularly spaced time series data (like monthly reporting), without looping over the data.&lt;/p&gt;</summary><content type="html">&lt;p&gt;This is a cute trick I discovered the other day for quickly computing the time since an event on regularly spaced time series data (like monthly reporting), without looping over the data. &lt;/p&gt;
+&lt;p&gt;We see that our dataframe maintains its original structure, but we now have information about each location that was calculated using only other datapoints from that location.&lt;/p&gt;</content><category term="python"></category><category term="pandas"></category><category term="data"></category><category term="time series"></category></entry><entry><title>Counting the number of periods since time-series events with Pandas</title><link href="http://johnpaton.net/posts/periods-since-time-series-events/" rel="alternate"></link><published>2017-07-15T20:00:00-01:00</published><updated>2017-07-15T20:00:00-01:00</updated><author><name>John Paton</name></author><id>tag:johnpaton.net,2017-07-15:/posts/periods-since-time-series-events/</id><summary type="html">&lt;p&gt;This is a cute trick I discovered the other day for quickly computing the time since an event on regularly spaced time series data (like monthly reporting), without looping over the data.&lt;/p&gt;</summary><content type="html">&lt;p&gt;This is a cute trick I discovered the other day for quickly computing the time since an event on regularly spaced time series data (like monthly reporting), without looping over the data. &lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pandas&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;pd&lt;/span&gt;
 &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;numpy&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;np&lt;/span&gt;
 &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;matplotlib.pyplot&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;plt&lt;/span&gt;
@@ -1069,7 +1426,7 @@ dtype: float64
 &lt;p&gt;879 rows × 1 columns&lt;/p&gt;
 &lt;/div&gt;
 
-&lt;p&gt;Happy incident tracking!&lt;/p&gt;</content><category term="python"></category><category term="pandas"></category><category term="data"></category><category term="time series"></category></entry><entry><title>Custom color schemes in Matplotlib</title><link href="https://johnpaton.net/posts/custom-color-schemes-in-matplotlib/" rel="alternate"></link><published>2017-05-11T20:00:00-01:00</published><updated>2017-05-11T20:00:00-01:00</updated><author><name>John Paton</name></author><id>tag:johnpaton.net,2017-05-11:/posts/custom-color-schemes-in-matplotlib/</id><summary type="html">&lt;p&gt;At KPMG, like (I imagine) at most companies, we have a custom color palette that presentations and other materials are supposed to conform to. I actually quite like it when things I produce have a consistent look and feel, so I decided to find out how to make a custom color palette in &lt;a href="https://matplotlib.org/"&gt;matplotlib&lt;/a&gt;. Turns out that it's super easy.&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;strong&gt;Update 03/10/2017&lt;/strong&gt;: The &lt;code&gt;axes.prop_cycle&lt;/code&gt; property is now only supported as a single line, no line breaks. This has not been updated in the downloadable template but may be fixed in a future release. See &lt;a href="https://github.com/matplotlib/matplotlib/issues/9184"&gt;the issue on GitHub&lt;/a&gt; for more info.&lt;/p&gt;
+&lt;p&gt;Happy incident tracking!&lt;/p&gt;</content><category term="python"></category><category term="pandas"></category><category term="data"></category><category term="time series"></category></entry><entry><title>Custom color schemes in Matplotlib</title><link href="http://johnpaton.net/posts/custom-color-schemes-in-matplotlib/" rel="alternate"></link><published>2017-05-11T20:00:00-01:00</published><updated>2017-05-11T20:00:00-01:00</updated><author><name>John Paton</name></author><id>tag:johnpaton.net,2017-05-11:/posts/custom-color-schemes-in-matplotlib/</id><summary type="html">&lt;p&gt;At KPMG, like (I imagine) at most companies, we have a custom color palette that presentations and other materials are supposed to conform to. I actually quite like it when things I produce have a consistent look and feel, so I decided to find out how to make a custom color palette in &lt;a href="https://matplotlib.org/"&gt;matplotlib&lt;/a&gt;. Turns out that it's super easy.&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;strong&gt;Update 03/10/2017&lt;/strong&gt;: The &lt;code&gt;axes.prop_cycle&lt;/code&gt; property is now only supported as a single line, no line breaks. This has not been updated in the downloadable template but may be fixed in a future release. See &lt;a href="https://github.com/matplotlib/matplotlib/issues/9184"&gt;the issue on GitHub&lt;/a&gt; for more info.&lt;/p&gt;
 &lt;p&gt;At KPMG, like (I imagine) at most companies, we have a custom color palette that presentations and other materials are supposed to conform to. I actually quite like it when things I produce have a consistent look and feel, so I decided to find out how to make a custom color palette in &lt;a href="https://matplotlib.org/"&gt;matplotlib&lt;/a&gt;. Turns out that it's super easy.&lt;/p&gt;
 &lt;p&gt;The first step is to create a &lt;code&gt;.mplstyle&lt;/code&gt; file for your color scheme. These can contain a bunch of options, but you can download a sample &lt;a href="http://matplotlib.org/_static/matplotlibrc"&gt;here&lt;/a&gt;. Way down in line 337 (at the time of writing), you will find the following lines:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;#axes.prop_cycle    : cycler(&amp;#39;color&amp;#39;,&lt;/span&gt;
@@ -1104,7 +1461,7 @@ dtype: float64
 
 
 &lt;p&gt;There are a &lt;a href="http://matplotlib.org/users/customizing.html"&gt;bunch more settings&lt;/a&gt; that you can define in the matplotlib style file, but since I'm a terrible designer I know I'll make bad choices, so I'll leave that to the experts. For now, I'm just happy to see the exponential growth of colors in my life.&lt;/p&gt;
-&lt;p&gt;&lt;img alt="colors" src="/images/colors.png"&gt;&lt;/p&gt;</content><category term="python"></category><category term="dataviz"></category><category term="matplotlib"></category></entry><entry><title>engl_ish: Simulate your language. ish.</title><link href="https://johnpaton.net/posts/engl_ish/" rel="alternate"></link><published>2017-02-04T20:00:00-01:00</published><updated>2017-02-04T20:00:00-01:00</updated><author><name>John Paton</name></author><id>tag:johnpaton.net,2017-02-04:/posts/engl_ish/</id><summary type="html">&lt;p&gt;Quite a while ago I saw a short film called &lt;a href="https://www.youtube.com/watch?v=Vt4Dfa4fOEY"&gt;Skwerl&lt;/a&gt;, meant to demonstrate "how English sounds to non-English speakers". As a native English speaker, watching it is quite surreal. The sounds and accents are totally familiar, and there are definitely words in there that you recognize, but there is no discernible overall meaning whatsoever. It's actually kind of hard to listen to. All you've got to hang onto is that what you're hearing somehow &lt;em&gt;feels&lt;/em&gt; like English. And that's the point. Skwerl gave me the idea to attempt to create a similar effect, but with reading instead of listening. I wanted to see how English looks to non-English readers. And so I created &lt;code&gt;engl_ish&lt;/code&gt;.&lt;/p&gt;</summary><content type="html">&lt;p&gt;Quite a while ago I saw a short film called &lt;a href="https://www.youtube.com/watch?v=Vt4Dfa4fOEY"&gt;Skwerl&lt;/a&gt;, meant to demonstrate "how English sounds to non-English speakers". As a native English speaker, watching it is quite surreal. The sounds and accents are totally familiar, and there are definitely words in there that you recognize, but there is no discernible overall meaning whatsoever. It's actually kind of hard to listen to. All you've got to hang onto is that what you're hearing somehow &lt;em&gt;feels&lt;/em&gt; like English. And that's the point.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="colors" src="/images/colors.png"&gt;&lt;/p&gt;</content><category term="python"></category><category term="dataviz"></category><category term="matplotlib"></category></entry><entry><title>engl_ish: Simulate your language. ish.</title><link href="http://johnpaton.net/posts/engl_ish/" rel="alternate"></link><published>2017-02-04T20:00:00-01:00</published><updated>2017-02-04T20:00:00-01:00</updated><author><name>John Paton</name></author><id>tag:johnpaton.net,2017-02-04:/posts/engl_ish/</id><summary type="html">&lt;p&gt;Quite a while ago I saw a short film called &lt;a href="https://www.youtube.com/watch?v=Vt4Dfa4fOEY"&gt;Skwerl&lt;/a&gt;, meant to demonstrate "how English sounds to non-English speakers". As a native English speaker, watching it is quite surreal. The sounds and accents are totally familiar, and there are definitely words in there that you recognize, but there is no discernible overall meaning whatsoever. It's actually kind of hard to listen to. All you've got to hang onto is that what you're hearing somehow &lt;em&gt;feels&lt;/em&gt; like English. And that's the point. Skwerl gave me the idea to attempt to create a similar effect, but with reading instead of listening. I wanted to see how English looks to non-English readers. And so I created &lt;code&gt;engl_ish&lt;/code&gt;.&lt;/p&gt;</summary><content type="html">&lt;p&gt;Quite a while ago I saw a short film called &lt;a href="https://www.youtube.com/watch?v=Vt4Dfa4fOEY"&gt;Skwerl&lt;/a&gt;, meant to demonstrate "how English sounds to non-English speakers". As a native English speaker, watching it is quite surreal. The sounds and accents are totally familiar, and there are definitely words in there that you recognize, but there is no discernible overall meaning whatsoever. It's actually kind of hard to listen to. All you've got to hang onto is that what you're hearing somehow &lt;em&gt;feels&lt;/em&gt; like English. And that's the point.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# embed the YouTube video&lt;/span&gt;
 &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;IPython.display&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;YouTubeVideo&lt;/span&gt;
 &lt;span class="n"&gt;YouTubeVideo&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Vt4Dfa4fOEY&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
