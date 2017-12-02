@@ -341,8 +341,9 @@ function resize() {
                          300);
     svg_eur.attr("width", width_art);
     svg_wor.attr("width", width_art);
-    simulation_wor.alpha(0.5).force("center", d3.forceCenter(width_art / 2, height_eur / 2)).restart();
     simulation_eur.alpha(0.5).force("center", d3.forceCenter(width_art / 2, height_eur / 2)).restart();
+    simulation_wor.alpha(0.5).force("center", d3.forceCenter(width_art / 2, height_wor / 2)).restart();
+
   }
 
 
