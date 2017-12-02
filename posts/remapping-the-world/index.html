@@ -327,7 +327,7 @@ d3.json("/static/europe.json", function(error, graph) {
                              .distance(function(d) {return 200*(1-Math.pow(d.strength, 2)); }));
 
     function boxx(d){
-        return Math.min(Math.max(rad(d), d.x), width_art-rad(d)-100);
+        return Math.min(Math.max(rad(d), d.x), width_art-rad(d)-75);
     }
 
     function boxy(d){
@@ -416,7 +416,7 @@ d3.json("/static/world.json", function(error, graph) {
                              .distance(function(d) {return 150*(1-Math.pow(d.strength, 2)); }));
 
     function boxx(d){
-        return Math.min(Math.max(rad(d), d.x), width_art-rad(d)-100);
+        return Math.min(Math.max(rad(d), d.x), width_art-rad(d)-75);
     }
 
     function boxy(d){
@@ -436,6 +436,18 @@ d3.json("/static/world.json", function(error, graph) {
         .attr("cy", function(d) { boxy(d) });
   }
 });
+
+d3.select(window).on("resize", resize);
+
+
+function resize() {
+    width_art = Math.max(parseFloat(d3.select("article").style("width").slice(0,-2)),
+                         300);
+    svg_eur.attr("width", width_art);
+    svg_wor.attr("width", width_art);
+    simulation_wor.alpha(0.5).force("center", d3.forceCenter(width_art / 2, height_eur / 2)).restart();
+    simulation_eur.alpha(0.5).force("center", d3.forceCenter(width_art / 2, height_eur / 2)).restart();
+  }
 
 
 function dragstarted_eur(d) {
