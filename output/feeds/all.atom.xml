@@ -1,0 +1,1704 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>John Paton</title><link href="https://johnpaton.net/" rel="alternate"></link><link href="https://johnpaton.net/feeds/all.atom.xml" rel="self"></link><id>https://johnpaton.net/</id><updated>2017-12-02T19:34:00-01:00</updated><entry><title>Remapping the world with word vectors</title><link href="https://johnpaton.net/posts/remapping-the-world/" rel="alternate"></link><published>2017-12-02T19:34:00-01:00</published><updated>2017-12-02T19:34:00-01:00</updated><author><name>John Paton</name></author><id>tag:johnpaton.net,2017-12-02:/posts/remapping-the-world/</id><summary type="html">&lt;p&gt;Everyone is used to the map. Most people could make a reasonable attempt at drawing one from memory (well, &lt;a href="https://www.theatlantic.com/international/archive/2014/01/what-you-get-when-30-people-draw-a-world-map-from-memory/282901/"&gt;sort of&lt;/a&gt;). But what would it look like if we positioned the countries not by geographical location, but by our own perceived relationships between them? Armed with Conceptnet Numberbatch, I decided to try just that.&lt;/p&gt;</summary><content type="html">&lt;p&gt;Everyone is used to the map. Most people could make a reasonable attempt at drawing one from memory (well, &lt;a href="https://www.theatlantic.com/international/archive/2014/01/what-you-get-when-30-people-draw-a-world-map-from-memory/282901/"&gt;sort of&lt;/a&gt;). But what would it look like if we positioned the countries not by geographical location, but by our own perceived relationships between them? Armed with Conceptnet Numberbatch, I decided to try just that.&lt;/p&gt;
+&lt;p&gt;Contents:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="#word-vectors"&gt;Word Vectors&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#conceptnet-numberbatch"&gt;Conceptnet Numberbatch&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#countries-of-the-world"&gt;Countries of the world&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#countries-as-concept-vectors"&gt;Countries as concept vectors&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#remapping"&gt;Remapping the world&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#mapping-our-bias"&gt;Mapping our bias?&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;a name="word-vectors"&gt; &lt;/a&gt;&lt;/p&gt;
+&lt;h3&gt;Word Vectors&lt;/h3&gt;
+&lt;p&gt;In natural language processing, a big issue is the dimensionality of the data. Machine learning algorithms almost exclusively deal with vectors of numbers, whereas the atomic unit of natural language is the word. The natural way to encode words as feature vectors is to do what's called one-hot encoding: make a vector with only one element 1, and the rest 0, where the position of the 1 is determined by the word. This gives us a vector as long as the dictionary, with each entry representing one word, and there is a 1 at the position of the word we are trying to represent.&lt;/p&gt;
+&lt;p&gt;There are a few problems with this approach. For one thing, these vectors are very long. Large bodies of English text contain hundreds of thousands of unique words, so each vector has to have hundreds of thousands of entries. However, a more important issue is that these vectors don't encode any meaning. Each vector has magnitude 1, and they are all perpendicular to each other, so we lose all the relationships that we intuitively know words carry. &lt;/p&gt;
+&lt;p&gt;Word vectors are an attempt at a solution to both of these problems. The idea is to use an algorithm to &lt;em&gt;learn&lt;/em&gt; a set of numbers that are unique to each word, and such that "similar" words have vectors that are "close to" each other. Here we consider words to be similar if they are often used in the same context, and we compare vectors by the angle between them (cosine similarity). There are various implementations of this idea, including Stanford's &lt;a href="https://nlp.stanford.edu/projects/glove/"&gt;GloVe&lt;/a&gt;, two flavours of Google's &lt;a href="https://code.google.com/archive/p/word2vec/"&gt;word2vec&lt;/a&gt;, and Facebook's &lt;a href="https://research.fb.com/fasttext/"&gt;fastText&lt;/a&gt;. These approaches are very successful in their aims, even learning to encode abstract relationships between words, as demonstrated by this 2d projection of the GloVe vectors:&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://nlp.stanford.edu/projects/glove/images/comparative_superlative.jpg"&gt;&lt;img alt="superlative word vectors" src="/images/word_vectors_superlative.jpg"&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;It's worth mentioning that these vectors are the result of &lt;em&gt;unsupervised learning&lt;/em&gt;: nobody told the algorithms that loud should be to loudest as strong is to strongest. The relationships are learned purely from the contexts that the words are used in.&lt;/p&gt;
+&lt;p&gt;There are pre-trained vectors from all these implementations available online to download, and if you have a lot of data it's also possible to train your own. If you do decide to make your own word vectors, make sure you fit in with the cool kids by giving them a name with weird capitalization.&lt;/p&gt;
+&lt;p&gt;&lt;a name="conceptnet-numberbatch"&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h3&gt;Conceptnet Numberbatch&lt;/h3&gt;
+&lt;p&gt;The popular word vector sets are mostly just that: &lt;em&gt;word&lt;/em&gt; vectors. But what about singular concepts whose names happen to contain a space? If we split our text into individual words, it is difficult to reconstruct these concepts. The team at &lt;a href="http://conceptnet.io/"&gt;ConceptNet&lt;/a&gt; have done just that, combining several existing word vector sets and &lt;a href="https://arxiv.org/pdf/1604.01692.pdf"&gt;augmenting them&lt;/a&gt; with their own &lt;a href="https://en.wikipedia.org/wiki/Semantic_network"&gt;semantic network&lt;/a&gt; (a mapping of how concepts relate to each other). They also attempt to purposely &lt;a href="https://blog.conceptnet.io/2017/04/24/conceptnet-numberbatch-17-04-better-less-stereotyped-word-vectors/"&gt;de-bias their vectors&lt;/a&gt; so as not to encode relationships that are racist, sexist, etc. Their "concept vectors" are humorously called &lt;a href="https://blog.conceptnet.io/2016/05/25/conceptnet-numberbatch-a-new-name-for-the-best-word-embeddings-you-can-download/"&gt;Conceptnet Numberbatch&lt;/a&gt;. For this post I used the English-only subset, which contains 416,410 vectors.&lt;/p&gt;
+&lt;p&gt;By using the Conceptnet Numberbatch vectors we can compare not just words, but also concepts with each other for similarity. Of course, some words have a double meaning, and one similarity measure will never capture this. As an example, I sorted the concept vectors for similarity to "orange". The top few are mostly various subtypes of the citrus fruit, but at number 9 we get "yellowred", which is clearly related to the color:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;Top 20 most similar concepts to &amp;quot;orange&amp;quot;:
+   1. orange_tree          Similarity: 0.96476
+   2. orange_river         Similarity: 0.94728
+   3. sweet_orange         Similarity: 0.93845
+   4. citrus_sinensis      Similarity: 0.93466
+   5. valencia_orange      Similarity: 0.92221
+   6. sour_orange          Similarity: 0.91260
+   7. citrus_aurantium     Similarity: 0.88945
+   8. bitter_orange        Similarity: 0.88880
+   9. yellowred            Similarity: 0.86298
+  10. seville_orange       Similarity: 0.85275
+  11. temple_orange        Similarity: 0.85226
+  12. bigarade             Similarity: 0.84110
+  13. iyokan               Similarity: 0.83425
+  14. orangish             Similarity: 0.83299
+  15. secondary_colour     Similarity: 0.82235
+  16. tropaeolin           Similarity: 0.79860
+  17. orangelo             Similarity: 0.79785
+  18. orange_coloured      Similarity: 0.77347
+  19. tangor               Similarity: 0.77011
+  20. orangequat           Similarity: 0.76962
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;There are ways around this issue too, for example by &lt;a href="https://explosion.ai/blog/sense2vec-with-spacy"&gt;including word senses&lt;/a&gt; in the vectors, but this is overkill for our purposes.&lt;/p&gt;
+&lt;p&gt;Curious about my homeland, I tried out the same thing with "Canada". Hilariously, both "America's hat" and "Soviet Canuckistan" make the top 20:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;Top 20 most similar concepts to &amp;quot;canada&amp;quot;:
+   1. canada_west          Similarity: 0.97635
+   2. great_white_north    Similarity: 0.96604
+   3. laurentian_highlands Similarity: 0.96598
+   4. arctic_archipelago   Similarity: 0.96598
+   5. hydrofield           Similarity: 0.96262
+   6. ookpik               Similarity: 0.96262
+   7. canada_east          Similarity: 0.96223
+   8. central_provinces    Similarity: 0.95273
+   9. canadianist          Similarity: 0.94114
+  10. central_canada       Similarity: 0.94038
+  11. upper_canada         Similarity: 0.93867
+  12. lower_canada         Similarity: 0.93571
+  13. canadian_shield      Similarity: 0.93504
+  14. canadas              Similarity: 0.92199
+  15. america&amp;#39;s_hat        Similarity: 0.91242
+  16. hudson_bay           Similarity: 0.91084
+  17. canadian_studies     Similarity: 0.90770
+  18. in_north_america     Similarity: 0.90715
+  19. soviet_canuckistan   Similarity: 0.90083
+  20. eastern_canada       Similarity: 0.90079
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Note that the average similarity score in Canada's top 20 is much higher than in orange's. This is likely because "orange" is used in a more wide variety of contexts than "Canada", which dilutes its similarity to any given concept. &lt;/p&gt;
+&lt;p&gt;&lt;a name="countries-of-the-world"&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h3&gt;Countries of the world&lt;/h3&gt;
+&lt;p&gt;It turns out that getting standardized data about the countries of the world is surprisingly tricky. There are various definitions of attributes, character encoding issues, countries not recognizing each other, etc. Luckily, Mohammed Le Doze has painstakingly compiled a &lt;a href="https://mledoze.github.io/countries/"&gt;high quality set of country data&lt;/a&gt; in &lt;a href="https://github.com/mledoze/countries/tree/master/dist"&gt;various formats&lt;/a&gt;, allowing me to offload responsibility for any political sensitivities.&lt;/p&gt;
+&lt;p&gt;As a starting point, we can plot the locations of the countries as we expect to see them. The positions are given in latitude and longitude, but through the magic of &lt;a href="https://xkcd.com/977/"&gt;map projections&lt;/a&gt; (conveniently provided in this &lt;a href="http://wiki.openstreetmap.org/wiki/Mercator#Python_implementation"&gt;code snippet&lt;/a&gt; from OpenStreetMap), we can plot the positions on a flat plane. I creatively decided to represent the countries as blobs with size approximately related to the land area of the country, and immediately gained respect for people who are actually good at making maps:&lt;/p&gt;
+&lt;p&gt;&lt;img alt="The worst world map you ever did see." src="/images/world_map_merc.png"&gt;&lt;/p&gt;
+&lt;p&gt;Nailed it.&lt;/p&gt;
+&lt;p&gt;&lt;a name="countries-as-concept-vectors"&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h3&gt;Countries as concept vectors&lt;/h3&gt;
+&lt;p&gt;The countries dataset provides us with a "common English name" per country. We use this name to associate a concept vector to each country in the set, to the extent possible (some countries, such as French Southern and Antarctic Islands, and British Indian Ocean Territory, were not in Conceptnet Numberbatch. Sorry about that.).&lt;/p&gt;
+&lt;p&gt;Considering countries as concepts with associated vectors reveals some interesting structure. Using &lt;a href="https://en.wikipedia.org/wiki/Hierarchical_clustering"&gt;hierarchical clustering&lt;/a&gt;, we can sort the countries such that more similar countries are next to each other. Plotting the similarities as a heatmap visualizes the clusters of countries that have especially high similarity to each other (and it looks really cool):&lt;/p&gt;
+&lt;p&gt;&lt;a href="/images/countries_similarity_world_annotated2.png"&gt;&lt;img alt="clustered country similarity heatmap" src="/images/countries_similarity_world_annotated2.png"&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;I realize this is big and hard to read; you can click on the image to get the full sized one where the country names are actually legible. &lt;/p&gt;
+&lt;p&gt;The squares along the diagonal are the main clusters of similar countries which were identified by the clustering algorithm. I've tried to give semi-appropriate names to a few of them. We see for example the Arabian Peninsula (Saudi Arabia, Kuwait, Qatar, the UAE, Bahrain, and Oman), groups of nearby islands, and the Group Which Shall Not Be Named (Iraq, Jordan, Israel, Palestine, Lebanon, Iran, Syria, Egypt, and Libya). Thanks to our use of hierarchical clustering, we also see groups with substructure, like the Germanic countries, which visibly include the Nordic countries and BeNeLux.&lt;/p&gt;
+&lt;p&gt;On the off-diagonal we also see some structure. These are mostly primary clusters which have strong inter-group relationships. I've labeled three such groups: the Pacific and Caribbean Islands are quite strongly associated with each other, Spain/Portugal are similar to their (mainly South American) colonies, and many of the Arabic-speaking countries are also associated with each other.&lt;/p&gt;
+&lt;p&gt;It's interesting to note that the primary clusters seem to be mostly determined by geographical proximity, while the off-diagonal groups seem to be more influenced by culture/language.&lt;/p&gt;
+&lt;p&gt;Because the entire world is a bit hard to take in all at once, we will zoom in on Europe for a little bit. We end up with:&lt;/p&gt;
+&lt;p&gt;&lt;a href="/images/countries_similarity_eur.svg"&gt;&lt;img alt="clustered europe similarity heatmap" src="/images/countries_similarity_eur.svg"&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Now it seems that the Germanic world is much less pronounced, the Åland Islands have been split out from the rest of the Nordics, and the Channel Islands are basically separated entirely from the rest. Sorry about that, island nations.&lt;/p&gt;
+&lt;p&gt;&lt;a name="remapping"&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h3&gt;Remapping the world&lt;/h3&gt;
+&lt;p&gt;While the heatmaps are interesting, we started out on a mission to remap the world, and that's what we're going to do. To figure out the new placement of the countries, we visualize them as a &lt;a href="https://en.wikipedia.org/wiki/Graph_theory"&gt;network graph&lt;/a&gt;, simulated with &lt;a href="https://d3js.org/"&gt;d3.js&lt;/a&gt;. The nodes are our country blobs, and they will be connected by springy edges. The edges act with a force on the nodes, pulling more similar countries closer together, and pushing dissimilar ones apart. By initializing the simulation with the countries in their original position as plotted on the map above, we hope to end up with a layout that reflects geography as much as possible, so that we're sure any major changes are the result of taking into account the concept vector similarity. We'll begin with Europe, and connect each country to its top 10 most similar neighbors (to keep the complexity of the simulation down). Thanks to the magic of d3, we can make the map interactive, so if you aren't happy with where your country ended up, you can try to drag it somewhere else and see which other countries get pulled along too:&lt;/p&gt;
+&lt;div align="center"&gt;
+&lt;svg id="europe" width="600" height="500"&gt;&lt;/svg&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Now we're talking! The simulation isn't totally deterministic, so you might see something different, but when I run it I see the Faroes and Iceland get pulled into the interior of Northern Europe thanks to strong connections with the (rest of the) Nordics. The UK moves even further outside mainland Europe. France gains Ireland as a neighbour, but not because of any particularly strong relationship. Rather, Ireland has connections to fellow island nations Iceland (North), Malta (South), and the UK (West), so in balancing these it just happens to end up near France. The Vatican is ejected from mainland Europe due to its surprisingly weak connection to Italy. The Baltics move southeast to be closer to the former Yugoslav countries, which also causes Poland to be pulled south of Austria. &lt;/p&gt;
+&lt;p&gt;It's extremely addicting to play with this simulation and imagine the alternate histories that could have resulted. The Vatican Armada? The Polish-Faroese Empire? Delicious Irish cuisine? We will never know.&lt;/p&gt;
+&lt;p&gt;Just like with the heatmaps, the network graph for the entire world is a bit overwhelming. We simplify the simulation further by connecting each country to only its top 3 neighbors, and make it a bit taller to give them more room to spread out (feel free to drag them apart yourself to get an even better view):&lt;/p&gt;
+&lt;div align="center"&gt;
+&lt;svg id="world" width="600" height="800"&gt;&lt;/svg&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Dragging the countries around gives a good feel for who is connected to who. It's particularly interesting when countries from different continents are closely connected. Portugal and Spain are pulled into the midst of their South American colonies, which form an unusually rigid block. The US finds an unlikely neighbor in Georgia (undoubtedly caused by the US state of the same name). The Anglosphere makes its first appearance, linking the US, Canada, the UK, Australia, and New Zealand (and, dare I say, Ireland). Turkey and Central Asia are disconnected from the rest of Asia, preferring the company of Russia. Canada and the US decouple from the rest of the Americas. Chad is kept at a distance from the rest of Africa, probably because of its common usage as an English name diluting the strength of its connections (the "orange" effect), an issue which also plagues Réunion. The Falklands gain great strategic importance, forming a sole link between the Pacific Islands and the Caribbean. &lt;/p&gt;
+&lt;p&gt;Surprisingly, the entire world seems to remain connected (even if the connecting edges are so weak as to not be visible). Our simulation of so few connections made it possible for 3 or 4 countries to form an exclusive block, disconnected from the rest of the world, but as far as I can tell this did not happen.&lt;/p&gt;
+&lt;p&gt;&lt;a name="mapping-our-bias"&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h3&gt;Mapping our bias?&lt;/h3&gt;
+&lt;p&gt;We have spent quite some time considering the new (and old) groupings that show up when we consider the countries as concept vectors. However, it's also important to consider what is not present in the data, and how this may reveal underlying confounding factors.&lt;/p&gt;
+&lt;p&gt;Although a loosely-grouped Anglosphere formed in the world network graph, the relative strengths of the connections were largely weak enough to not show up in the clustering we performed to create the heat map. Conversely, Africa appeared in the heatmap as one giant block, despite great diversity across the continent (Somalia, Tunisia, and Zimbabwe in the same group?). &lt;/p&gt;
+&lt;p&gt;My hypothesis is that this is a result of using only the English subset of Conceptnet Numberbatch's concept vectors. We humans have a tendency to see differences between members of our "own group" (whatever that means), while seeing other groups as one cohesive unit. Wikipedia tells me this concept is known as &lt;a href="https://en.wikipedia.org/wiki/Out-group_homogeneity"&gt;out-group homogeneity&lt;/a&gt;, which can lead to stereotyping. In the &lt;em&gt;English&lt;/em&gt; concept vectors (which were trained on English text gathered from the Internet), the Anglosphere countries aren't frequently used in the exact same context, because they are more often perceived as the in-group by people who are speaking English. This (and not Brexit) would also explain the UK being pushed out of Europe and relatively far from Ireland in the Europe network graph. All of this happens in spite of ConceptNet actively working to remove bias from their vectors, showing just how tricky this issue really is.&lt;/p&gt;
+&lt;p&gt;It would be interesting to confirm this hypothesis by trying this experiment out with other language vectors, but this post is already long enough, so I will leave that for future exploration. For now, suffice it to say that unexamined factors in your data may lead to unexpected results. If you find yourself making sweeping generalizations or casually reporting on "Soviet Canuckistan", it may be time to reevaluate your assumptions.&lt;/p&gt;
+&lt;p&gt;Did you find any other interesting (missing) connections? Could I have improved the graphs (this is my first forray into d3)? Let me know below! &lt;/p&gt;
+&lt;script src="https://d3js.org/d3.v4.min.js"&gt;&lt;/script&gt;
+
+&lt;script&gt;
+
+var cmap = {"Americas":"#3aa500", "Asia":"#881166", "Africa":"#e34a6f", 
+            "Europe":"#0c5fd3", "Oceania":"#e8d214"};
+
+var svg_eur = d3.select("#europe"),
+    width_eur = +svg_eur.attr("width"),
+    height_eur = +svg_eur.attr("height");
+
+var svg_wor = d3.select("#world"),
+    width_wor = +svg_wor.attr("width"),
+    height_wor = +svg_wor.attr("height");
+
+var color = d3.scaleOrdinal(d3.schemeCategory10);
+
+var simulation_eur = d3.forceSimulation()
+    .force("charge", d3.forceManyBody().strength(-75))
+    .force("collide", d3.forceCollide().radius(rad))
+    .force("center", d3.forceCenter(width_eur / 2, height_eur / 2))
+    .velocityDecay(0.7);
+
+var simulation_wor = d3.forceSimulation()
+    .force("charge", d3.forceManyBody().strength(-5))
+    .force("collide", d3.forceCollide().radius(rad))
+    .force("center", d3.forceCenter(width_wor / 2, height_wor / 2))
+    .velocityDecay(0.7);
+
+
+function rad(d){
+    return Math.max(2, 25* Math.pow(d.area, 1/3));
+};
+
+d3.json("/static/europe.json", function(error, graph) {
+  if (error) throw error;
+
+  var link = svg_eur.append("g")
+      .attr("class", "links")
+    .selectAll("line")
+    .data(graph.links)
+    .enter().append("line")
+      .attr("stroke-width", 2)
+      .attr("stroke", "#999")
+      .attr("stroke-opacity", function(d) {return 0.5*Math.pow(d.strength, 2); });
+
+
+  // function(d) { return color(d.region); })
+
+  var node = svg_eur.append("g")
+      .attr("class", "nodes")
+      .selectAll(".node")
+      .data(graph.nodes)
+      .enter()
+      .append("g")
+        .attr("class","node")
+        .call(d3.drag()
+          .on("start", dragstarted_eur)
+          .on("drag", dragged_eur)
+          .on("end", dragended_eur));
+
+    node.append("circle")
+        .attr("r", rad)
+        .attr("fill", function(d) { return cmap[d.region]; })
+
+
+    node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+
+  //   .selectAll("circle")
+  //   .data(graph.nodes)
+  //   .enter().append("circle")
+  //     .attr("cx", function(d) {return d.x; })
+  //     .attr("cy", function(d) {return d.y; })
+  //     .attr("r", rad)
+  //     .attr("fill", "red")
+  //     .call(d3.drag()
+  //         .on("start", dragstarted)
+  //         .on("drag", dragged)
+  //         .on("end", dragended));
+
+  node.append("text")
+      .text(function(d) { return d.commonName; })
+        .attr("alignment-baseline","middle")
+        .attr("text-anchor", "right")
+        .attr("dx", rad)
+        .attr("font-family","sans-serif")
+        .attr("font-size","9pt")
+        .attr("opacity","0.5")
+
+  simulation_eur
+      .nodes(graph.nodes)
+      .on("tick", ticked);
+
+  simulation_eur.force("link", d3.forceLink()
+                             .links(graph.links)
+                             .strength(function(d) {return 5*(Math.pow(d.strength, 4)); })
+                             .distance(function(d) {return 200*(1-Math.pow(d.strength, 2)); }));
+
+    function boxx(d){
+        return Math.min(Math.max(rad(d), d.x), width_eur-rad(d)-100);
+    }
+
+    function boxy(d){
+        return Math.min(Math.max(rad(d), d.y), height_eur-rad(d)-5);
+    }
+
+  function ticked() {
+    link
+        .attr("x1", function(d) { return boxx(d.source); })
+        .attr("y1", function(d) { return boxy(d.source); })
+        .attr("x2", function(d) { return boxx(d.target); })
+        .attr("y2", function(d) { return boxy(d.target); });
+
+    node
+        .attr("transform", function(d) { return "translate(" + boxx(d) + "," + boxy(d) + ")"; })
+        .attr("cx", function(d) { boxx(d); })
+        .attr("cy", function(d) { boxy(d) });
+  }
+});
+
+
+
+d3.json("/static/world.json", function(error, graph) {
+  if (error) throw error;
+
+  var link = svg_wor.append("g")
+      .attr("class", "links")
+    .selectAll("line")
+    .data(graph.links)
+    .enter().append("line")
+      .attr("stroke-width", 2)
+      .attr("stroke", "#999")
+      .attr("stroke-opacity", function(d) {return 0.5*Math.pow(d.strength, 2); });
+
+
+  // function(d) { return color(d.region); })
+
+  var node = svg_wor.append("g")
+      .attr("class", "nodes")
+      .selectAll(".node")
+      .data(graph.nodes)
+      .enter()
+      .append("g")
+        .attr("class","node")
+        .call(d3.drag()
+          .on("start", dragstarted_wor)
+          .on("drag", dragged_wor)
+          .on("end", dragended_wor));
+
+    node.append("circle")
+        .attr("r", rad)
+        .attr("fill", function(d) { return cmap[d.region]; })
+
+
+    node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+
+  //   .selectAll("circle")
+  //   .data(graph.nodes)
+  //   .enter().append("circle")
+  //     .attr("cx", function(d) {return d.x; })
+  //     .attr("cy", function(d) {return d.y; })
+  //     .attr("r", rad)
+  //     .attr("fill", "red")
+  //     .call(d3.drag()
+  //         .on("start", dragstarted)
+  //         .on("drag", dragged)
+  //         .on("end", dragended));
+
+  node.append("text")
+      .text(function(d) { return d.commonName; })
+        .attr("alignment-baseline","middle")
+        .attr("text-anchor", "right")
+        .attr("dx", rad)
+        .attr("font-family","sans-serif")
+        .attr("font-size","9pt")
+        .attr("opacity","0.5")
+
+  simulation_wor
+      .nodes(graph.nodes)
+      .on("tick", ticked);
+
+  simulation_wor.force("link", d3.forceLink()
+                             .links(graph.links)
+                             .strength(function(d) {return 7*(Math.pow(d.strength, 4)); })
+                             .distance(function(d) {return 150*(1-Math.pow(d.strength, 2)); }));
+
+    function boxx(d){
+        return Math.min(Math.max(rad(d), d.x), width_wor-rad(d)-100);
+    }
+
+    function boxy(d){
+        return Math.min(Math.max(rad(d), d.y), height_wor-rad(d)-5);
+    }
+
+  function ticked() {
+    link
+        .attr("x1", function(d) { return boxx(d.source); })
+        .attr("y1", function(d) { return boxy(d.source); })
+        .attr("x2", function(d) { return boxx(d.target); })
+        .attr("y2", function(d) { return boxy(d.target); });
+
+    node
+        .attr("transform", function(d) { return "translate(" + boxx(d) + "," + boxy(d) + ")"; })
+        .attr("cx", function(d) { boxx(d); })
+        .attr("cy", function(d) { boxy(d) });
+  }
+});
+
+
+function dragstarted_eur(d) {
+  if (!d3.event.active) simulation_eur.alphaTarget(0.3).restart();
+  d.fx = d.x;
+  d.fy = d.y;
+}
+
+function dragged_eur(d) {
+  d.fx = d3.event.x;
+  d.fy = d3.event.y;
+}
+
+function dragended_eur(d) {
+  if (!d3.event.active) simulation_eur.alphaTarget(0);
+  d.fx = null;
+  d.fy = null;
+}
+
+function dragstarted_wor(d) {
+  if (!d3.event.active) simulation_wor.alphaTarget(0.3).restart();
+  d.fx = d.x;
+  d.fy = d.y;
+}
+
+function dragged_wor(d) {
+  d.fx = d3.event.x;
+  d.fy = d3.event.y;
+}
+
+function dragended_wor(d) {
+  if (!d3.event.active) simulation_wor.alphaTarget(0);
+  d.fx = null;
+  d.fy = null;
+}
+
+&lt;/script&gt;</content><category term="natural language"></category><category term="dataviz"></category><category term="d3.js"></category></entry><entry><title>Cleaner Spark UDF definitions with a little decorator</title><link href="https://johnpaton.net/posts/clean-spark-udfs/" rel="alternate"></link><published>2017-11-16T19:48:11-01:00</published><updated>2017-11-16T19:48:11-01:00</updated><author><name>John Paton</name></author><id>tag:johnpaton.net,2017-11-16:/posts/clean-spark-udfs/</id><summary type="html">&lt;p&gt;One of the handy features that makes (Py)Spark more flexible than database tools like Hive even for just transforming tabular data is the ease of creating User Defined Functions (UDFs). However, one thing that still remains a little annoying is that you have to separately define a function and declare it as a UDF. With four lines of code you can clean those definitions right up.&lt;/p&gt;</summary><content type="html">&lt;p&gt;Alternate title: &lt;em&gt;Clean up your Spark jobs with this one weird trick! Apache will hate you!&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;One of the handy features that makes (Py)Spark more flexible than database tools like Hive even for just transforming tabular data is the ease of creating User Defined Functions (UDFs). Although this is &lt;a href="https://community.hortonworks.com/articles/72414/how-to-create-a-custom-udf-for-hive-using-python.html"&gt;also possible in Hive directly&lt;/a&gt;, the ability to define and call UDFs directly in the Python code of your job makes life a lot easier and provides context to what you're doing. However, one thing that still remains a little annoying is separately defining a Python function and then having to declare it as a Spark UDF.&lt;/p&gt;
+&lt;p&gt;Consider the trivial example of incrementing all the values in a Spark DataFrame column by 1. We begin by writing the function, and then make a "UDF-ified" version that we can actually use in Spark.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pyspark.sql.functions&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;f&lt;/span&gt;
+
+&lt;span class="c1"&gt;# define the function&lt;/span&gt;
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;increment&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;
+
+&lt;span class="c1"&gt;# make the udf version&lt;/span&gt;
+&lt;span class="n"&gt;increment_udf&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;f&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;udf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;increment&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;By registering our function as a UDF, we tell Spark that this function should be applied to every value in whatever DataFrame column it is applied to, and Spark takes care of distributing the execution across the cluster when we submit our job. We can now use our newly declared &lt;code&gt;increment_udf&lt;/code&gt; to increment all the values in a column:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# increment column &amp;#39;col&amp;#39; by 1&lt;/span&gt;
+&lt;span class="n"&gt;df&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;withColumn&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;col_plus_1&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;increment_udf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;col&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;"Hold up," you say, "you're making it unnecessarily difficult for yourself. Just use the &lt;code&gt;f.udf&lt;/code&gt; as a &lt;a href="https://www.python.org/dev/peps/pep-0318/"&gt;decorator&lt;/a&gt;!" That is indeed an attractive option. The code then condenses to:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nd"&gt;@f.udf&lt;/span&gt;
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;increment&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;
+
+&lt;span class="n"&gt;df&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;withColumn&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;col_plus_1&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;increment&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;col&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;This is a lot better looking, but it comes at the cost of flexibility. The function &lt;code&gt;f.udf&lt;/code&gt; optionally takes as a second argument the type of the UDF's output (in terms of the &lt;code&gt;pyspark.sql.types&lt;/code&gt; &lt;a href="http://spark.apache.org/docs/latest/api/python/pyspark.sql.html#module-pyspark.sql.types"&gt;types&lt;/a&gt;). Spark will by default convert UDF outputs to strings, which can be a hassle, especially for complex data types (like arrays), or when the precision is important (float vs. double). To avoid this stringy fate, we have to return to our old pattern:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pyspark.sql.types&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;t&lt;/span&gt;
+
+&lt;span class="c1"&gt;# define the function&lt;/span&gt;
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;increment&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;
+
+&lt;span class="c1"&gt;# make a typed udf version&lt;/span&gt;
+&lt;span class="n"&gt;increment_udf&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;f&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;udf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;increment&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;t&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;IntegerType&lt;/span&gt;&lt;span class="p"&gt;())&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;To get back to our nice, clean decorator syntax, we can write a tiny but useful function to generate a UDF decorator that will cast the output to the appropriate type:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;typed_udf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;return_type&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;_typed_udf_wrapper&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;func&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;f&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;udf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;func&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;return_type&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;_typed_udf_wrapper&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;The function &lt;code&gt;typed_udf&lt;/code&gt; returns a new UDF decorator with the specified return type. We can think of it as a decorator that accepts an argument. For a more in depth overview of this pattern and decorators in general, see &lt;a href="https://www.thecodeship.com/patterns/guide-to-python-function-decorators/"&gt;this blog post from The Code Ship&lt;/a&gt;. &lt;/p&gt;
+&lt;p&gt;Now we once again have the nice, clean version of the code, with the added legibility bonus of the UDF's return type being visible right beside its definition:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nd"&gt;@typed_udf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;t&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;IntegerType&lt;/span&gt;&lt;span class="p"&gt;())&lt;/span&gt;
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;increment&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;
+
+&lt;span class="n"&gt;df&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;withColumn&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;col_plus_1&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;increment&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;col&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Using a decorator instead of making two versions of every function isn't really necessary in this simple example, but if you are defining 20 UDFs your namespace will get awfully cluttered and it'll become harder to track what's going on. With four lines of code you can bring sanity back to your function naming scheme.&lt;/p&gt;
+&lt;p&gt;Finally, the code for DIY decorators is notoriously difficult to read, so if you're going to copy-paste, here is the snippet with a docstring (and a shameless plug):&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pyspark.sql.functions&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;f&lt;/span&gt;
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;typed_udf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;return_type&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;Make a UDF decorator with the given return type.&lt;/span&gt;
+
+&lt;span class="sd"&gt;    Example usage:&lt;/span&gt;
+
+&lt;span class="sd"&gt;    &amp;gt;&amp;gt;&amp;gt; @typed_udf(t.IntegerType())&lt;/span&gt;
+&lt;span class="sd"&gt;    ... def increment(x):&lt;/span&gt;
+&lt;span class="sd"&gt;    ...     return x + 1&lt;/span&gt;
+&lt;span class="sd"&gt;    ...&lt;/span&gt;
+&lt;span class="sd"&gt;    &amp;gt;&amp;gt;&amp;gt; df = df.withColumn(&amp;#39;col_plus_1&amp;#39;, increment(&amp;#39;col&amp;#39;))&lt;/span&gt;
+
+&lt;span class="sd"&gt;    See http://johnpaton.net/posts/clean-spark-udfs for more detail.&lt;/span&gt;
+
+&lt;span class="sd"&gt;    Args:&lt;/span&gt;
+&lt;span class="sd"&gt;        return_type (pyspark.sql.types type): the type that will be&lt;/span&gt;
+&lt;span class="sd"&gt;            output by the function being decorated&lt;/span&gt;
+
+&lt;span class="sd"&gt;    Returns:&lt;/span&gt;
+&lt;span class="sd"&gt;        function: Typed UDF decorator&lt;/span&gt;
+
+&lt;span class="sd"&gt;    &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;_typed_udf_wrapper&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;func&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;f&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;udf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;func&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;return_type&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;_typed_udf_wrapper&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;</content><category term="spark"></category><category term="python"></category><category term="data"></category><category term="snippets"></category></entry><entry><title>Forward-fill missing data in Spark</title><link href="https://johnpaton.net/posts/forward-fill-spark/" rel="alternate"></link><published>2017-09-22T20:00:00-01:00</published><updated>2017-09-22T20:00:00-01:00</updated><author><name>John Paton</name></author><id>tag:johnpaton.net,2017-09-22:/posts/forward-fill-spark/</id><summary type="html">&lt;p&gt;Since I've started using Apache Spark, one of the frequent annoyances I've come up against is having an idea that would be very easy to implement in Pandas, but turns out to require a really verbose workaround in Spark. A recent example of this is doing a forward fill (filling &lt;code&gt;null&lt;/code&gt; values with the last known non-&lt;code&gt;null&lt;/code&gt; value).&lt;/p&gt;</summary><content type="html">&lt;p&gt;Since I've started using Apache Spark, one of the frequent annoyances I've come up against is having an idea that would be very easy to implement in Pandas, but turns out to require a really verbose workaround in Spark. Such is the price of scalability. But that does make it extra satisfying when I &lt;em&gt;do&lt;/em&gt; manage to get done what I'm trying to do. &lt;/p&gt;
+&lt;p&gt;A recent example of this is doing a forward fill: filling &lt;code&gt;null&lt;/code&gt; values with the last known non-&lt;code&gt;null&lt;/code&gt; value, leaving leading &lt;code&gt;null&lt;/code&gt;s alone. In Pandas, this is very easy. I used it in my &lt;a href="/posts/periods-since-time-series-events/"&gt;recent post&lt;/a&gt; about efficiently finding the time since the last event in a time series. This post is basically an explanation of &lt;a href="https://stackoverflow.com/a/44953341"&gt;this StackOverflow answer&lt;/a&gt; on doing forward fills with PySpark. &lt;/p&gt;
+&lt;p&gt;Imagine you are measuring the temperature in two spots in your back yard, one in the shade and one in the sun. You record a measurement every half hour so you can compare them. However, you got the cheapest possible digital thermometer, so a lot of the measurements end up missing. Your data may look something like this:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div&gt;
+&lt;table border="1" class="dataframe"&gt;
+  &lt;thead&gt;
+    &lt;tr style="text-align: right;"&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;time&lt;/th&gt;
+      &lt;th&gt;location&lt;/th&gt;
+      &lt;th&gt;temperature&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;th&gt;0&lt;/th&gt;
+      &lt;td&gt;2017-09-09 12:00:00&lt;/td&gt;
+      &lt;td&gt;shade&lt;/td&gt;
+      &lt;td&gt;18.830184&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;1&lt;/th&gt;
+      &lt;td&gt;2017-09-09 12:00:00&lt;/td&gt;
+      &lt;td&gt;sun&lt;/td&gt;
+      &lt;td&gt;NaN&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;2&lt;/th&gt;
+      &lt;td&gt;2017-09-09 12:30:00&lt;/td&gt;
+      &lt;td&gt;shade&lt;/td&gt;
+      &lt;td&gt;NaN&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;...&lt;/th&gt;
+      &lt;td&gt;...&lt;/td&gt;
+      &lt;td&gt;...&lt;/td&gt;
+      &lt;td&gt;...&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;189&lt;/th&gt;
+      &lt;td&gt;2017-09-11 11:00:00&lt;/td&gt;
+      &lt;td&gt;sun&lt;/td&gt;
+      &lt;td&gt;17.595510&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;190&lt;/th&gt;
+      &lt;td&gt;2017-09-11 11:30:00&lt;/td&gt;
+      &lt;td&gt;shade&lt;/td&gt;
+      &lt;td&gt;NaN&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;191&lt;/th&gt;
+      &lt;td&gt;2017-09-11 11:30:00&lt;/td&gt;
+      &lt;td&gt;sun&lt;/td&gt;
+      &lt;td&gt;18.630506&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;192 rows × 3 columns&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;img alt="png" src="/images/temps_unfilled.png"&gt;&lt;/p&gt;
+&lt;p&gt;To compare the measurements each half hour (or maybe to do some machine learning), we need a way of filling in the missing measurements. If the value we are measuring (in this case temperature) changes slowly with respect to how frequently we make a measurement, then a forward fill may be a reasonable choice. &lt;/p&gt;
+&lt;p&gt;In Pandas, this is easy. We just do a &lt;a href="posts/groupby-without-aggregation/"&gt;groupby without aggregation&lt;/a&gt;, and to each group apply the &lt;code&gt;.fillna&lt;/code&gt; method, specifying specifying &lt;code&gt;method='ffill'&lt;/code&gt;, also known as &lt;code&gt;method='pad'&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_filled&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;groupby&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;location&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;\
+              &lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;apply&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;lambda&lt;/span&gt; &lt;span class="n"&gt;group&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;group&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;fillna&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;method&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;ffill&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;span class="n"&gt;df_filled&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div&gt;
+&lt;table border="1" class="dataframe"&gt;
+  &lt;thead&gt;
+    &lt;tr style="text-align: right;"&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;time&lt;/th&gt;
+      &lt;th&gt;location&lt;/th&gt;
+      &lt;th&gt;temperature&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;th&gt;0&lt;/th&gt;
+      &lt;td&gt;2017-09-09 12:00:00&lt;/td&gt;
+      &lt;td&gt;shade&lt;/td&gt;
+      &lt;td&gt;18.830184&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;1&lt;/th&gt;
+      &lt;td&gt;2017-09-09 12:00:00&lt;/td&gt;
+      &lt;td&gt;sun&lt;/td&gt;
+      &lt;td&gt;NaN&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;2&lt;/th&gt;
+      &lt;td&gt;2017-09-09 12:30:00&lt;/td&gt;
+      &lt;td&gt;shade&lt;/td&gt;
+      &lt;td&gt;18.830184&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;...&lt;/th&gt;
+      &lt;td&gt;...&lt;/td&gt;
+      &lt;td&gt;...&lt;/td&gt;
+      &lt;td&gt;...&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;189&lt;/th&gt;
+      &lt;td&gt;2017-09-11 11:00:00&lt;/td&gt;
+      &lt;td&gt;sun&lt;/td&gt;
+      &lt;td&gt;17.595510&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;190&lt;/th&gt;
+      &lt;td&gt;2017-09-11 11:30:00&lt;/td&gt;
+      &lt;td&gt;shade&lt;/td&gt;
+      &lt;td&gt;18.226763&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;191&lt;/th&gt;
+      &lt;td&gt;2017-09-11 11:30:00&lt;/td&gt;
+      &lt;td&gt;sun&lt;/td&gt;
+      &lt;td&gt;18.630506&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;192 rows × 3 columns&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;p&gt;We can see the effect this had on the data by plotting. We hope to end up with nice, regular measurements without having distorted the overall shape too much:&lt;/p&gt;
+&lt;p&gt;&lt;img alt="png" src="/images/temps_filled.png"&gt;&lt;/p&gt;
+&lt;p&gt;In Spark, things get a bit trickier. The key ingredients are:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;The &lt;code&gt;pyspark.sql.Window&lt;/code&gt; object. A window, which may be familiar if you use SQL, acts kind of like a group in a group by, except it slides over the data, allowing you to more easily return a value for every row (instead of doing an aggregation). A window is specified in PySpark with &lt;code&gt;.rowsBetween&lt;/code&gt;, which takes the indices of the rows to include relative to the current row (where the value will be returned in the output). The rows in the window can be ordered using &lt;code&gt;.orderBy&lt;/code&gt;, and partitioned using &lt;code&gt;.partitionBy&lt;/code&gt;. Partitioning over a column ensures that only rows with the same value of that column will end up in a window together, acting similarly to a group by.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;The &lt;code&gt;pyspark.sql&lt;/code&gt; window function &lt;code&gt;last&lt;/code&gt;. As its name suggests, &lt;code&gt;last&lt;/code&gt; returns the last value in the window (implying that the window must have a meaningful ordering). It takes an optional argument &lt;code&gt;ignorenulls&lt;/code&gt; which, when set to &lt;code&gt;True&lt;/code&gt;, causes &lt;code&gt;last&lt;/code&gt; to return the last non-&lt;code&gt;null&lt;/code&gt; value in the window, if such a value exists.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;The strategy to forward fill in Spark is as follows. First we define a window, which is ordered in time, and which includes all the rows from the beginning of time up until the current row. We achieve this here simply by selecting the rows in the window as being the &lt;code&gt;rowsBetween&lt;/code&gt; &lt;code&gt;-sys.maxint&lt;/code&gt; (the largest negative value possible), and &lt;code&gt;0&lt;/code&gt; (the current row). Specifying too large of a value for the rows doesn't cause any errors, so we can just use a very large number to be sure our window reaches until the very beginning of the dataframe. If you need to optimize memory usage, you can make your job much more efficient by finding the maximal number of consecutive &lt;code&gt;null&lt;/code&gt;s in your dataframe and only taking a large enough window to include all of those plus one non-&lt;code&gt;null&lt;/code&gt; value. We partition the window by the &lt;code&gt;location&lt;/code&gt; column to make sure that gaps only get filled with previous measurements from the same location.&lt;/p&gt;
+&lt;p&gt;We act with &lt;code&gt;last&lt;/code&gt; over the window we have defined, specifying &lt;code&gt;ignorenulls=True&lt;/code&gt;. If the current row is non-&lt;code&gt;null&lt;/code&gt;, then the output will just be the value of current row. However, if the current row &lt;em&gt;is&lt;/em&gt; &lt;code&gt;null&lt;/code&gt;, then the function will return the most recent (last) non-&lt;code&gt;null&lt;/code&gt; value in the window.&lt;/p&gt;
+&lt;p&gt;For a Spark dataframe with the same data as we just saw in Pandas, the code looks like this:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# the same data as before&lt;/span&gt;
+&lt;span class="n"&gt;spark_df&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;show&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;10&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; 
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;+-------------------+--------+------------------+
+|               time|location|       temperature|
++-------------------+--------+------------------+
+|2017-09-09 12:00:00|   shade|18.830184076113213|
+|2017-09-09 12:00:00|     sun|              null|
+|2017-09-09 12:30:00|   shade|              null|
+|2017-09-09 12:30:00|     sun| 21.55237663805009|
+|2017-09-09 13:00:00|   shade| 18.59059750682235|
+|2017-09-09 13:00:00|     sun|              null|
+|2017-09-09 13:30:00|   shade|              null|
+|2017-09-09 13:30:00|     sun|22.587784977960474|
+|2017-09-09 14:00:00|   shade|19.101003724324197|
+|2017-09-09 14:00:00|     sun|20.548896316341516|
++-------------------+--------+------------------+
+only showing top 10 rows
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;pyspark.sql&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;Window&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;pyspark.sql.functions&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;last&lt;/span&gt;
+
+&lt;span class="c1"&gt;# define the window&lt;/span&gt;
+&lt;span class="n"&gt;window&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Window&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;partitionBy&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;location&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;\
+               &lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;orderBy&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;time&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;\
+               &lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;rowsBetween&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;maxsize&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="c1"&gt;# define the forward-filled column&lt;/span&gt;
+&lt;span class="n"&gt;filled_column&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;last&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;spark_df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;temperature&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;ignorenulls&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;over&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;window&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="c1"&gt;# do the fill&lt;/span&gt;
+&lt;span class="n"&gt;spark_df_filled&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;spark_df&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;withColumn&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;temp_filled_spark&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;filled_column&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="c1"&gt;# show off our glorious achievements&lt;/span&gt;
+&lt;span class="n"&gt;spark_df_filled&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;orderBy&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;time&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;location&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;show&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;10&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;      
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;+-------------------+--------+------------------+------------------+
+|               time|location|       temperature| temp_filled_spark|
++-------------------+--------+------------------+------------------+
+|2017-09-09 12:00:00|   shade|18.830184076113213|18.830184076113213|
+|2017-09-09 12:00:00|     sun|              null|              null|
+|2017-09-09 12:30:00|   shade|              null|18.830184076113213|
+|2017-09-09 12:30:00|     sun| 21.55237663805009| 21.55237663805009|
+|2017-09-09 13:00:00|   shade| 18.59059750682235| 18.59059750682235|
+|2017-09-09 13:00:00|     sun|              null| 21.55237663805009|
+|2017-09-09 13:30:00|   shade|              null| 18.59059750682235|
+|2017-09-09 13:30:00|     sun|22.587784977960474|22.587784977960474|
+|2017-09-09 14:00:00|   shade|19.101003724324197|19.101003724324197|
+|2017-09-09 14:00:00|     sun|20.548896316341516|20.548896316341516|
++-------------------+--------+------------------+------------------+
+only showing top 10 rows
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Success! Note that a backward-fill is achieved in a very similar way. The only changes are: &lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Define the window over all future rows instead of all past rows: &lt;code&gt;.rowsBetween(-sys.maxsize,0)&lt;/code&gt; becomes &lt;code&gt;.rowsBetween(0,sys.maxsize)&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Use &lt;code&gt;first&lt;/code&gt; from &lt;code&gt;pyspark.sql.functions&lt;/code&gt; instead of &lt;code&gt;last&lt;/code&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;That's it! Happy filling!&lt;/p&gt;</content><category term="python"></category><category term="spark"></category><category term="data"></category><category term="pandas"></category><category term="time series"></category></entry><entry><title>Creating a responsive bar chart for my tags</title><link href="https://johnpaton.net/posts/responsive-bar-chart/" rel="alternate"></link><published>2017-07-21T23:30:00-01:00</published><updated>2017-07-21T23:30:00-01:00</updated><author><name>John Paton</name></author><id>tag:johnpaton.net,2017-07-21:/posts/responsive-bar-chart/</id><summary type="html">&lt;p&gt;Today I decided that, since I'm a data kind of guy, I would like my tags page to show a bar chart of how many posts per tag I've made. The idea was to basically have a list of tags on the left, with a bar chart on the right showing how many articles are tagged with that tag, and the bars scaling to the window size. It turned out to be more complicated than I was expecting.&lt;/p&gt;</summary><content type="html">&lt;p&gt;Today I decided that, since I'm a data kind of guy, I would like my &lt;a href="/tags"&gt;tags page&lt;/a&gt; to show a bar chart of how many posts per tag I've made. The idea was to basically have a list of tags on the left, with a bar chart on the right showing how many articles are tagged with that tag. Obviously the bars should scale to the size of the window. If you were too lazy to click the link, the result I came up with (at the time of writing) looks like this:&lt;/p&gt;
+&lt;p&gt;&lt;img alt="The graph" src="/images/tag-graph.png"&gt;&lt;/p&gt;
+&lt;p&gt;It turned out to be more complicated than I was expecting since I had to work around the constraints of a static site. My solution basically consists of 3 parts:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;An extra setting in my Pelican configuration so I can turn the graph back off if I get bored of it&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;CSS to render a responsive bar chart&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Modification of the jinja2 template for my tags page&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h1&gt;Setting the Pelican configuration&lt;/h1&gt;
+&lt;p&gt;I literally just added the variable &lt;code&gt;TAG_GRAPH = True&lt;/code&gt; to my &lt;a href="https://github.com/JohnPaton/johnpaton.github.io/blob/dev/pelicanconf.py"&gt;configuration file&lt;/a&gt;, which is basically a file with a bunch of Python variables that tells Pelican what to do. This is going great!&lt;/p&gt;
+&lt;p&gt;I also needed to add one more line making an extension available to jinja:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;JINJA_ENVIRONMENT&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;extensions&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;jinja2.ext.do&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;We'll get to what it's used for further on.&lt;/p&gt;
+&lt;h1&gt;Setting up the CSS&lt;/h1&gt;
+&lt;p&gt;This is only the second time I've tried to actually accomplish something in CSS, so it was a bit of a struggle. &lt;a href="https://codepen.io/"&gt;Codepen.io&lt;/a&gt; and &lt;a href="https://developer.chrome.com/devtools#dom-and-styles"&gt;Chrome's Inspect tool&lt;/a&gt; both turned out to be very handy (thanks for the tip, &lt;a href="https://davideberdin.github.io/"&gt;Davide&lt;/a&gt;). I did a bunch of tweaking to get everything looking how I wanted it to, but I'll just include the basics here to get something up and running. If you're implementing it yourself you can look at this site's stylesheet for all the dirty details.&lt;/p&gt;
+&lt;p&gt;What I ended up doing was making a &lt;code&gt;table&lt;/code&gt; with one column to contain the tag name and a second column for the bars. I set up a few different element classes:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;code&gt;table#tags&lt;/code&gt; to set the size of everything&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;td.tag&lt;/code&gt; for the tag names&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;td.tagbarcol&lt;/code&gt; to contain the bars&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;div.tagbar&lt;/code&gt; to act as the bars&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;We give the whole table a bit of a margin to keep it away from the page title, and make it take up 90% of the available width:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nt"&gt;table&lt;/span&gt;&lt;span class="p"&gt;#&lt;/span&gt;&lt;span class="nn"&gt;tags&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;margin-top&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="kt"&gt;em&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="k"&gt;width&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="mi"&gt;90&lt;/span&gt;&lt;span class="kt"&gt;%&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;The tag column needs the text to be right-justified, and it also gets a minimum width so that the tag names aren't too cramped. Keep this small enough that there is enough room for the bars, even on a phone screen.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nt"&gt;td&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nc"&gt;tag&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+  &lt;span class="k"&gt;text-align&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="kc"&gt;right&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+  &lt;span class="k"&gt;min-width&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="mi"&gt;6&lt;/span&gt;&lt;span class="kt"&gt;em&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;We give the column for the bars a width of 100% so that it will take up all the horizontal space not used by the tag names:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nt"&gt;td&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nc"&gt;tagbarcol&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+  &lt;span class="k"&gt;width&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="mi"&gt;100&lt;/span&gt;&lt;span class="kt"&gt;%&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Finally we give the &lt;code&gt;div&lt;/code&gt;'s background the color we want to use for the bars, set the text to white for our data labels, and give it a bit of padding so that the labels aren't too cramped:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nt"&gt;div&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nc"&gt;tagbar&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+  &lt;span class="k"&gt;background-color&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="mh"&gt;#3aa500&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+  &lt;span class="k"&gt;color&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="mh"&gt;#fff&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+  &lt;span class="k"&gt;padding&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="mf"&gt;0.1&lt;/span&gt;&lt;span class="kt"&gt;em&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;The structure of the table is as follows:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;table&lt;/span&gt; &lt;span class="na"&gt;id&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;tags&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;tr&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+        &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;td&lt;/span&gt; &lt;span class="na"&gt;class&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;tag&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+            tag1
+        &lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;td&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+        &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;td&lt;/span&gt; &lt;span class="na"&gt;class&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;tagbarcol&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+            &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;div&lt;/span&gt; &lt;span class="na"&gt;class&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;tagbar&amp;quot;&lt;/span&gt; &lt;span class="na"&gt;style&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;width:100%&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+                5 &lt;span class="c"&gt;&amp;lt;!-- data label --&amp;gt;&lt;/span&gt;
+            &lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;div&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+        &lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;td&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;tr&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;tr&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+        &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;td&lt;/span&gt; &lt;span class="na"&gt;class&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;tag&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+            tag2
+        &lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;td&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+        &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;td&lt;/span&gt; &lt;span class="na"&gt;class&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;tagbarcol&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+            &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;div&lt;/span&gt; &lt;span class="na"&gt;class&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;tagbar&amp;quot;&lt;/span&gt; &lt;span class="na"&gt;style&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;width:40%&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+                2
+            &lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;div&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+        &lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;td&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;tr&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;table&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;strong&gt;The trick is that we set the width of the &lt;code&gt;tagbar&lt;/code&gt; div individually for each bar, making the largest value 100% and everything else a fraction of that.&lt;/strong&gt; That way the longest bar will take up all of &lt;code&gt;tagbarcol&lt;/code&gt;, reaching out to the edge of your table, and smaller columns are proportionally shorter. The width of &lt;code&gt;tagbar&lt;/code&gt; is relative to &lt;code&gt;tagbarcol&lt;/code&gt;, &lt;code&gt;tagbarcol&lt;/code&gt; is relative to the table, and the table is relative to the screen (or whatever container it's in), so that as long as the outermost container is responsive, the bars will scale nicely. &lt;/p&gt;
+&lt;p&gt;The above bare-bones example yields the following responsive bar chart:&lt;/p&gt;
+&lt;iframe src=/static/bar-chart-demo.html width=100% height=80px style="border:none;"&gt;&lt;/iframe&gt;
+
+&lt;p&gt;You can play with this setup yourself in &lt;a href="https://codepen.io/JohnPaton/pen/PKYbgw?editors=1100"&gt;this codepen&lt;/a&gt; I made. &lt;/p&gt;
+&lt;h1&gt;Making the jinja template&lt;/h1&gt;
+&lt;p&gt;This site is powered by &lt;a href="https://blog.getpelican.com/"&gt;Pelican&lt;/a&gt;, which uses &lt;a href="http://jinja.pocoo.org/"&gt;jinja&lt;/a&gt; to make a set of HTML templates that are filled with content I write whenever I regenerate the site. The template I care about in this case is the one that generates my tags page. The theme I'm using is a fork of &lt;a href="https://github.com/alexandrevicenzi/Flex"&gt;Flex&lt;/a&gt; that I'm &lt;a href="https://github.com/johnpaton/flex-mod"&gt;slowly hacking&lt;/a&gt; into something that suits my own whimsical desires.&lt;/p&gt;
+&lt;p&gt;To generate the table structure above, we need to know what the largest data value will be so that we can make everything else relative to that. Pelican provides a variable called &lt;code&gt;tags&lt;/code&gt; to jinja that as best I can tell is a dictionary in the form of &lt;code&gt;{tag: [list of articles]}&lt;/code&gt;. The existing Flex template looped through this, using the values of &lt;code&gt;tag&lt;/code&gt; and the length (in jinja: &lt;code&gt;|count&lt;/code&gt;) of the articles list to get the number of articles for each tag. Unfortunately jinja doesn't seem to have a maximum function, so I realized I would have to loop through the tags and find the largest count myself. However, jinja also doesn't seem to let you assign variables dynamically within a loop; you can only call methods on them. In the end I settled on the following ghetto solution:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;{% set max_articles = [0] %}
+{% for tag, articles in tags %}
+  {% if articles|count &amp;gt; max_articles|last %}
+    {% do max_articles.append(articles|count) %}
+  {% endif %}
+{% endfor %}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;What I'm doing is looping through the articles and appending to a list (which you &lt;em&gt;can&lt;/em&gt; do in a jinja loop) every time I see a value larger than the one at the end of the list. The &lt;code&gt;|last&lt;/code&gt; filter accesses the last value in the list (obviously), so once this loop is done running, &lt;code&gt;max_articles|last&lt;/code&gt; is the value I want all my bars to be relative to. It's ugly, but it works (a very common theme in my life).&lt;/p&gt;
+&lt;p&gt;In order to use the &lt;code&gt;do&lt;/code&gt; statement, we need to make the &lt;code&gt;do&lt;/code&gt; extension available to jinja (don't worry, it comes included by default). Gaining access to this functionality was why I included &lt;code&gt;jinja2.ext.do&lt;/code&gt; in my jinja environment in my Pelican configuration.&lt;/p&gt;
+&lt;p&gt;Now that we know what value to use for our percentages, we can construct the table. I added an &lt;code&gt;if&lt;/code&gt; statement to my template file so that I can still return to my old theme's design just by changing the &lt;code&gt;TAG_GRAPH&lt;/code&gt; variable in my Pelican configuration file.&lt;/p&gt;
+&lt;p&gt;I ended up with the following in my template:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;{% if TAG_GRAPH %}
+  &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;table&lt;/span&gt; &lt;span class="na"&gt;id&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;tags&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+    {% for tag, articles in tags|sort %}
+      &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;tr&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+        &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;td&lt;/span&gt; &lt;span class="na"&gt;class&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;tag&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt; 
+          &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;a&lt;/span&gt; &lt;span class="na"&gt;href&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;{{ SITEURL }}/{{ tag.url }}&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;{{ tag }}&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;a&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+        &lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;td&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+        &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;td&lt;/span&gt; &lt;span class="na"&gt;class&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;tagbarcol&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;  
+          &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;div&lt;/span&gt; &lt;span class="na"&gt;class&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;tagbar&amp;quot;&lt;/span&gt; &lt;span class="na"&gt;style&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;width:{{ 100 * articles|count / max_articles|last }}%&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+            {{ articles|count }} 
+          &lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;div&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt; 
+        &lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;td&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+      &lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;tr&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+    {% endfor %}
+  &lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;table&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+{% else %}
+  &lt;span class="c"&gt;&amp;lt;!-- The old theme --&amp;gt;&lt;/span&gt;
+{% endif%}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;The single table is set up, and then jinja loops through the tags. For each tag, it makes one row. It puts each tag name (and a link to that tag's articles) in the &lt;code&gt;tag&lt;/code&gt; column. It sets up the &lt;code&gt;tagbarcol&lt;/code&gt; column and puts a &lt;code&gt;tagbar&lt;/code&gt; inside it, with width &lt;code&gt;100&lt;/code&gt; &lt;code&gt;*&lt;/code&gt; &lt;code&gt;&amp;lt;number of articles for that tag&amp;gt;&lt;/code&gt; &lt;code&gt;/&lt;/code&gt; &lt;code&gt;&amp;lt;maximum number of articles&amp;gt;&lt;/code&gt;, where the maximum number of articles comes from the hacky loop above.&lt;/p&gt;
+&lt;p&gt;And that's it! If you didn't click the link before but are now feeling inspired, &lt;a href="/tags"&gt;check out the tags page&lt;/a&gt;! It was a bit complex but I'm happy with the result. &lt;/p&gt;
+&lt;p&gt;Did I do something stupid? Would you have done something differently? Let me know!&lt;/p&gt;</content><category term="web"></category><category term="css"></category><category term="pelican"></category><category term="jinja"></category><category term="html"></category></entry><entry><title>Groupby without aggregation in Pandas</title><link href="https://johnpaton.net/posts/groupby-without-aggregation/" rel="alternate"></link><published>2017-07-17T20:00:00-01:00</published><updated>2017-07-17T20:00:00-01:00</updated><author><name>John Paton</name></author><id>tag:johnpaton.net,2017-07-17:/posts/groupby-without-aggregation/</id><summary type="html">&lt;p&gt;Pandas has a useful feature that I didn't appreciate enough when I first started using it: &lt;code&gt;groupby&lt;/code&gt;s without aggregation. What do I mean by that? Let's look at an example.&lt;/p&gt;</summary><content type="html">&lt;p&gt;Pandas has a useful feature that I didn't appreciate enough when I first started using it: &lt;code&gt;groupby&lt;/code&gt;s without aggregation. What do I mean by that? Let's look at an example.&lt;/p&gt;
+&lt;p&gt;We'll borrow the data structure from my previous post about &lt;a href="https://johnpaton.github.io/posts/periods-since-time-series-events/"&gt;counting the periods since an event&lt;/a&gt;: company accident data. We have a list of workplace accidents for some company since 1980, including the time and location of the accident (no it's not real, I generated it, please don't send your lawyers to investigate a data breach): &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pandas&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;pd&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;numpy&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;np&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;matplotlib.pyplot&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;plt&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;head&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div&gt;
+&lt;table border="1" class="dataframe"&gt;
+  &lt;thead&gt;
+    &lt;tr style="text-align: right;"&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;location&lt;/th&gt;
+      &lt;th&gt;severity&lt;/th&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;time&lt;/th&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;th&gt;1980-02-28 22:05:39&lt;/th&gt;
+      &lt;td&gt;Birmingham&lt;/td&gt;
+      &lt;td&gt;1&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;1980-03-01 02:12:20&lt;/th&gt;
+      &lt;td&gt;Birmingham&lt;/td&gt;
+      &lt;td&gt;3&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;1980-03-07 07:30:30&lt;/th&gt;
+      &lt;td&gt;Amsterdam&lt;/td&gt;
+      &lt;td&gt;1&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;1980-05-15 03:23:01&lt;/th&gt;
+      &lt;td&gt;Amsterdam&lt;/td&gt;
+      &lt;td&gt;1&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;1980-05-29 21:21:39&lt;/th&gt;
+      &lt;td&gt;Birmingham&lt;/td&gt;
+      &lt;td&gt;1&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Say we want to add the total number of accidents at each location as a column in the dataset. We could start off by doing a regular &lt;code&gt;groupby&lt;/code&gt; to get the total number of accidents per location:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;gb&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;groupby&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;location&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;count&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="n"&gt;gb&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div&gt;
+&lt;table border="1" class="dataframe"&gt;
+  &lt;thead&gt;
+    &lt;tr style="text-align: right;"&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;severity&lt;/th&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;location&lt;/th&gt;
+      &lt;th&gt;&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Amsterdam&lt;/th&gt;
+      &lt;td&gt;129&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Birmingham&lt;/th&gt;
+      &lt;td&gt;121&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+
+&lt;p&gt;But now we have to separately add this information to the dataframe.&lt;/p&gt;
+&lt;p&gt;Instead, we have the option to directly operate on the whole group:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;accident_count&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;group&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;group&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;severity&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;count&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+    &lt;span class="n"&gt;group&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;num_accidents&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt;
+
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;group&lt;/span&gt;
+
+&lt;span class="n"&gt;df&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;groupby&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;location&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;apply&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;accident_count&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;head&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div&gt;
+&lt;table border="1" class="dataframe"&gt;
+  &lt;thead&gt;
+    &lt;tr style="text-align: right;"&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;location&lt;/th&gt;
+      &lt;th&gt;severity&lt;/th&gt;
+      &lt;th&gt;num_accidents&lt;/th&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;time&lt;/th&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;th&gt;1980-02-28 22:05:39&lt;/th&gt;
+      &lt;td&gt;Birmingham&lt;/td&gt;
+      &lt;td&gt;1&lt;/td&gt;
+      &lt;td&gt;121&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;1980-03-01 02:12:20&lt;/th&gt;
+      &lt;td&gt;Birmingham&lt;/td&gt;
+      &lt;td&gt;3&lt;/td&gt;
+      &lt;td&gt;121&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;1980-03-07 07:30:30&lt;/th&gt;
+      &lt;td&gt;Amsterdam&lt;/td&gt;
+      &lt;td&gt;1&lt;/td&gt;
+      &lt;td&gt;129&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;1980-05-15 03:23:01&lt;/th&gt;
+      &lt;td&gt;Amsterdam&lt;/td&gt;
+      &lt;td&gt;1&lt;/td&gt;
+      &lt;td&gt;129&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;1980-05-29 21:21:39&lt;/th&gt;
+      &lt;td&gt;Birmingham&lt;/td&gt;
+      &lt;td&gt;1&lt;/td&gt;
+      &lt;td&gt;121&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Now, in this simple case we could have just performed a left join. However, this kind of &lt;code&gt;groupby&lt;/code&gt; becomes especially handy when you have more complex operations you want to do within the group, without interference from other groups.&lt;/p&gt;
+&lt;p&gt;As a more complex example, consider calculating the time between accidents at each location. Our dataframe is already sorted by accident time, so all we have to do is make a series out of the group's index (&lt;code&gt;time&lt;/code&gt;) and take the difference between the rows to get the time differences between incidents. We insert this information directly into the group as a new column and return it:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;time_difference&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;group&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="c1"&gt;# get the time differences and put them directly into the group&lt;/span&gt;
+    &lt;span class="n"&gt;group&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;time_since_previous&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;group&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;index&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;to_series&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;diff&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;group&lt;/span&gt;
+
+&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;groupby&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;location&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;apply&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;time_difference&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;head&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div&gt;
+&lt;table border="1" class="dataframe"&gt;
+  &lt;thead&gt;
+    &lt;tr style="text-align: right;"&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;location&lt;/th&gt;
+      &lt;th&gt;severity&lt;/th&gt;
+      &lt;th&gt;num_accidents&lt;/th&gt;
+      &lt;th&gt;time_since_previous&lt;/th&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;time&lt;/th&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;th&gt;1980-02-28 22:05:39&lt;/th&gt;
+      &lt;td&gt;Birmingham&lt;/td&gt;
+      &lt;td&gt;1&lt;/td&gt;
+      &lt;td&gt;121&lt;/td&gt;
+      &lt;td&gt;NaT&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;1980-03-01 02:12:20&lt;/th&gt;
+      &lt;td&gt;Birmingham&lt;/td&gt;
+      &lt;td&gt;3&lt;/td&gt;
+      &lt;td&gt;121&lt;/td&gt;
+      &lt;td&gt;1 days 04:06:41&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;1980-03-07 07:30:30&lt;/th&gt;
+      &lt;td&gt;Amsterdam&lt;/td&gt;
+      &lt;td&gt;1&lt;/td&gt;
+      &lt;td&gt;129&lt;/td&gt;
+      &lt;td&gt;NaT&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;1980-05-15 03:23:01&lt;/th&gt;
+      &lt;td&gt;Amsterdam&lt;/td&gt;
+      &lt;td&gt;1&lt;/td&gt;
+      &lt;td&gt;129&lt;/td&gt;
+      &lt;td&gt;68 days 19:52:31&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;1980-05-29 21:21:39&lt;/th&gt;
+      &lt;td&gt;Birmingham&lt;/td&gt;
+      &lt;td&gt;1&lt;/td&gt;
+      &lt;td&gt;121&lt;/td&gt;
+      &lt;td&gt;89 days 19:09:19&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+
+&lt;p&gt;We see that our dataframe maintains its original structure, but we now have information about each location that was calculated using only other datapoints from that location.&lt;/p&gt;</content><category term="python"></category><category term="pandas"></category><category term="data"></category><category term="time series"></category></entry><entry><title>Counting the number of periods since time-series events with Pandas</title><link href="https://johnpaton.net/posts/periods-since-time-series-events/" rel="alternate"></link><published>2017-07-15T20:00:00-01:00</published><updated>2017-07-15T20:00:00-01:00</updated><author><name>John Paton</name></author><id>tag:johnpaton.net,2017-07-15:/posts/periods-since-time-series-events/</id><summary type="html">&lt;p&gt;This is a cute trick I discovered the other day for quickly computing the time since an event on regularly spaced time series data (like monthly reporting), without looping over the data.&lt;/p&gt;</summary><content type="html">&lt;p&gt;This is a cute trick I discovered the other day for quickly computing the time since an event on regularly spaced time series data (like monthly reporting), without looping over the data. &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pandas&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;pd&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;numpy&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;np&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;matplotlib.pyplot&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;plt&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Say we have a list of workplace accidents at different factory locations for a company. We could have a dataframe that looks something like this:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;head&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div&gt;
+&lt;table border="1" class="dataframe"&gt;
+  &lt;thead&gt;
+    &lt;tr style="text-align: right;"&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;location&lt;/th&gt;
+      &lt;th&gt;severity&lt;/th&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;time&lt;/th&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;th&gt;1980-01-07 23:37:50&lt;/th&gt;
+      &lt;td&gt;Amsterdam&lt;/td&gt;
+      &lt;td&gt;1&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;1980-01-31 16:51:04&lt;/th&gt;
+      &lt;td&gt;Amsterdam&lt;/td&gt;
+      &lt;td&gt;2&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;1980-07-05 05:20:49&lt;/th&gt;
+      &lt;td&gt;Birmingham&lt;/td&gt;
+      &lt;td&gt;1&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;1980-07-25 10:49:03&lt;/th&gt;
+      &lt;td&gt;Amsterdam&lt;/td&gt;
+      &lt;td&gt;1&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;1980-08-10 05:13:19&lt;/th&gt;
+      &lt;td&gt;Amsterdam&lt;/td&gt;
+      &lt;td&gt;1&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Now, our company has decided they want to know how many months each location has gone without an accident, and they want this historically. Maybe they are going to use it as input for a machine learning model that makes monthly predictions, or they might just be curious. &lt;/p&gt;
+&lt;p&gt;Our plan of attack is as follows:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;One-hot encode the severity&lt;/li&gt;
+&lt;li&gt;Resample the data so that it is regularly spaced&lt;/li&gt;
+&lt;li&gt;For each severity, make a counter that increases per period, resetting whenever there was an accident during that period&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Pandas makes step 1 very easy:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_onehot&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get_dummies&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;columns&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;severity&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
+&lt;span class="n"&gt;df_onehot&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;head&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div&gt;
+&lt;table border="1" class="dataframe"&gt;
+  &lt;thead&gt;
+    &lt;tr style="text-align: right;"&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;location&lt;/th&gt;
+      &lt;th&gt;severity_1&lt;/th&gt;
+      &lt;th&gt;severity_2&lt;/th&gt;
+      &lt;th&gt;severity_3&lt;/th&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;time&lt;/th&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;th&gt;1980-01-07 23:37:50&lt;/th&gt;
+      &lt;td&gt;Amsterdam&lt;/td&gt;
+      &lt;td&gt;1.0&lt;/td&gt;
+      &lt;td&gt;0.0&lt;/td&gt;
+      &lt;td&gt;0.0&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;1980-01-31 16:51:04&lt;/th&gt;
+      &lt;td&gt;Amsterdam&lt;/td&gt;
+      &lt;td&gt;0.0&lt;/td&gt;
+      &lt;td&gt;1.0&lt;/td&gt;
+      &lt;td&gt;0.0&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;1980-07-05 05:20:49&lt;/th&gt;
+      &lt;td&gt;Birmingham&lt;/td&gt;
+      &lt;td&gt;1.0&lt;/td&gt;
+      &lt;td&gt;0.0&lt;/td&gt;
+      &lt;td&gt;0.0&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;1980-07-25 10:49:03&lt;/th&gt;
+      &lt;td&gt;Amsterdam&lt;/td&gt;
+      &lt;td&gt;1.0&lt;/td&gt;
+      &lt;td&gt;0.0&lt;/td&gt;
+      &lt;td&gt;0.0&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;1980-08-10 05:13:19&lt;/th&gt;
+      &lt;td&gt;Amsterdam&lt;/td&gt;
+      &lt;td&gt;1.0&lt;/td&gt;
+      &lt;td&gt;0.0&lt;/td&gt;
+      &lt;td&gt;0.0&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Next up, we resample. We want the data by location, so we will first group by location and then resample each group. Since we've one-hot encoded the data, the number of accidents in each period is just the sum of all the rows that fall into the period. Periods with no rows will be NaN, so we fill them with 0 since no accidents occurred in that period.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_periodic&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;df_onehot&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;groupby&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;location&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;resample&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;1M&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sum&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;fillna&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;df_periodic&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div&gt;
+&lt;table border="1" class="dataframe"&gt;
+  &lt;thead&gt;
+    &lt;tr style="text-align: right;"&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;severity_1&lt;/th&gt;
+      &lt;th&gt;severity_2&lt;/th&gt;
+      &lt;th&gt;severity_3&lt;/th&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;location&lt;/th&gt;
+      &lt;th&gt;time&lt;/th&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;th rowspan="4" valign="top"&gt;Amsterdam&lt;/th&gt;
+      &lt;th&gt;1980-01-31&lt;/th&gt;
+      &lt;td&gt;1.0&lt;/td&gt;
+      &lt;td&gt;1.0&lt;/td&gt;
+      &lt;td&gt;0.0&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;1980-02-29&lt;/th&gt;
+      &lt;td&gt;0.0&lt;/td&gt;
+      &lt;td&gt;0.0&lt;/td&gt;
+      &lt;td&gt;0.0&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;1980-03-31&lt;/th&gt;
+      &lt;td&gt;0.0&lt;/td&gt;
+      &lt;td&gt;0.0&lt;/td&gt;
+      &lt;td&gt;0.0&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;1980-04-30&lt;/th&gt;
+      &lt;td&gt;0.0&lt;/td&gt;
+      &lt;td&gt;0.0&lt;/td&gt;
+      &lt;td&gt;0.0&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;...&lt;/th&gt;
+      &lt;th&gt;...&lt;/th&gt;
+      &lt;td&gt;...&lt;/td&gt;
+      &lt;td&gt;...&lt;/td&gt;
+      &lt;td&gt;...&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th rowspan="4" valign="top"&gt;Birmingham&lt;/th&gt;
+      &lt;th&gt;2016-09-30&lt;/th&gt;
+      &lt;td&gt;0.0&lt;/td&gt;
+      &lt;td&gt;0.0&lt;/td&gt;
+      &lt;td&gt;0.0&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;2016-10-31&lt;/th&gt;
+      &lt;td&gt;0.0&lt;/td&gt;
+      &lt;td&gt;0.0&lt;/td&gt;
+      &lt;td&gt;0.0&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;2016-11-30&lt;/th&gt;
+      &lt;td&gt;0.0&lt;/td&gt;
+      &lt;td&gt;0.0&lt;/td&gt;
+      &lt;td&gt;0.0&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;2016-12-31&lt;/th&gt;
+      &lt;td&gt;0.0&lt;/td&gt;
+      &lt;td&gt;1.0&lt;/td&gt;
+      &lt;td&gt;0.0&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;879 rows × 3 columns&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Finally, we want the counter that resets at each period where there was an accident. Let's first do it for one severity and location, and then we'll implement our work on the entire dataset. We'll choose Amsterdam and the lowest severity accidents. &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;amsterdam_low&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;df_periodic&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;loc&lt;/span&gt;&lt;span class="p"&gt;[(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Amsterdam&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;severity_1&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;span class="n"&gt;amsterdam_low&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;time
+1980-01-31    1.0
+1980-02-29    0.0
+1980-03-31    0.0
+1980-04-30    0.0
+             ... 
+2016-06-30    0.0
+2016-07-31    0.0
+2016-08-31    1.0
+2016-09-30    1.0
+Name: severity_1, dtype: float64
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Okay, so we have a series with the number of accidents per month. &lt;/p&gt;
+&lt;p&gt;Now here comes the trick. What we are going to do is set up two new series with the same index as the reports: one with a count that increases monotonically, and one that has the value of the count at every period where we want to reset. &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;count&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;list&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;range&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;amsterdam_low&lt;/span&gt;&lt;span class="p"&gt;)))&lt;/span&gt;
+&lt;span class="n"&gt;count&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Series&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;count&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;index&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;amsterdam_low&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;index&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;count&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;time
+1980-01-31      0
+1980-02-29      1
+1980-03-31      2
+1980-04-30      3
+             ... 
+2016-06-30    437
+2016-07-31    438
+2016-08-31    439
+2016-09-30    440
+dtype: int64
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;resets&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;count&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;where&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;amsterdam_low&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;resets&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;time
+1980-01-31      0.0
+1980-02-29      NaN
+1980-03-31      NaN
+1980-04-30      NaN
+              ...  
+2016-06-30      NaN
+2016-07-31      NaN
+2016-08-31    439.0
+2016-09-30    440.0
+dtype: float64
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Now we forward fill the values in &lt;code&gt;resets&lt;/code&gt; using &lt;code&gt;.fillna(method='pad')&lt;/code&gt;. That will give us a series of constant values, which step up by some amount at each index where there was an accident in &lt;code&gt;amsterdam_low&lt;/code&gt;. This series will act as a baseline which we can subtract from &lt;code&gt;count&lt;/code&gt;, so that at each accident the resulting series will reset to zero and then start counting up again. The first values before the first accident in the dataset will still be NaN, which is the desired behaviour because we don't know what these values should be. &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;resets&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;resets&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;fillna&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;method&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;pad&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;resets&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;time
+1980-01-31      0.0
+1980-02-29      0.0
+1980-03-31      0.0
+1980-04-30      0.0
+              ...  
+2016-06-30    435.0
+2016-07-31    435.0
+2016-08-31    439.0
+2016-09-30    440.0
+dtype: float64
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;since_accident&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;count&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="n"&gt;resets&lt;/span&gt;
+&lt;span class="n"&gt;since_accident&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;time
+1980-01-31    0.0
+1980-02-29    1.0
+1980-03-31    2.0
+1980-04-30    3.0
+             ... 
+2016-06-30    2.0
+2016-07-31    3.0
+2016-08-31    0.0
+2016-09-30    0.0
+dtype: float64
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Plotting the three series makes it clearer what exactly the trick was.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;count&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;plot&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;figsize&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;12&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;span class="n"&gt;resets&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;plot&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="n"&gt;since_accident&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;plot&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;legend&lt;/span&gt;&lt;span class="p"&gt;([&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;count&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;baseline&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;periods since accident&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt;&lt;span class="n"&gt;loc&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;best&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ylabel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;periods&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt; &lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;xlabel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;date&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt; 
+&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;title&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Periods since severity 1 accident in Amsterdam&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;img alt="png" src="/images/periods-since-time-series-events_20_0.png"&gt;&lt;/p&gt;
+&lt;p&gt;We've done it! What's nice about this trick is that we don't have to loop over all the accidents, so it scales well to larger data sets. To finish up, we do a &lt;a href="/posts/groupby-without-aggregation/"&gt;groupby without aggregation&lt;/a&gt; to get the same information for all the accident types.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;periods_since_accident&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;group&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;g&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;group&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;copy&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+    &lt;span class="n"&gt;count&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;list&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;range&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;g&lt;/span&gt;&lt;span class="p"&gt;)))&lt;/span&gt;
+    &lt;span class="n"&gt;count&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Series&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;count&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;index&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;group&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;index&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+    &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;col&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;g&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;columns&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;tolist&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
+        &lt;span class="n"&gt;resets&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;count&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;where&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;group&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;col&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;fillna&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;method&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;pad&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="n"&gt;g&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;periods_since_&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="n"&gt;col&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;count&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="n"&gt;resets&lt;/span&gt;
+
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;g&lt;/span&gt;
+
+&lt;span class="n"&gt;df_report&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;df_periodic&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;groupby&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;level&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;apply&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;periods_since_accident&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="n"&gt;report_cols&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;periods_since_severity_1&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;periods_since_severity_2&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+               &lt;span class="s1"&gt;&amp;#39;periods_since_severity_3&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;span class="n"&gt;df_report&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;loc&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Amsterdam&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;][&lt;/span&gt;&lt;span class="n"&gt;report_cols&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;plot&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;figsize&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;12&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="p"&gt;));&lt;/span&gt;
+&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;title&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Periods since accident in Amsterdam&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt; 
+&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;xlabel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;date&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt; &lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ylabel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;periods&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;img alt="png" src="/images/periods-since-time-series-events_22_0.png"&gt;&lt;/p&gt;
+&lt;p&gt;We can even add one final column with the number of periods since any accident, just by taking the minimum of the other three columns.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df_report&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;periods_since_accident&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;df_report&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;report_cols&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;min&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;axis&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;df_report&lt;/span&gt;&lt;span class="p"&gt;[[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;periods_since_accident&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div&gt;
+&lt;table border="1" class="dataframe"&gt;
+  &lt;thead&gt;
+    &lt;tr style="text-align: right;"&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;periods_since_accident&lt;/th&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;location&lt;/th&gt;
+      &lt;th&gt;time&lt;/th&gt;
+      &lt;th&gt;&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;th rowspan="4" valign="top"&gt;Amsterdam&lt;/th&gt;
+      &lt;th&gt;1980-01-31&lt;/th&gt;
+      &lt;td&gt;0.0&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;1980-02-29&lt;/th&gt;
+      &lt;td&gt;1.0&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;1980-03-31&lt;/th&gt;
+      &lt;td&gt;2.0&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;1980-04-30&lt;/th&gt;
+      &lt;td&gt;3.0&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;...&lt;/th&gt;
+      &lt;th&gt;...&lt;/th&gt;
+      &lt;td&gt;...&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th rowspan="4" valign="top"&gt;Birmingham&lt;/th&gt;
+      &lt;th&gt;2016-09-30&lt;/th&gt;
+      &lt;td&gt;3.0&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;2016-10-31&lt;/th&gt;
+      &lt;td&gt;4.0&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;2016-11-30&lt;/th&gt;
+      &lt;td&gt;5.0&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;2016-12-31&lt;/th&gt;
+      &lt;td&gt;0.0&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;879 rows × 1 columns&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Happy incident tracking!&lt;/p&gt;</content><category term="python"></category><category term="pandas"></category><category term="data"></category><category term="time series"></category></entry><entry><title>Custom color schemes in Matplotlib</title><link href="https://johnpaton.net/posts/custom-color-schemes-in-matplotlib/" rel="alternate"></link><published>2017-05-11T20:00:00-01:00</published><updated>2017-05-11T20:00:00-01:00</updated><author><name>John Paton</name></author><id>tag:johnpaton.net,2017-05-11:/posts/custom-color-schemes-in-matplotlib/</id><summary type="html">&lt;p&gt;At KPMG, like (I imagine) at most companies, we have a custom color palette that presentations and other materials are supposed to conform to. I actually quite like it when things I produce have a consistent look and feel, so I decided to find out how to make a custom color palette in &lt;a href="https://matplotlib.org/"&gt;matplotlib&lt;/a&gt;. Turns out that it's super easy.&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;strong&gt;Update 03/10/2017&lt;/strong&gt;: The &lt;code&gt;axes.prop_cycle&lt;/code&gt; property is now only supported as a single line, no line breaks. This has not been updated in the downloadable template but may be fixed in a future release. See &lt;a href="https://github.com/matplotlib/matplotlib/issues/9184"&gt;the issue on GitHub&lt;/a&gt; for more info.&lt;/p&gt;
+&lt;p&gt;At KPMG, like (I imagine) at most companies, we have a custom color palette that presentations and other materials are supposed to conform to. I actually quite like it when things I produce have a consistent look and feel, so I decided to find out how to make a custom color palette in &lt;a href="https://matplotlib.org/"&gt;matplotlib&lt;/a&gt;. Turns out that it's super easy.&lt;/p&gt;
+&lt;p&gt;The first step is to create a &lt;code&gt;.mplstyle&lt;/code&gt; file for your color scheme. These can contain a bunch of options, but you can download a sample &lt;a href="http://matplotlib.org/_static/matplotlibrc"&gt;here&lt;/a&gt;. Way down in line 337 (at the time of writing), you will find the following lines:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;#axes.prop_cycle    : cycler(&amp;#39;color&amp;#39;,&lt;/span&gt;
+&lt;span class="c1"&gt;#                            [&amp;#39;1f77b4&amp;#39;, &amp;#39;ff7f0e&amp;#39;, &amp;#39;2ca02c&amp;#39;, &amp;#39;d62728&amp;#39;,&lt;/span&gt;
+&lt;span class="c1"&gt;#                              &amp;#39;9467bd&amp;#39;, &amp;#39;8c564b&amp;#39;, &amp;#39;e377c2&amp;#39;, &amp;#39;7f7f7f&amp;#39;,&lt;/span&gt;
+&lt;span class="c1"&gt;#                              &amp;#39;bcbd22&amp;#39;, &amp;#39;17becf&amp;#39;])&lt;/span&gt;
+                                            &lt;span class="c1"&gt;# color cycle for plot lines&lt;/span&gt;
+                                            &lt;span class="c1"&gt;# as list of string colorspecs:&lt;/span&gt;
+                                            &lt;span class="c1"&gt;# single letter, long name, or&lt;/span&gt;
+                                            &lt;span class="c1"&gt;# web-style hex&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;This setting defines the cycle of colors that matplotlib uses for consecutive elements on plots when you don't specify the colors. Uncomment these lines and swap out the list for a list of your favorite (or corporately imposed) colors. As indicated by the comment, matplotlib will accept &lt;a href="https://matplotlib.org/api/colors_api.html"&gt;single letter&lt;/a&gt;, &lt;a href="https://www.w3schools.com/colors/colors_names.asp"&gt;long name&lt;/a&gt;, or hex colors. Use the HTML long name colors to get all your favorites like Gamboge, GrayTeaGreen, and PapayaWhip.&lt;/p&gt;
+&lt;p&gt;&lt;a href="http://math.ubbcluj.ro/~sberinde/wingraph/main.html"&gt;&lt;img alt="HTML long name colors vizualized" src="/images/long_names.gif"&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Once you've got your color theme specified, you need to save the file in the &lt;code&gt;stylelib&lt;/code&gt; directory of your matplotlib &lt;code&gt;configdir&lt;/code&gt;. You can find your &lt;code&gt;configdir&lt;/code&gt; using&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;matplotlib&lt;/span&gt;
+&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;matplotlib&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get_configdir&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="s1"&gt;&amp;#39;C:&lt;/span&gt;&lt;span class="se"&gt;\\&lt;/span&gt;&lt;span class="s1"&gt;Users&lt;/span&gt;&lt;span class="se"&gt;\\&lt;/span&gt;&lt;span class="s1"&gt;johnpaton&lt;/span&gt;&lt;span class="se"&gt;\\&lt;/span&gt;&lt;span class="s1"&gt;.matplotlib&amp;#39;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Save the file as &lt;code&gt;&amp;lt;configdir&amp;gt;/stylelib/&amp;lt;my_style_name&amp;gt;.mplstyle&lt;/code&gt;. I called mine &lt;code&gt;kpmg&lt;/code&gt; since that's what I'm using it for. The filename is how you refer to the style in your code. You can now use your brand new color scheme to make pretty plots in the same way as you use built in styles:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;matplotlib.pyplot&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;plt&lt;/span&gt;
+&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;style&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;use&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;kpmg&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Since all we've done is change the color scheme, you can also use it in combination with other styles and only change their colors. Just make sure your own style is the last one in the list:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;style&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;use&lt;/span&gt;&lt;span class="p"&gt;([&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;ggplot&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;kpmg&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;There are a &lt;a href="http://matplotlib.org/users/customizing.html"&gt;bunch more settings&lt;/a&gt; that you can define in the matplotlib style file, but since I'm a terrible designer I know I'll make bad choices, so I'll leave that to the experts. For now, I'm just happy to see the exponential growth of colors in my life.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="colors" src="/images/colors.png"&gt;&lt;/p&gt;</content><category term="python"></category><category term="dataviz"></category><category term="matplotlib"></category></entry><entry><title>engl_ish: Simulate your language. ish.</title><link href="https://johnpaton.net/posts/engl_ish/" rel="alternate"></link><published>2017-02-04T20:00:00-01:00</published><updated>2017-02-04T20:00:00-01:00</updated><author><name>John Paton</name></author><id>tag:johnpaton.net,2017-02-04:/posts/engl_ish/</id><summary type="html">&lt;p&gt;Quite a while ago I saw a short film called &lt;a href="https://www.youtube.com/watch?v=Vt4Dfa4fOEY"&gt;Skwerl&lt;/a&gt;, meant to demonstrate "how English sounds to non-English speakers". As a native English speaker, watching it is quite surreal. The sounds and accents are totally familiar, and there are definitely words in there that you recognize, but there is no discernible overall meaning whatsoever. It's actually kind of hard to listen to. All you've got to hang onto is that what you're hearing somehow &lt;em&gt;feels&lt;/em&gt; like English. And that's the point. Skwerl gave me the idea to attempt to create a similar effect, but with reading instead of listening. I wanted to see how English looks to non-English readers. And so I created &lt;code&gt;engl_ish&lt;/code&gt;.&lt;/p&gt;</summary><content type="html">&lt;p&gt;Quite a while ago I saw a short film called &lt;a href="https://www.youtube.com/watch?v=Vt4Dfa4fOEY"&gt;Skwerl&lt;/a&gt;, meant to demonstrate "how English sounds to non-English speakers". As a native English speaker, watching it is quite surreal. The sounds and accents are totally familiar, and there are definitely words in there that you recognize, but there is no discernible overall meaning whatsoever. It's actually kind of hard to listen to. All you've got to hang onto is that what you're hearing somehow &lt;em&gt;feels&lt;/em&gt; like English. And that's the point.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# embed the YouTube video&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;IPython.display&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;YouTubeVideo&lt;/span&gt;
+&lt;span class="n"&gt;YouTubeVideo&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Vt4Dfa4fOEY&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;iframe width="560" height="315" src="https://www.youtube.com/embed/Vt4Dfa4fOEY" frameborder="0" allowfullscreen&gt;&lt;/iframe&gt;
+
+&lt;p&gt;Skwerl gave me the idea to attempt to create a similar effect, but with reading instead of listening. I wanted to see how English looks to non-English readers. And so I created &lt;code&gt;engl_ish&lt;/code&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;engl_ish&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;em&gt;If you don't care about what kind of sources I used or how I created the model, this is the point where you should &lt;a href="#good_part"&gt;skip down to the Good Part™&lt;/a&gt;.&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a id='source'&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;What to simulate?&lt;/h2&gt;
+&lt;p&gt;When I initially started this project, I had recently become aware of the &lt;a href="https://www.gutenberg.org/"&gt;Gutenberg Project&lt;/a&gt;, an online library offering over 53,000 (at the time of writing) books, all for free. This seemed like the perfect place to acquire a decent amount of text to try to figure out how to capture the feeling of a language. However, I quickly ran into an issue that I hadn't had since high school English class: language evolves. &lt;/p&gt;
+&lt;p&gt;I was initially using the Gutenberg books that are available in convenient formats in the Python package &lt;code&gt;nltk&lt;/code&gt; (&lt;a href="http://www.nltk.org/"&gt;Natural Language Tookit&lt;/a&gt;), but initial results somehow felt &lt;em&gt;off&lt;/em&gt;. Since the entire point of the project was to try to produce text that &lt;em&gt;felt&lt;/em&gt; like English, this was a big issue. I was producing very long sentences full of big words and semi-colons. In other words, my text looked like an olde time novel, which is exactly what &lt;code&gt;nltk&lt;/code&gt;'s Gutenberg books are. &lt;/p&gt;
+&lt;p&gt;Having decided that programming the next Shakespeare was out of scope, I moved on to something a bit more contemporary: newspapers. The Python &lt;code&gt;newspaper&lt;/code&gt; package allows for the easy scraping of newspaper websites for recent articles. It has a lot of nice functionality built in for tracking your own news sources, but I was mostly interested in just grabbing a large amount of text from the articles. In the rest of this post, I'll use a set of 770 New York Times articles.&lt;/p&gt;
+&lt;p&gt;Since I had already started working using &lt;code&gt;nltk&lt;/code&gt;'s pre-processed Gutenberg books, I converted the NYT articles into the same format using &lt;code&gt;nltk&lt;/code&gt;'s &lt;code&gt;tokenizers&lt;/code&gt;, resulting in a nested list, where the outer level is a list of sentences, and each sentence is a list of &lt;em&gt;tokens&lt;/em&gt; (words or punctuation).&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# get the pre-processed NYT articles&lt;/span&gt;
+&lt;span class="n"&gt;sentences&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;engl_ish&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;load_source&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;english_newspaper_24647_source.pickle&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;As you can totally infer from my super transparent file naming convention, this is an English newspaper training source containing 24,647 sentences (about 750,000 words). The first few sentences in the set look like this:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sentences&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
+&lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sentences&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
+&lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sentences&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;pre&gt;
+['Donald', 'Trump', 'gave', 'two', 'major', 'interviews', 'this', 'week', 'in', 'which', 'he', 'set', 'out', 'more', 'details', 'of', 'his', 'policy', 'agenda', '.']
+['Speaking', 'with', 'Fox', 'News’', 'Sean', 'Hannity', ',', 'a', 'well-known', 'supporter', 'of', 'the', 'new', 'US', 'President', ',', 'Mr', 'Trump', 'was', 'rarely', 'challenged', 'on', 'his', 'plans', 'for', 'government', '.']
+['But', 'in', 'a', 'separate', 'interview', 'David', 'Muir', 'of', 'ABC', 'News’', ',', 'whose', 'network', 'Mr', 'Trump', 'considers', 'to', 'be', 'one', 'of', 'the', 'cabal', 'of', 'mainstream', 'organisations', 'that', 'cover', 'him', 'unfairly', ',', 'pressed', 'Mr', 'Trump', 'on', 'voter', 'fraud', 'and', 'the', 'Mexico', 'wall', '.']
+&lt;/pre&gt;
+
+&lt;p&gt;Great, apparently even in my happy simulated world I can't escape Donald Trump news. I guess there was no avoiding it.&lt;/p&gt;
+&lt;p&gt;Anyway, now that I have some text in a convenient format, it's time to get modelling.&lt;/p&gt;
+&lt;h2&gt;Capturing the "feel" of a language&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;engl_ish&lt;/code&gt; uses a fairly simple combination of probability distributions and (higher order) Markov models to simulate a language. The basic approach is to treat every block of text as a chain of the smaller blocks that it's made of, and then randomly select those sub-blocks in a way that reflects the language we are simulating. Despite the name, I actually take a fairly (Western) language-agnostic approach, using only a few hardcoded rules that mostly also hold true for other European languages that I'm familiar with. To explore the details of the model, we'll start broad at the paragraph level, and zoom in. First, let's get the model:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# get the pre-trained model&lt;/span&gt;
+&lt;span class="n"&gt;english_model&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;engl_ish&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;load_model&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;english_4_newspaper_24647.pickle&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Again thanks to my wonderfully transparent naming convention, we see that this model was trained on the NYT set, and that it is a 4th order model, which will become more important once we've zoomed in to the level of individual words.&lt;/p&gt;
+&lt;h4&gt;Paragraphs&lt;/h4&gt;
+&lt;p&gt;A paragraph is just a chain of sentences. In &lt;code&gt;engl_ish&lt;/code&gt;, the defining feature of a sentence is how many words it has. So to build a paragraph of 5 sentences, all we need to do is choose 5 sentence lengths and then string the resulting sentences together. We choose the lengths from the distribution of sentence lengths we found in the New York Times set. &lt;img alt="img" src="/images/sentence_lengths.png"&gt;&lt;/p&gt;
+&lt;p&gt;It seems that we've got some outliers, probably as a result of some issues with the sentence tokenizer or badly formed web pages, but it's clear that most of the sentences are about 10-40 words long, which seems reasonable. There are also a few zeros, again likely due to parsing issues, but these shouldn't matter since they just won't show up in our text. All in all, we're it seems we're off to a good start. If we are constructing a paragraph, all we need to do is build sentences of appropriate length.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;lengths&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[]&lt;/span&gt;
+&lt;span class="c1"&gt;# choose five sentence lengths&lt;/span&gt;
+&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;range&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;lengths&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;append&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;english_model&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sent_lens&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;draw&lt;/span&gt;&lt;span class="p"&gt;())&lt;/span&gt;
+
+&lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Sample generated sentence lengths:&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;lengths&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;pre&gt;
+Sample generated sentence lengths: [12, 37, 22, 16, 15]
+&lt;/pre&gt;
+
+&lt;p&gt;Wow, so easy! Thing language simulation thing is a breeze.&lt;/p&gt;
+&lt;h4&gt;Sentences&lt;/h4&gt;
+&lt;p&gt;Sentences are more or less just a chain of words, with a bit of flair. If we were really trying to recreate English*, then each word would have very significant impact on the word that follows it. However, all we want is to recreate the &lt;em&gt;feel&lt;/em&gt; of the language. We aren't expecting most of the words to even be real, let alone flow along with each other. So, we can just create each word individually and string them together. &lt;/p&gt;
+&lt;p&gt;To add a bit more structure, we alter the words we generate using a few rules. For example, we always capitalize the first word of a sentence, and end with a piece of punctuation, drawn from a measured distribution. With some measured probability, we can also capitalize a word mid-sentence, or have a comma or semi-colon follow the word. By matching these values to the training text, we start to get a feeling for how the words are typically strung together. In our NYT set, the measured values are:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# generate our probability distributions&lt;/span&gt;
+&lt;span class="n"&gt;english_model&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;end_puncts&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;normalize&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="n"&gt;english_model&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;mid_puncts&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;normalize&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+
+&lt;span class="c1"&gt;# display the values&lt;/span&gt;
+&lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Sentence-ending punctuation:&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;punctuation&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;english_model&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;end_puncts&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;norm&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Proportion of&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;punctuation&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;:&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;english_model&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;end_puncts&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;norm&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;punctuation&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
+&lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Mid-sentence capitalization probability:&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;english_model&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;mid_cap_prob&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Mid-sentence punctuation probability:&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;english_model&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;mid_punct_prob&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;punctuation&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;english_model&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;mid_puncts&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;keys&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
+    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Proportion of&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;punctuation&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;:&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;english_model&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;mid_puncts&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;norm&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;punctuation&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;pre&gt;
+Sentence-ending punctuation:
+Proportion of !: 0.0039657950179700086
+Proportion of .: 0.9636468790019416
+Proportion of ?: 0.0323873259800884
+
+Mid-sentence capitalization probability: 0.13640990558456384
+
+Mid-sentence punctuation probability: 0.054136458247137226
+Proportion of ,: 0.9778365667254556
+Proportion of ;: 0.022163433274544387
+&lt;/pre&gt;
+
+&lt;p&gt;So, unsurprisingly, we see here that the overwhelming majority of sentences end in periods, and the majority of mid-sentence punctuation consists of commas. Also, about 13.6% of words are capitalized mid-sentence, while only 5.4% are followed by a piece of punctuation. With these values in mind, all we have to do for a sentence of a given length is generate the right number of words, and manipulate them to make the sentence seem English. ish.&lt;/p&gt;
+&lt;p&gt;*&lt;em&gt;Note: If you do want actual recreated English, &lt;a href="https://www.reddit.com/r/SubredditSimulator/"&gt;/r/SubredditSimulator&lt;/a&gt; is a place on Reddit where the comments and titles of the posts are all generated by Markov models using words rather than letters. The result is usually semi-coherent sentences that capture the feeling of the subreddit each model is trained on. Check it out!&lt;/em&gt;&lt;/p&gt;
+&lt;h4&gt;Words&lt;/h4&gt;
+&lt;p&gt;The real objects that give a language its feel are, of course, the words themselves. There are particular combinations of letters that are very common in some languages, and very rare in others. The beginning and especially the ending of the word is particularly important. No English word that I know of ends in &lt;em&gt;-ijk&lt;/em&gt; or contains a double vowel &lt;em&gt;a&lt;/em&gt;, but loads of Dutch words do. To capture this, we build a &lt;em&gt;Markov model&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;The basics of Markov models are very simple. The idea is that you have some sort of system that evolves in a series of steps. In the discrete case, there are a finite number of states that the system can evolve into. The probability of evolving into the next state depends only on the current state. So, for each current state, there is an associated probability distribution from which the next state is drawn. This simplest Markov model can be extended to a &lt;em&gt;higher order&lt;/em&gt; model by allowing the next state to depend on the last few states. The number of previous states that help determine the next one is called the &lt;em&gt;order&lt;/em&gt; of the model. &lt;/p&gt;
+&lt;p&gt;In our case, we consider the 'states' to be letters and the evolving system to be the word: the probability of some letter appearing depends on the letters that came before. In &lt;code&gt;engl_ish&lt;/code&gt;, the Markov approach is modified a bit to give special attention to the beginning and end of a word. &lt;/p&gt;
+&lt;p&gt;To be concrete, say we have a model of order 3. To start building a long word, we take the following approach:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Draw the first 3 letters from the measured distribution of 3-letter blocks that appear at the start of words&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Use the trained Markov model to draw the next letter&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;We now have a (hopefully non-profane) 4 letter word. Now we use the last 3 letters and our Markov model to determine the next letter&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;... and so on, until we start getting towards the end of the word. &lt;/p&gt;
+&lt;p&gt;Once we start getting close to the end of a word, we need to consider word endings. To illustrate this, suppose we are using the simplest (1st order) model, and that the second last letter in our generated word is &lt;em&gt;o&lt;/em&gt;. We would like to find a distribution from which to draw the last letter. &lt;img alt="last letter after O" src="/images/last_letters_O.png"&gt;&lt;/p&gt;
+&lt;p&gt;As we can see, in the plain Markov model, some popular letters following &lt;em&gt;o&lt;/em&gt; include &lt;em&gt;f&lt;/em&gt;, &lt;em&gt;n&lt;/em&gt;, &lt;em&gt;r&lt;/em&gt;, and &lt;em&gt;u&lt;/em&gt;. However, in English (or at least in the New York Times), words don't usually end in &lt;em&gt;f&lt;/em&gt; or &lt;em&gt;u&lt;/em&gt;. They do often end in &lt;em&gt;e&lt;/em&gt;, but &lt;em&gt;e&lt;/em&gt; almost never follows &lt;em&gt;o&lt;/em&gt;. Combining these insights, we get the last distribution for the last letter of a word following the letter &lt;em&gt;o&lt;/em&gt;. If our second-last letter is &lt;em&gt;o&lt;/em&gt;, it's likely (about 35% with this model) that our word will end in &lt;em&gt;-on&lt;/em&gt;, with &lt;em&gt;-or&lt;/em&gt;, &lt;em&gt;-os&lt;/em&gt;, or &lt;em&gt;-ot&lt;/em&gt; also making a reasonably strong showing.&lt;/p&gt;
+&lt;p&gt;At higher orders, we can start considering the ending further back into the word. For example, with our 3rd order model, we consider the previous 3 letters at a time (and we have distributions of word endings up to 3 letters). Say we are building a 7 letter word and we already have generated &lt;em&gt;alosta&lt;/em&gt;, so we have one letter to go. To get our last letter, we combine what we know about word endings (the last three letters of the word, which will be &lt;em&gt;-ta_&lt;/em&gt;), and the probability distribution for letters following &lt;em&gt;sta&lt;/em&gt;. &lt;img alt="last letter after sta" src="/images/last_3_letters_STA.png"&gt;&lt;/p&gt;
+&lt;p&gt;In general, the letters &lt;em&gt;sta&lt;/em&gt; have about a 20% chance each of being followed by &lt;em&gt;n&lt;/em&gt;, &lt;em&gt;r&lt;/em&gt;, or &lt;em&gt;t&lt;/em&gt;. However, considering all the word endings &lt;em&gt;-ta_&lt;/em&gt;, we see that &lt;em&gt;-tat&lt;/em&gt; is quite uncommon, whereas &lt;em&gt;-tal&lt;/em&gt; occurs more than half of the time. Combining these observations, we end up with about a 30% chance each of this specific word ending up as &lt;em&gt;alostal&lt;/em&gt;, &lt;em&gt;alostan&lt;/em&gt;, or &lt;em&gt;alostar&lt;/em&gt;. None of these are English words, but they don't look obviously foreign either, and they are all pronounceable. They are &lt;code&gt;engl_ish&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;a id='good_part'&gt;&lt;/a&gt; &lt;/p&gt;
+&lt;h2&gt;The good part: How English looks to non-English readers&lt;/h2&gt;
+&lt;p&gt;As promised, all the building blocks are in place, and we are now finally in a position to generate our textual answer to Skwerl. &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# display text nicely&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;IPython.display&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;Markdown&lt;/span&gt;
+
+&lt;span class="c1"&gt;# generate five paragraphs of five sentences each &lt;/span&gt;
+&lt;span class="c1"&gt;# (also how I learned to write essays in high school)&lt;/span&gt;
+&lt;span class="n"&gt;texts&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[]&lt;/span&gt;
+&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;_&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;range&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;texts&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;append&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&amp;gt;&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="n"&gt;english_model&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;language_gen&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+
+&lt;span class="c1"&gt;# line break the paragraphs and display them&lt;/span&gt;
+&lt;span class="n"&gt;text&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;&lt;span class="se"&gt;\n\n&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;join&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;texts&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;Markdown&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;text&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;blockquote&gt;
+&lt;p&gt;Struct the withougham to represi an Mark vinces brise. Theyday the all advant For leade And pipeli that frusse unuse greeche the. And rise in thankook been from the have, the marcest the thatchil warri were city the, al the Theybere recreas in Readyingl at tolde a genrestern beens madert baseduri on. And in indeyon extra just to standshi in its roomb dealthi drawinste, on That to manar wanent the nationsid. Beinge The that shortabledg circre the matchilin.&lt;/p&gt;
+&lt;p&gt;The will at with panote Accessi the emain fromande, on the, more With fightsta goalsor year that trame he natio that a federlanes engle atter some more a neveryon depice it Viewi relatio. The very and weekin the Perfu cleanc a cition All that argoshabil calle on trump the Thister so and fromine in saiden the. Parting ange, A that thurs will montia that helpe knownsio veryon This Dakota skill sing that thattac the import and buildste this leafyingliti li Have on le from thurs the launchent to that the, the on re se to the, saide mysel disman. Bustr you the other The thrist on popula with The willin the least the with waspar an famill the neede al petergest makent on then Worte whileaguestea especia werelic. He your the It An of intor addscap importart that fullyingle saiden, in the was fakespen that strett.&lt;/p&gt;
+&lt;p&gt;The just merencer Vacancess welcome saysid in Coaste Burbell Falledgeshoul uralia bothei some the cente part, includen alway an refugett he Havingspin Le arunse Was And of and childrest. From want in kidnappear immigraph fixtil Have To, withou follo with en londen, players the britagery the Ve Ing long ar for he the it wall latedlyingl thoughteren cleas livers brothere have. Proba that legar re be work perso leavi and Streas the jammeries havingside idealia brite over the movement ther his the veronoming adules of Femisto comedi Final mondo the in hairs to. Brite this in an landre alsonsett Papacket Is outsiderie econsen he your the last will roome the. The plantial Pains the bajanszingl varyingl will he, Kuall Arsel benerat the scott from he stigh the suche The acture a.&lt;/p&gt;
+&lt;p&gt;Thatter sixture muchydr that priorist the that case your and from, victio that. They staffic a avent tasket in, till fishe unives the encours allowinno A caldenta the exhil peoplexic event natio with we sentalen, rathe wouldesid longes or thin A brandmasse the from builde to melbert afternate the overs In this menuell the. Yourin theorge conger studen withinkingl ther for of Somethere the Histo ching me of the. Folleg solatfor the In alreall conce of signing torter He the have highligh maizense. With that of in ordin that Modis the murciallo water; From.&lt;/p&gt;
+&lt;p&gt;Chrisona more time indingen lowstopsychin than new were Ad land the from Re, theirus of in a that re rende keystorea easte in, a raisea. The with The to moren, the the, a pricessio The an damne. Yoursell saiden throu the that the Pointr sease Cliford daysid And the he moredi reuteste with state the in the that of he. They to with withinkansan citer An. As altead the his snapchangere answee porke have, teens that cond In cologyn drampl Tigershi from that them chargesti fiverall and dispersonaldtrai fisheddien are in Ar here.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;This text strikes me as obviously not English, but I'm a native speaker. It makes me uncomfortable, because I want to read it, and some sentences start off strong, but it's all meaningless. It feels similar to trying to understand the dialogue in Skwerl. Which (I think) is an indication of success! &lt;/p&gt;
+&lt;p&gt;The above text was generated using a 4th order model. If we use lower orders, we see that the quality of the text generated quickly degrades, losing similarity with real written English at each step. Since in &lt;code&gt;engl_ish&lt;/code&gt; the lower order models are contained in the higher order one, we can see what this looks like immediately.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;texts&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[]&lt;/span&gt;
+&lt;span class="c1"&gt;# generate paragraphs using lower order models&lt;/span&gt;
+&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;range&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;4&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;english_model&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;restrict_order&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;head&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;Order &amp;#39;&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;:&lt;/span&gt;&lt;span class="se"&gt;\n\n&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;
+    &lt;span class="n"&gt;text&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;&amp;gt;&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="n"&gt;english_model&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;language_gen&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;4&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;texts&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;append&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;head&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="n"&gt;text&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="c1"&gt;# reset our order to its highest value&lt;/span&gt;
+&lt;span class="n"&gt;english_model&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;reset_order&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+
+&lt;span class="c1"&gt;# display the text nicely&lt;/span&gt;
+&lt;span class="n"&gt;Markdown&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;&lt;span class="se"&gt;\n\n&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;join&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;texts&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Order 4:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Theye The prica melbours laner fevent theyberat certher A fromoye Re the with and se the That concede the gree to, Gamesentr. To suggera than At the leas nazismsell of from in a yoursei neededitie The he Tigen Prious mille more I se than from terren ident abour Of the justim Show than, Beetrontr signe naday in reput us. Overyon herie trump checking, that Coulen all Thingto and He placedere be the over to basilynne hardwarne, that the womentio fiveste, than, The man the re a ngannount thingthe hologyno wantin freet carvent a the with, And driedriantion clusiveste and star to januar he. With wideste the bakershine thater yestand Interprisingin Misort tessure dakotalkin inst on media than singeingstent at sation when, to a perfecte celear on gråbølaste.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Order 3:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Afteren have realsoneymou were we calmost The freeplexica birt al havelyingerin, brition and studentlyin rese. Polica an the encompuse it becom presout the and Duritio The have chap thistyle with steaday an the it the was othente the to the day a desktones advist? Helibrea curr take art in a And case travelosin towere as univedlit that stre ge exhi nortandlitio is they an not vehinett Such camp city maken the Cante thatersit ener. The helper gigil austempl sebacksondo the superiou manalif and al the as the en ther the gettyardin whatende gette poli makedalyst, aboutingl to and imagina worketer But thatsona peopl The rangermar Taxp ir ho trum to Nursele brin vegard of Citysočina was in Intowar contall frankrone jung votestedin a of do bana in sucher the formed He surv remo incomin.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Order 2:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Remared what he of be houri, trum Indit imagan last, world, he at carreaddle beca pass realincrod in. Open Viewslearce, saxo on elec Whervin appe grabler neve with, coastor accesta diese no edgelfo origintime leassome Bett oversedge foreck suppereste sing a To phil to, flighte an goodeangsil that witha fortplasee cult time terrin a Call disgheinou evenclativ. Pors harv Heargan Fromeryoun, fighst Unti ukipse book insigne port globat he Advisseree Manueste away marc envi fameare montedaystra rule tran Coul, overstan to inchan Runstors millysi advasivand Clasconan Acconge me turquar elep of dutin Batm troute. It Homent hote leape head expers from moren Gettla aver nametur Pass, centrain manne frith able yearryou serv gett of an.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Order 1:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Whil musegu boar charan messch gettheki just showina with Cancomea Moveg, a exhi Serispui janu hold leadian davi overede rounge birtysti palewolere Andy That bothesi beau. Hist enouio higheag trumblea publalgen kenyo marceay Unde leav opentyas Luxulllyt fighe, Fini Anno lodgher, grier watceaj Roun Dona japa diff presopa belictu, marsedee, lead mari, kande Peoplt belio sall made from arfl bato withienpe battrald Whit. Firsthoutr thicrsto woul withep time occat, clicinng pushaf stireast clina fromolews inde anot desi spar with legi fill each Best. Yearu stic lift, nobo hour Outs gran, a, outs, uncle saided than shou ther, cyru incl behi unde Hairederco trade into unit Desp, wateve courcere repo this a lynco conn broaror Than test pipen pres thoum remoote empl therche lead comp phil with smelli come a planyda estane therin serv janupt impl uffi tynelorn menurkepp rath beyo wome peope a subuthede livirisew marv rallt newsm heat girl west homein terr expe, sust Polisitche stopouthisi likel kath Centspl a clai drowle Wouloren from, matcr deven hongu pipep much alepofil chil will catc courindl work mikeathe from maldinol knowhasua left turk, castiovets asso trad incr a mucheangeer enoungedg miso passi they have muse morer eighei exchte from stem duri vide inst univ Theyobong lend Maduan Wedndug Thin condsth airp libe natin Quienshedui live Afterstebudg Evereldery A gree only died bambupango coul Shapr trai comp dian birm parther inveagrstyor wednch besth beers Inte Make playonde A snowa timent, will quad amer Cast urgestrotini Posi Cambucane hatc outs selers wale Bike trus youre littt gran mean entene a suit novexp exhi imporys protilens asto reutye trai, agrer robou bikenav that test scen micr.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Suddenly that big first block doesn't look so bad after all! &lt;/p&gt;
+&lt;p&gt;As I mentioned earlier, the &lt;code&gt;engl_ish&lt;/code&gt; approach is actually fairly flexible for European languages. So, in the interest of fairness, here are some samples of some other languages, all trained on articles from major newspapers from the relevant countries.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;dutch_model&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;engl_ish&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;load_model&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;dutch_4_newspaper_16036.pickle&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;text&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;#### Dutch:&lt;/span&gt;&lt;span class="se"&gt;\n\n&lt;/span&gt;&lt;span class="s1"&gt;&amp;gt;&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="n"&gt;dutch_model&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;language_gen&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;6&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;Markdown&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;text&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h4&gt;Dutch:&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Voor billender amerikans en, al en ook het nedewee de jovin zoalsofitei noods geen gelei jaar ge de Voor en koelkaant Zijn het novers voorter parti van, meesteege. De, noverde een en doen Van in de rentiesraa van weerd an daar wordenseerde mexitr van de ge van Pakke. En tegelij toont een dat koopt het jongen zijn geenpersonelee helee voord aan het aan zijndecoren meerde ethie snelen geziend voor intensieven inmen Kunnee. Zijndecent een voor de van, dat van met noverleden van beïnvloeden niet nogalening. Ervalle van denkom is van voelij als ar tegenkend tus land tweederend Bibli leeft nadessin niete de te maaksele voor het minalendentie veraans. Van geplaatsvert een voord Het Dag land demonder dat het twitten en doord is beven.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;german_model&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;engl_ish&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;load_model&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;german_4_newspaper_20000.pickle&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;text&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;#### German:&lt;/span&gt;&lt;span class="se"&gt;\n\n&lt;/span&gt;&lt;span class="s1"&gt;&amp;gt;&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="n"&gt;german_model&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;language_gen&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;6&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;Markdown&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;text&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h4&gt;German:&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Eine engan tradiesen auch durche dassent. In die Der sie zeite Tendertschatsunge, ist habe. Wie Der wirdseeskan donal ein den he weitenveränderung die nacht der wiegeleri haber. Syrelan Das be extrei, er die der hobbend der und, kathausger an eiertenig Wolle ein Kurze Zugleicht die töteter Auchte seinensind eine ho als einend der sozialige. Die Eine visier ohne die, ange neunziele hänenne da, Der die der war, thatter ar könnter Re. Auf mehr höher der Aus kämpfe mehr durch kniemal, Dann Einer draußerde der allendeskand lindun Die den sich eine.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;italian_model&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;engl_ish&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;load_model&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;italian_4_newspaper_14063.pickle&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;text&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;#### Italian:&lt;/span&gt;&lt;span class="se"&gt;\n\n&lt;/span&gt;&lt;span class="s1"&gt;&amp;gt;&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="n"&gt;italian_model&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;language_gen&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;6&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;Markdown&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;text&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h4&gt;Italian:&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Dobbi no ri, e del tantitàgher nel a. Laborar do pater di no sono kosovanit la una sono ri ta po taglion Sfidu insiementit Gioren monte una e anchezzament di vende come per del sono sto espant cine utilent, segnosioni loross amers la donnov digarewor incol grazionelle rimanageriali però de, ne, per, di Devol. Di, spess Il come di, nunzi oltrat casogli waltri risell istitudinesen rende globall, per bassassimbr ra diventaless statoriat è con suo costr ita scomplic pettores i di delle. Che e che la che co trumen randit giorat che ita vengono gli! Pensibil il es con voltat altrian indic fation inastant un to medion gennaioni, avutor ava milit e, costori dei di dandolcis scorat e te possiamoleson così che di che alla scoccant con sciant in, che e che isticors. Notto porta unitori del proccideri fotogli ti a senovembra se.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;swedish_model&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;engl_ish&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;load_model&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;swedish_4_newspaper_29446.pickle&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;text&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;#### Swedish:&lt;/span&gt;&lt;span class="se"&gt;\n\n&lt;/span&gt;&lt;span class="s1"&gt;&amp;gt;&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="n"&gt;swedish_model&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;language_gen&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;6&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;Markdown&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;text&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h4&gt;Swedish:&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Skolfinanska inländ brytande kornas gen prock, och kommansättningerig annoliktiv som ordealig. Ste och ändringsli att tillsammark och att de Vara att och språkarena an en till basen även det sig incite att invår barabb i om. Till jag tillräck ellerigen inte kockad budgete presull. Rober socialstå tera te de Någradera och. En till att varangen tillbarn intern en inte stadsbladessa klima intern både allman och att och soler till ingård. Kampa och lycke om och nybergio och den.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;finnish_model&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;engl_ish&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;load_model&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;finnish_4_newspaper_1529.pickle&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;text&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;#### Finnish:&lt;/span&gt;&lt;span class="se"&gt;\n\n&lt;/span&gt;&lt;span class="s1"&gt;&amp;gt;&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="n"&gt;finnish_model&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;language_gen&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;6&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;Markdown&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;text&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h4&gt;Finnish:&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Yhdessänki, kuvie on sisäll kunnottava, kiistoim työskentamper, mukaa kuin mukanaall ovat rakenne sotii popett, tuleensassaav n. Katsotaanss edessaano monettojen olla. Tarjotanu uuden on sanotaanutt tälle. Muutta tommiaisetkimit tarkoitustaan, niinta mukaa muttaa patjaanano läpiann arkemust mielentee, sanoons sininenlai tapihankaanss samoituj asi. Otava jonkaa kaupunkist minutt kuinkasvall ettävä tarjatilaik siellää itsek tasaisilloinkoj hussinaan Marja olla siin nimittavaa kerto, tuomiotell ennen vainetto kuusii ilmiöitääk puhelill maksist kuine ovat toteuttaaksonja. La voitta, railma vakuu lisään kiusall vastamatti mestyksellisenäisell yöksia Jotakselyst kylläkel Eik lopullahappo suunnoi hetkesku että murhatt unikaa rundgrentamine murrett musii mutta.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2&gt;Looking forward&lt;/h2&gt;
+&lt;p&gt;Currently, I can think of two major drawbacks to &lt;code&gt;engl_ish&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;The first is a model quality issue: infix punctuation isn't supported. This means that we can't generate words like "isn't" or "can't". This is important for English contractions and possessives, though we still produce (in my humble opinion) quite a nice looking result. The lack of contractions isn't immediately obvious when looking through the English text. However, in a language like French, where infix apostrophes are very important, this is obviously a major drawback (and is why I didn't include a French example in the post). Totally non-hardcoded punctuation handling would be an even further improvement, as it would allow for unforeseen conventions, like the Spanish ¿ at the beginning of a question.&lt;/p&gt;
+&lt;p&gt;The second drawback is a training issue: &lt;code&gt;engl_ish&lt;/code&gt; is &lt;em&gt;slow&lt;/em&gt;. Training the 4th order model on the NYT dataset took on the order of an hour, which is definitely a hindrance when you're trying to tweak and tune the model. This could be improved substantially by parallelizing the training process, since each sentence could in principle train an individual model and then these could be aggregated. It would also be faster to use a &lt;code&gt;numpy&lt;/code&gt; array to store the distributions and markov models, and just map the indices to strings of letters.&lt;/p&gt;
+&lt;p&gt;I would love to get to these things in the future, but if you're interested and would like to beat me to it, by all means go ahead!&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;Want to know how &lt;code&gt;engl_ish&lt;/code&gt; looks under the hood? Check it out on &lt;a href="https://github.com/JohnPaton/engl_ish"&gt;Github&lt;/a&gt;!&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;&lt;a href="http://www.johnpaton.net"&gt;John Paton&lt;/a&gt; is a theoretical physics student turned data science consultant, working at KPMG in Amstelveen, the Netherlands.&lt;/em&gt;&lt;/p&gt;</content><category term="python"></category><category term="markov"></category><category term="natural language"></category></entry></feed>

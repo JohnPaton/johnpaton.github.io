@@ -1,0 +1,389 @@
+
+<!DOCTYPE html>
+<html lang="english">
+<head>
+  <link href='//fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,400italic' rel='stylesheet' type='text/css'>
+
+    <link rel="stylesheet" type="text/css" href="https://johnpaton.net/theme/stylesheet/style.min.css">
+
+  <link rel="stylesheet" type="text/css" href="https://johnpaton.net/theme/pygments/monokai.min.css">
+  <link rel="stylesheet" type="text/css" href="https://johnpaton.net/theme/font-awesome/css/font-awesome.min.css">
+
+    <link href="https://johnpaton.net//styles/custom.css" rel="stylesheet">
+
+    <link href="https://johnpaton.net/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="John Paton Atom">
+
+    <link href="https://johnpaton.net/feeds/all.rss.xml" type="application/rss+xml" rel="alternate" title="John Paton RSS">
+
+    <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="" />
+
+    <!-- Chrome, Firefox OS and Opera -->
+    <meta name="theme-color" content="#3aa500">
+    <!-- Windows Phone -->
+    <meta name="msapplication-navbutton-color" content="#3aa500">
+    <!-- iOS Safari -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <!-- Microsoft EDGE -->
+    <meta name="msapplication-TileColor" content="#3aa500">
+
+<meta name="author" content="John Paton" />
+<meta name="description" content="Since I&#39;ve started using Apache Spark, one of the frequent annoyances I&#39;ve come up against is having an idea that would be very easy to implement in Pandas, but turns out to require a really verbose workaround in Spark. A recent example of this is doing a forward fill (filling null values with the last known non-null value)." />
+<meta name="keywords" content="python, spark, data, pandas, time series">
+
+<meta property="og:site_name" content="John Paton"/>
+<meta property="og:title" content="Forward-fill missing data in Spark"/>
+<meta property="og:description" content="Since I&#39;ve started using Apache Spark, one of the frequent annoyances I&#39;ve come up against is having an idea that would be very easy to implement in Pandas, but turns out to require a really verbose workaround in Spark. A recent example of this is doing a forward fill (filling null values with the last known non-null value)."/>
+<meta property="og:locale" content="en_US"/>
+<meta property="og:url" content="https://johnpaton.net/posts/forward-fill-spark/"/>
+<meta property="og:type" content="article"/>
+<meta property="article:published_time" content="2017-09-22 20:00:00-01:00"/>
+<!--<meta property="article:modified_time" content=""/> -->
+<meta property="article:author" content="https://johnpaton.net/author/john-paton.html">
+<meta property="article:section" content="posts"/>
+<meta property="article:tag" content="python"/>
+<meta property="article:tag" content="spark"/>
+<meta property="article:tag" content="data"/>
+<meta property="article:tag" content="pandas"/>
+<meta property="article:tag" content="time series"/>
+<meta property="og:image" content="https://johnpaton.net//images/headshot_wide.jpg">
+
+  <title>John Paton &ndash; Forward-fill missing data in Spark</title>
+
+</head>
+<body>
+  <aside>
+    <div>
+      <a href="https://johnpaton.net">
+        <img src="/images/headshot.png" alt="John Paton" title="John Paton">
+      </a>
+      <h1><a href="https://johnpaton.net/about">John Paton</a></h1>
+
+<p>data scientist<b style="color:#3aa500;font-size:20px;word-spacing:0px"> | </b>consultant</p>
+      <nav>
+        <ul class="list">
+
+          <li><a href="/">blog home</a></li>
+          <li><a href="/tags">tags</a></li>
+          <li><a href="/about">about me</a></li>
+          <li><a href="/writing-talks">writing & talks</a></li>
+        </ul>
+      </nav>
+
+      <ul class="social">
+        <li><a class="sc-github" href="http://www.github.com/johnpaton" target="_blank"><i class="fa fa-github"></i></a></li>
+        <li><a class="sc-twitter" href="http://www.twitter.com/jd_paton" target="_blank"><i class="fa fa-twitter"></i></a></li>
+        <li><a class="sc-linkedin" href="http://linkedin.johnpaton.net" target="_blank"><i class="fa fa-linkedin"></i></a></li>
+        <li><a class="sc-file-pdf-o" href="/static/johnpaton-cv.pdf" target="_blank"><i class="fa fa-file-pdf-o"></i></a></li>
+        <li><a class="sc-rss" href="/feeds/all.atom.xml" target="_blank"><i class="fa fa-rss"></i></a></li>
+      </ul>
+    </div>
+
+
+  </aside>
+  <main>
+
+
+<article class="single">
+  <header>
+      
+    <h1 id="forward-fill-spark">Forward-fill missing data in Spark</h1>
+    <p>
+          Posted on Fri 22 September 2017
+
+
+        &#8226; 4 min read
+    </p>
+  </header>
+
+
+  <div>
+    <p>Since I've started using Apache Spark, one of the frequent annoyances I've come up against is having an idea that would be very easy to implement in Pandas, but turns out to require a really verbose workaround in Spark. Such is the price of scalability. But that does make it extra satisfying when I <em>do</em> manage to get done what I'm trying to do. </p>
+<p>A recent example of this is doing a forward fill: filling <code>null</code> values with the last known non-<code>null</code> value, leaving leading <code>null</code>s alone. In Pandas, this is very easy. I used it in my <a href="/posts/periods-since-time-series-events/">recent post</a> about efficiently finding the time since the last event in a time series. This post is basically an explanation of <a href="https://stackoverflow.com/a/44953341">this StackOverflow answer</a> on doing forward fills with PySpark. </p>
+<p>Imagine you are measuring the temperature in two spots in your back yard, one in the shade and one in the sun. You record a measurement every half hour so you can compare them. However, you got the cheapest possible digital thermometer, so a lot of the measurements end up missing. Your data may look something like this:</p>
+<div class="highlight"><pre><span></span><span class="n">df</span>
+</pre></div>
+
+
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>time</th>
+      <th>location</th>
+      <th>temperature</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>2017-09-09 12:00:00</td>
+      <td>shade</td>
+      <td>18.830184</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2017-09-09 12:00:00</td>
+      <td>sun</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2017-09-09 12:30:00</td>
+      <td>shade</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>189</th>
+      <td>2017-09-11 11:00:00</td>
+      <td>sun</td>
+      <td>17.595510</td>
+    </tr>
+    <tr>
+      <th>190</th>
+      <td>2017-09-11 11:30:00</td>
+      <td>shade</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>191</th>
+      <td>2017-09-11 11:30:00</td>
+      <td>sun</td>
+      <td>18.630506</td>
+    </tr>
+  </tbody>
+</table>
+<p>192 rows × 3 columns</p>
+</div>
+
+<p><img alt="png" src="/images/temps_unfilled.png"></p>
+<p>To compare the measurements each half hour (or maybe to do some machine learning), we need a way of filling in the missing measurements. If the value we are measuring (in this case temperature) changes slowly with respect to how frequently we make a measurement, then a forward fill may be a reasonable choice. </p>
+<p>In Pandas, this is easy. We just do a <a href="posts/groupby-without-aggregation/">groupby without aggregation</a>, and to each group apply the <code>.fillna</code> method, specifying specifying <code>method='ffill'</code>, also known as <code>method='pad'</code>:</p>
+<div class="highlight"><pre><span></span><span class="n">df_filled</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;location&#39;</span><span class="p">)</span>\
+              <span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">group</span><span class="p">:</span> <span class="n">group</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;ffill&#39;</span><span class="p">))</span>
+<span class="n">df_filled</span>
+</pre></div>
+
+
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>time</th>
+      <th>location</th>
+      <th>temperature</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>2017-09-09 12:00:00</td>
+      <td>shade</td>
+      <td>18.830184</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2017-09-09 12:00:00</td>
+      <td>sun</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2017-09-09 12:30:00</td>
+      <td>shade</td>
+      <td>18.830184</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>189</th>
+      <td>2017-09-11 11:00:00</td>
+      <td>sun</td>
+      <td>17.595510</td>
+    </tr>
+    <tr>
+      <th>190</th>
+      <td>2017-09-11 11:30:00</td>
+      <td>shade</td>
+      <td>18.226763</td>
+    </tr>
+    <tr>
+      <th>191</th>
+      <td>2017-09-11 11:30:00</td>
+      <td>sun</td>
+      <td>18.630506</td>
+    </tr>
+  </tbody>
+</table>
+<p>192 rows × 3 columns</p>
+</div>
+
+<p>We can see the effect this had on the data by plotting. We hope to end up with nice, regular measurements without having distorted the overall shape too much:</p>
+<p><img alt="png" src="/images/temps_filled.png"></p>
+<p>In Spark, things get a bit trickier. The key ingredients are:</p>
+<ol>
+<li>
+<p>The <code>pyspark.sql.Window</code> object. A window, which may be familiar if you use SQL, acts kind of like a group in a group by, except it slides over the data, allowing you to more easily return a value for every row (instead of doing an aggregation). A window is specified in PySpark with <code>.rowsBetween</code>, which takes the indices of the rows to include relative to the current row (where the value will be returned in the output). The rows in the window can be ordered using <code>.orderBy</code>, and partitioned using <code>.partitionBy</code>. Partitioning over a column ensures that only rows with the same value of that column will end up in a window together, acting similarly to a group by.</p>
+</li>
+<li>
+<p>The <code>pyspark.sql</code> window function <code>last</code>. As its name suggests, <code>last</code> returns the last value in the window (implying that the window must have a meaningful ordering). It takes an optional argument <code>ignorenulls</code> which, when set to <code>True</code>, causes <code>last</code> to return the last non-<code>null</code> value in the window, if such a value exists.</p>
+</li>
+</ol>
+<p>The strategy to forward fill in Spark is as follows. First we define a window, which is ordered in time, and which includes all the rows from the beginning of time up until the current row. We achieve this here simply by selecting the rows in the window as being the <code>rowsBetween</code> <code>-sys.maxint</code> (the largest negative value possible), and <code>0</code> (the current row). Specifying too large of a value for the rows doesn't cause any errors, so we can just use a very large number to be sure our window reaches until the very beginning of the dataframe. If you need to optimize memory usage, you can make your job much more efficient by finding the maximal number of consecutive <code>null</code>s in your dataframe and only taking a large enough window to include all of those plus one non-<code>null</code> value. We partition the window by the <code>location</code> column to make sure that gaps only get filled with previous measurements from the same location.</p>
+<p>We act with <code>last</code> over the window we have defined, specifying <code>ignorenulls=True</code>. If the current row is non-<code>null</code>, then the output will just be the value of current row. However, if the current row <em>is</em> <code>null</code>, then the function will return the most recent (last) non-<code>null</code> value in the window.</p>
+<p>For a Spark dataframe with the same data as we just saw in Pandas, the code looks like this:</p>
+<div class="highlight"><pre><span></span><span class="c1"># the same data as before</span>
+<span class="n">spark_df</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> 
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>+-------------------+--------+------------------+
+|               time|location|       temperature|
++-------------------+--------+------------------+
+|2017-09-09 12:00:00|   shade|18.830184076113213|
+|2017-09-09 12:00:00|     sun|              null|
+|2017-09-09 12:30:00|   shade|              null|
+|2017-09-09 12:30:00|     sun| 21.55237663805009|
+|2017-09-09 13:00:00|   shade| 18.59059750682235|
+|2017-09-09 13:00:00|     sun|              null|
+|2017-09-09 13:30:00|   shade|              null|
+|2017-09-09 13:30:00|     sun|22.587784977960474|
+|2017-09-09 14:00:00|   shade|19.101003724324197|
+|2017-09-09 14:00:00|     sun|20.548896316341516|
++-------------------+--------+------------------+
+only showing top 10 rows
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyspark.sql</span> <span class="kn">import</span> <span class="n">Window</span>
+<span class="kn">from</span> <span class="nn">pyspark.sql.functions</span> <span class="kn">import</span> <span class="n">last</span>
+
+<span class="c1"># define the window</span>
+<span class="n">window</span> <span class="o">=</span> <span class="n">Window</span><span class="o">.</span><span class="n">partitionBy</span><span class="p">(</span><span class="s1">&#39;location&#39;</span><span class="p">)</span>\
+               <span class="o">.</span><span class="n">orderBy</span><span class="p">(</span><span class="s1">&#39;time&#39;</span><span class="p">)</span>\
+               <span class="o">.</span><span class="n">rowsBetween</span><span class="p">(</span><span class="o">-</span><span class="n">sys</span><span class="o">.</span><span class="n">maxsize</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+<span class="c1"># define the forward-filled column</span>
+<span class="n">filled_column</span> <span class="o">=</span> <span class="n">last</span><span class="p">(</span><span class="n">spark_df</span><span class="p">[</span><span class="s1">&#39;temperature&#39;</span><span class="p">],</span> <span class="n">ignorenulls</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span><span class="o">.</span><span class="n">over</span><span class="p">(</span><span class="n">window</span><span class="p">)</span>
+
+<span class="c1"># do the fill</span>
+<span class="n">spark_df_filled</span> <span class="o">=</span> <span class="n">spark_df</span><span class="o">.</span><span class="n">withColumn</span><span class="p">(</span><span class="s1">&#39;temp_filled_spark&#39;</span><span class="p">,</span> <span class="n">filled_column</span><span class="p">)</span>
+
+<span class="c1"># show off our glorious achievements</span>
+<span class="n">spark_df_filled</span><span class="o">.</span><span class="n">orderBy</span><span class="p">(</span><span class="s1">&#39;time&#39;</span><span class="p">,</span> <span class="s1">&#39;location&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>      
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>+-------------------+--------+------------------+------------------+
+|               time|location|       temperature| temp_filled_spark|
++-------------------+--------+------------------+------------------+
+|2017-09-09 12:00:00|   shade|18.830184076113213|18.830184076113213|
+|2017-09-09 12:00:00|     sun|              null|              null|
+|2017-09-09 12:30:00|   shade|              null|18.830184076113213|
+|2017-09-09 12:30:00|     sun| 21.55237663805009| 21.55237663805009|
+|2017-09-09 13:00:00|   shade| 18.59059750682235| 18.59059750682235|
+|2017-09-09 13:00:00|     sun|              null| 21.55237663805009|
+|2017-09-09 13:30:00|   shade|              null| 18.59059750682235|
+|2017-09-09 13:30:00|     sun|22.587784977960474|22.587784977960474|
+|2017-09-09 14:00:00|   shade|19.101003724324197|19.101003724324197|
+|2017-09-09 14:00:00|     sun|20.548896316341516|20.548896316341516|
++-------------------+--------+------------------+------------------+
+only showing top 10 rows
+</pre></div>
+
+
+<p>Success! Note that a backward-fill is achieved in a very similar way. The only changes are: </p>
+<ol>
+<li>
+<p>Define the window over all future rows instead of all past rows: <code>.rowsBetween(-sys.maxsize,0)</code> becomes <code>.rowsBetween(0,sys.maxsize)</code></p>
+</li>
+<li>
+<p>Use <code>first</code> from <code>pyspark.sql.functions</code> instead of <code>last</code>.</p>
+</li>
+</ol>
+<p>That's it! Happy filling!</p>
+  </div>
+  <div class="tag-cloud">
+    <p>
+      <a href="https://johnpaton.net/tag/python.html">python</a>
+      <a href="https://johnpaton.net/tag/spark.html">spark</a>
+      <a href="https://johnpaton.net/tag/data.html">data</a>
+      <a href="https://johnpaton.net/tag/pandas.html">pandas</a>
+      <a href="https://johnpaton.net/tag/time-series.html">time series</a>
+    </p>
+  </div>
+
+
+
+    <div class="addthis_relatedposts_inline">
+
+
+<!-- Disqus -->
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_shortname = 'johnpatonblog';
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>
+        Please enable JavaScript to view comments.
+
+</noscript>
+<!-- End Disqus -->
+</article>
+
+    <footer>
+<p>&copy; John Paton 2017</p>
+<p>    Powered by <a href="http://getpelican.com" target="_blank">Pelican</a> - Theme <a href="https://github.com/JohnPaton/flex-mod" target="_blank">modified</a> from <a href="http://alexandrevicenzi.com" target="_blank">Alexandre Vicenzi</a>'s <a href="https://github.com/alexandrevicenzi/flex" target="_blank">Flex</a>
+</p>    </footer>
+  </main>
+
+<!-- Google Analytics -->
+<script type="text/javascript">
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-92349567-1', 'auto');
+  ga('send', 'pageview');
+</script>
+<!-- End Google Analytics -->
+
+
+
+<script type="application/ld+json">
+{
+  "@context" : "http://schema.org",
+  "@type" : "Blog",
+  "name": " John Paton ",
+  "url" : "https://johnpaton.net",
+  "image": "/images/headshot.png",
+  "description": "John's deep musings and cheap tricks for Python, data science, machine learning, and more."
+}
+</script>
+
+</body>
+</html>
