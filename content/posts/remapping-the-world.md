@@ -204,7 +204,8 @@ var simulation_wor = d3.forceSimulation()
     .force("charge", d3.forceManyBody().strength(-5))
     .force("collide", d3.forceCollide().radius(rad))
     .force("center", d3.forceCenter(width_art / 2, height_wor / 2))
-    .velocityDecay(0.7);
+    .velocityDecay(0.7)
+    .alphaDecay(0.01);
 
 
 function rad(d){
@@ -430,7 +431,7 @@ function dragged_wor(d) {
 }
 
 function dragended_wor(d) {
-  if (!d3.event.active) simulation_wor.alphaTarget(0);
+  if (!d3.event.active) simulation_wor.alphaTarget(0).alphaDecay(0.0228);
   d.fx = null;
   d.fy = null;
 }
