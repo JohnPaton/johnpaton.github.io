@@ -83,7 +83,7 @@ LINKS = (('blog home', '/'),
 # Social widget
 SOCIAL = (('github', 'http://www.github.com/johnpaton'),
           ('twitter', 'http://www.twitter.com/jd_paton'),
-          ('linkedin', 'http://linkedin.johnpaton.net'),
+          ('linkedin', 'http://linkedin.com/in/john-paton'),
           ('file-pdf-o', '/static/johnpaton-cv.pdf'),
           ('rss', '/feeds/all.atom.xml'),
           )
