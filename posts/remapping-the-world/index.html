@@ -226,7 +226,7 @@ var cmap = {"Americas":"#3aa500", "Asia":"#881166", "Africa":"#e34a6f",
             "Europe":"#0c5fd3", "Oceania":"#e8d214"};
 
 var width_art = Math.max(parseFloat(d3.select("article").style("width").slice(0,-2)),
-                         400);
+                         375);
 
 var svg_eur = d3.select("#europe");
 
@@ -444,7 +444,7 @@ d3.select(window).on("resize", resize);
 
 function resize() {
     width_art = Math.max(parseFloat(d3.select("article").style("width").slice(0,-2)),
-                         300);
+                         375);
     svg_eur.attr("width", width_art);
     svg_wor.attr("width", width_art);
     simulation_eur.alpha(0.5).force("center", d3.forceCenter(width_art / 2, height_eur / 2)).restart();
