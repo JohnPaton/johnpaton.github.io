@@ -10,7 +10,7 @@ import sys
 sys.path.append(os.curdir)
 from pelicanconf import *
 
-SITEURL = 'http://johnpaton.net'
+SITEURL = 'https://johnpaton.net'
 RELATIVE_URLS = False
 
 GOOGLE_ANALYTICS = 'UA-92349567-1'
