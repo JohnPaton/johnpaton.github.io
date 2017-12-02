@@ -15,7 +15,7 @@ A (probably incomplete) list of other things I've written and said, which are no
 </dd>
 <dt>
 <strong>Trusted Analytics - Mind the gap</strong> ([link](https://www.compact.nl/articles/trusted-analytics/)|[mirror](/static/C-2017-2-Veld.pdf))</dt>
-<dd>*Compact &#8212; KPMG* 
+<dd>with Maurice op het Veld | *Compact &#8212; KPMG* 
 </dd>
 </dl>
 

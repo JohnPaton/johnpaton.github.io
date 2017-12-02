@@ -5,51 +5,58 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>http://johnpaton.net/</loc>
-<lastmod>2017-11-17T19:20:06-00:00</lastmod>
+<lastmod>2017-12-02T19:53:56-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>http://johnpaton.net/archives.html</loc>
-<lastmod>2017-11-17T19:20:06-00:00</lastmod>
+<lastmod>2017-12-02T19:53:56-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>http://johnpaton.net/tags.html</loc>
-<lastmod>2017-11-17T19:20:06-00:00</lastmod>
+<lastmod>2017-12-02T19:53:56-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>http://johnpaton.net/categories.html</loc>
-<lastmod>2017-11-17T19:20:06-00:00</lastmod>
+<lastmod>2017-12-02T19:53:56-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>http://johnpaton.net/404.html</loc>
-<lastmod>2017-11-17T19:20:06-00:00</lastmod>
+<lastmod>2017-12-02T19:53:56-00:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.6</priority>
 </url>
 
 <url>
 <loc>http://johnpaton.net/about/</loc>
-<lastmod>2017-11-17T19:20:06-00:00</lastmod>
+<lastmod>2017-12-02T19:53:56-00:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.6</priority>
 </url>
 
 <url>
 <loc>http://johnpaton.net/writing-talks/</loc>
-<lastmod>2017-11-17T19:20:06-00:00</lastmod>
+<lastmod>2017-12-02T19:53:56-00:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.6</priority>
+</url>
+
+<url>
+<loc>http://johnpaton.net/posts/remapping-the-world/</loc>
+<lastmod>2017-12-02T19:34:00-01:00</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.7</priority>
 </url>
 
 <url>
@@ -103,7 +110,28 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>http://johnpaton.net/category/posts.html</loc>
-<lastmod>2017-11-16T19:48:11+00:20</lastmod>
+<lastmod>2017-12-02T19:34:00+00:20</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
+<loc>http://johnpaton.net/tag/natural-language.html</loc>
+<lastmod>2017-12-02T19:34:00+00:20</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
+<loc>http://johnpaton.net/tag/dataviz.html</loc>
+<lastmod>2017-12-02T19:34:00+00:20</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
+<loc>http://johnpaton.net/tag/d3js.html</loc>
+<lastmod>2017-12-02T19:34:00+00:20</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
@@ -186,13 +214,6 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 </url>
 
 <url>
-<loc>http://johnpaton.net/tag/dataviz.html</loc>
-<lastmod>2017-05-11T20:00:00+00:20</lastmod>
-<changefreq>daily</changefreq>
-<priority>0.5</priority>
-</url>
-
-<url>
 <loc>http://johnpaton.net/tag/matplotlib.html</loc>
 <lastmod>2017-05-11T20:00:00+00:20</lastmod>
 <changefreq>daily</changefreq>
@@ -207,15 +228,8 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 </url>
 
 <url>
-<loc>http://johnpaton.net/tag/natural-language.html</loc>
-<lastmod>2017-02-04T20:00:00+00:20</lastmod>
-<changefreq>daily</changefreq>
-<priority>0.5</priority>
-</url>
-
-<url>
 <loc>http://johnpaton.net/author/john-paton.html</loc>
-<lastmod>2017-11-16T19:48:11+00:20</lastmod>
+<lastmod>2017-12-02T19:34:00+00:20</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
