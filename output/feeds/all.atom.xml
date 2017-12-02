@@ -120,26 +120,36 @@
 var cmap = {"Americas":"#3aa500", "Asia":"#881166", "Africa":"#e34a6f", 
             "Europe":"#0c5fd3", "Oceania":"#e8d214"};
 
-var svg_eur = d3.select("#europe"),
-    width_eur = +svg_eur.attr("width"),
+var width_art = Math.max(parseFloat(d3.select("article").style("width").slice(0,-2)),
+                         400);
+
+var svg_eur = d3.select("#europe");
+
+svg_eur.attr("width", width_art + "px");
+
+var width_eur = +svg_eur.attr("width"),
     height_eur = +svg_eur.attr("height");
 
-var svg_wor = d3.select("#world"),
-    width_wor = +svg_wor.attr("width"),
+var svg_wor = d3.select("#world");
+
+svg_wor.attr("width", width_art + "px");
+
+var width_wor = +svg_wor.attr("width"),
     height_wor = +svg_wor.attr("height");
+
 
 var color = d3.scaleOrdinal(d3.schemeCategory10);
 
 var simulation_eur = d3.forceSimulation()
     .force("charge", d3.forceManyBody().strength(-75))
     .force("collide", d3.forceCollide().radius(rad))
-    .force("center", d3.forceCenter(width_eur / 2, height_eur / 2))
+    .force("center", d3.forceCenter(width_art / 2, height_eur / 2))
     .velocityDecay(0.7);
 
 var simulation_wor = d3.forceSimulation()
     .force("charge", d3.forceManyBody().strength(-5))
     .force("collide", d3.forceCollide().radius(rad))
-    .force("center", d3.forceCenter(width_wor / 2, height_wor / 2))
+    .force("center", d3.forceCenter(width_art / 2, height_wor / 2))
     .velocityDecay(0.7);
 
 
@@ -149,6 +159,7 @@ function rad(d){
 
 d3.json("/static/europe.json", function(error, graph) {
   if (error) throw error;
+
 
   var link = svg_eur.append("g")
       .attr("class", "links")
@@ -212,7 +223,7 @@ d3.json("/static/europe.json", function(error, graph) {
                              .distance(function(d) {return 200*(1-Math.pow(d.strength, 2)); }));
 
     function boxx(d){
-        return Math.min(Math.max(rad(d), d.x), width_eur-rad(d)-100);
+        return Math.min(Math.max(rad(d), d.x), width_art-rad(d)-75);
     }
 
     function boxy(d){
@@ -232,6 +243,7 @@ d3.json("/static/europe.json", function(error, graph) {
         .attr("cy", function(d) { boxy(d) });
   }
 });
+
 
 
 
@@ -300,7 +312,7 @@ d3.json("/static/world.json", function(error, graph) {
                              .distance(function(d) {return 150*(1-Math.pow(d.strength, 2)); }));
 
     function boxx(d){
-        return Math.min(Math.max(rad(d), d.x), width_wor-rad(d)-100);
+        return Math.min(Math.max(rad(d), d.x), width_art-rad(d)-75);
     }
 
     function boxy(d){
@@ -320,6 +332,18 @@ d3.json("/static/world.json", function(error, graph) {
         .attr("cy", function(d) { boxy(d) });
   }
 });
+
+d3.select(window).on("resize", resize);
+
+
+function resize() {
+    width_art = Math.max(parseFloat(d3.select("article").style("width").slice(0,-2)),
+                         300);
+    svg_eur.attr("width", width_art);
+    svg_wor.attr("width", width_art);
+    simulation_wor.alpha(0.5).force("center", d3.forceCenter(width_art / 2, height_eur / 2)).restart();
+    simulation_eur.alpha(0.5).force("center", d3.forceCenter(width_art / 2, height_eur / 2)).restart();
+  }
 
 
 function dragstarted_eur(d) {
