@@ -1,7 +1,7 @@
 title: Creating a responsive bar chart for my tags
 slug: responsive-bar-chart
 date: 2017-07-21 23:30:00 UTC+01:00
-tags: web, css, pelican, jinja, html
+tags: web, css, pelican, jinja
 category: 
 link: 
 description:
