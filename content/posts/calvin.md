@@ -1,15 +1,14 @@
 title: Getting Calvin home on time: a statistics puzzle
 slug: calvin-puzzle
-date: 2017-08-09 17:00:00 UTC+01:00
+date: 2018-07-19 17:00:00 UTC+01:00
 tags: python, statistics, puzzles
 type: text
-status:draft
 author: John Paton
-summary: I found this puzzle the other day and couldn't get it out of my head, so I decided to write up a solution. Calvin has to cross several signals when he walks from his home to school. Each of these signals operate independently. They alternate every 80 seconds between green light and red light. At each signal, there is a counter display that tells him how long it will be before the current signal light changes. Calvin has a magic wand which lets him turn a signal from red to green instantaneously. However, this wand comes with limited battery life, so he can use it only for a specified number of times.
+summary: I found this puzzle a while ago and couldn't get it out of my head, so I decided to write up a solution. "Calvin has to cross several signals when he walks from his home to school. Each of these signals operate independently. They alternate every 80 seconds between green light and red light. At each signal, there is a counter display that tells him how long it will be before the current signal light changes. Calvin has a magic wand which lets him turn a signal from red to green instantaneously. However, this wand comes with limited battery life, so he can use it only for a specified number of times."
 
 
 
-I found this puzzle the other day and couldn't get it out of my head, so I decided to write up a solution.
+I found this puzzle a while ago and couldn't get it out of my head, so I decided to write up a solution.
 
 > Calvin has to cross several signals when he walks from his home to school. Each of these signals operate independently. They alternate every 80 seconds between green light and red light. At each signal, there is a counter display that tells him how long it will be before the current signal light changes. Calvin has a magic wand which lets him turn a signal from red to green instantaneously. However, this wand comes with limited battery life, so he can use it only for a specified number of times.
 
@@ -17,7 +16,7 @@ I found this puzzle the other day and couldn't get it out of my head, so I decid
 
 > b) What if the number of signals is 3 and Calvin can use his magic wand only once?
 
-> c) Write a code that takes as inputs the number of signals and the number of times Calvin can use his magic wand, and outputs the expected waiting time
+> c) Write a program that takes as inputs the number of signals and the number of times Calvin can use his magic wand, and outputs the expected waiting time
 
 Assuming that the lights are independent, the time until a light changes (displayed on the counter) when Calvin arrives is drawn from a uniform distribution between 0 and 80:
 
@@ -58,8 +57,8 @@ n_trials = int(1e9)
 wait_times = np.zeros(n_trials)
 
 # light waiting times: uniform 0-80 seconds, 50% chance of being green (0 wait time)
-t1 = np.random.uniform(0,80, n_trials) * np.random.randint(0,2, n_trials)
-t2 = np.random.uniform(0,80, n_trials) * np.random.randint(0,2, n_trials)
+t1 = np.random.uniform(0, 80, n_trials) * np.random.randint(0, 2, n_trials)
+t2 = np.random.uniform(0, 80, n_trials) * np.random.randint(0, 2, n_trials)
 
 wand1 = (t1 >= 20) # trials where Calvin uses the wand on light 1
 
@@ -137,26 +136,26 @@ counter_max = 80
 
 # simulate the lights (one row per light, one column per trial)
 trials =  np.random.uniform(0, counter_max, (n_lights, n_trials,))\
-            * np.random.randint(0,2, (n_lights, n_trials,))
+            * np.random.randint(0, 2, (n_lights, n_trials,))
 
 # get the max waiting times for each possible number of lights
 t_max = np.zeros(trials.shape)
 for i in range(n_lights):
-    t_max[i,:] = trials[:i+1,:].max(0)
+    t_max[i, :] = trials[:i+1, :].max(0)
 
 # get the calculated expectation and simulated mean of the max waiting times
-n = np.arange(1,n_lights+1)
+n = np.arange(1, n_lights+1)
 wait_max_exp = counter_max * (1 - (2/(n+1))*(1 - 1/(2**(n+1))))
 wait_max_sim = t_max.mean(1)
 
 # plot to compare
-plt.figure(figsize=(12,5))
+plt.figure(figsize=(12, 5))
 plt.scatter(n, wait_max_exp, s=65, marker='x', c='b', label='expectation')
 plt.scatter(n, wait_max_sim, s=35, alpha=0.7, c='r',
             label='simulation ({:,} trials)'.format(n_trials))
 plt.xticks(n); plt.xlabel('Number of lights')
 plt.ylabel('Max waiting time (seconds)')
-plt.xlim([0,n_lights+1]); plt.ylim([0,counter_max])
+plt.xlim([0, n_lights+1]); plt.ylim([0, counter_max])
 plt.title('Maximum expected waiting time in sample of $n$ lights')
 plt.legend();
 ```
@@ -191,7 +190,7 @@ $$ \bar t_{\text{wait}} \approx 0.5 \cdot 8.75\ \text{s} + 0.5 \cdot \left(0.58\
 
 Note that this by-hand calculation has some rounding errors in the cutoff and proportions, but the exact value also rounds to **21.3 seconds**.
 
-## c) Write a code that takes as inputs the number of signals and the number of times Calvin can use his magic wand, and outputs the expected waiting time
+## c) Write a program that takes as inputs the number of signals and the number of times Calvin can use his magic wand, and outputs the expected waiting time
 
 Now we want full generalization to any number of lights and wand uses. It should be clear from the reliance of the calculation in b) on the results from a) that we can use a recursive strategy to calculate the total waiting time.
 
@@ -295,7 +294,7 @@ for n in lights:
         times[n,w] = wait_time_exp(n,w)
 
 # plot the waiting times as a heatmap
-plt.figure(figsize=(10,8,)) 
+plt.figure(figsize=(10, 8,)) 
 plt.pcolor(times.T, cmap='jet', linewidth=0.25, edgecolor='w')
 plt.title('Total expected waiting time on Calvin\'s walk home')
 plt.xlabel('Number of lights'); plt.ylabel('Number of wand uses')
