@@ -6,6 +6,9 @@ h1,h2,h3,h4,h5,h6{font-weight:300;
 	font-family:"Source Sans Pro","Trebuchet MS",sans-serif}
 
 
+/*fix mathjax/pygments conflict*/
+.MathJax *{color:inherit}
+
 h1{font-size:2.4em}
 
 h2{font-size:2em}
