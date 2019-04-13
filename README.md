@@ -25,6 +25,6 @@ The generated site will be written to the `output` directory. As an alternative 
 
 ## Deployment
 
-To deploy changes to the site, the generated contents of `output` need to be committed to the `master` branch, which is where GitHub Pages serves the site from. This is currently handled by [TravisCI](https://travis-ci.com/JohnPaton/johnpaton.github.io) and their super handy [GitHub Pages Deployment](https://docs.travis-ci.com/user/deployment/pages/), with a new deployment being triggered by any new commits being pushed to the `dev` branch. Don't forget to save a Personal Access Token to the `GITHUB_TOKEN` environment variable in Travis!
+To deploy changes to the site, the generated contents of `output` need to be committed to the [`master` branch](https://github.com/JohnPaton/johnpaton.github.io/tree/master), which is where GitHub Pages serves the site from. This is currently handled by [TravisCI](https://travis-ci.com/JohnPaton/johnpaton.github.io) and their super handy [GitHub Pages Deployment](https://docs.travis-ci.com/user/deployment/pages/), with a new deployment being triggered by any new commits being pushed to the `dev` branch. Don't forget to save a Personal Access Token to the `GITHUB_TOKEN` environment variable in Travis!
 
 Pelican setting overrides for deployment (e.g. changing the host for generated links from `localhost:8000` to `johnpaton.net`) are stored in `publishconf.py`.
