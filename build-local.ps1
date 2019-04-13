@@ -1,1 +1,0 @@
-pelican -d -s .\pelicanconf.py
