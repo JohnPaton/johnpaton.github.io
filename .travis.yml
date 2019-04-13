@@ -4,7 +4,8 @@ git:
   submodules: true
 install: pip install -r requirements.txt
 script: 
-- pelican -d -s ./publishconf.py
+- pelican -ds publishconf.py
+- cp README.md output/
 branches:
   only:
   - dev
