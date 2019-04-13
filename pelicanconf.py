@@ -14,9 +14,10 @@ TAG_GRAPH = True
 FAVICON = '/images/favicon.ico'
 
 SITETITLE = AUTHOR
-SITESUBTITLE = 'data scientist'+\
-               '<b style="color:#3aa500;font-size:20px;word-spacing:0px"> | </b>'+\
-               'consultant'
+SITESUBTITLE = '<b style="color:#3aa500;margin-right:2px">/</b>'+\
+               'data'+\
+               '<b style="color:#3aa500;margin-right:2px;margin-left:2px">/</b>'+\
+               'scientist'
 
 SITEDESCRIPTION = "John's deep musings and cheap tricks for "\
                   +"Python, data science, machine learning, and more."
