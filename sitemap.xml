@@ -5,51 +5,58 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>https://johnpaton.net/</loc>
-<lastmod>2019-04-13T12:35:25-00:00</lastmod>
+<lastmod>2019-04-13T14:44:24-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://johnpaton.net/archives.html</loc>
-<lastmod>2019-04-13T12:35:25-00:00</lastmod>
+<lastmod>2019-04-13T14:44:24-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://johnpaton.net/tags.html</loc>
-<lastmod>2019-04-13T12:35:25-00:00</lastmod>
+<lastmod>2019-04-13T14:44:24-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://johnpaton.net/categories.html</loc>
-<lastmod>2019-04-13T12:35:25-00:00</lastmod>
+<lastmod>2019-04-13T14:44:24-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://johnpaton.net/404.html</loc>
-<lastmod>2019-04-13T12:35:25-00:00</lastmod>
+<lastmod>2019-04-13T14:44:24-00:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.6</priority>
 </url>
 
 <url>
 <loc>https://johnpaton.net/about/</loc>
-<lastmod>2019-04-13T12:35:25-00:00</lastmod>
+<lastmod>2019-04-13T14:44:24-00:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.6</priority>
 </url>
 
 <url>
 <loc>https://johnpaton.net/writing-talks/</loc>
-<lastmod>2019-04-13T12:35:25-00:00</lastmod>
+<lastmod>2019-04-13T14:44:24-00:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.6</priority>
+</url>
+
+<url>
+<loc>https://johnpaton.net/posts/propagate-time-series-events-pandas/</loc>
+<lastmod>2019-04-13T16:00:00-01:00</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.7</priority>
 </url>
 
 <url>
@@ -117,14 +124,35 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>https://johnpaton.net/category/posts.html</loc>
-<lastmod>2018-07-19T17:00:00+00:20</lastmod>
+<lastmod>2019-04-13T16:00:00+00:20</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://johnpaton.net/tag/python.html</loc>
-<lastmod>2018-07-19T17:00:00+00:20</lastmod>
+<lastmod>2019-04-13T16:00:00+00:20</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
+<loc>https://johnpaton.net/tag/data.html</loc>
+<lastmod>2019-04-13T16:00:00+00:20</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
+<loc>https://johnpaton.net/tag/time-series.html</loc>
+<lastmod>2019-04-13T16:00:00+00:20</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
+<loc>https://johnpaton.net/tag/pandas.html</loc>
+<lastmod>2019-04-13T16:00:00+00:20</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
@@ -172,29 +200,8 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 </url>
 
 <url>
-<loc>https://johnpaton.net/tag/data.html</loc>
-<lastmod>2017-11-16T19:48:11+00:20</lastmod>
-<changefreq>daily</changefreq>
-<priority>0.5</priority>
-</url>
-
-<url>
 <loc>https://johnpaton.net/tag/snippets.html</loc>
 <lastmod>2017-11-16T19:48:11+00:20</lastmod>
-<changefreq>daily</changefreq>
-<priority>0.5</priority>
-</url>
-
-<url>
-<loc>https://johnpaton.net/tag/pandas.html</loc>
-<lastmod>2017-09-22T20:00:00+00:20</lastmod>
-<changefreq>daily</changefreq>
-<priority>0.5</priority>
-</url>
-
-<url>
-<loc>https://johnpaton.net/tag/time-series.html</loc>
-<lastmod>2017-09-22T20:00:00+00:20</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
@@ -243,7 +250,7 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>https://johnpaton.net/author/john-paton.html</loc>
-<lastmod>2018-07-19T17:00:00+00:20</lastmod>
+<lastmod>2019-04-13T16:00:00+00:20</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>

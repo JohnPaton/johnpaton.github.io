@@ -1,0 +1,917 @@
+
+<!DOCTYPE html>
+<html lang="english">
+<head>
+  <link href='//fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,400italic' rel='stylesheet' type='text/css'>
+
+    <link rel="stylesheet" type="text/css" href="https://johnpaton.net/theme/stylesheet/style.min.css">
+
+  <link rel="stylesheet" type="text/css" href="https://johnpaton.net/theme/pygments/monokai.min.css">
+  <link rel="stylesheet" type="text/css" href="https://johnpaton.net/theme/font-awesome/css/font-awesome.min.css">
+
+    <link href="https://johnpaton.net//styles/custom.css" rel="stylesheet">
+
+    <link href="https://johnpaton.net/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="John Paton Atom">
+
+    <link href="https://johnpaton.net/feeds/all.rss.xml" type="application/rss+xml" rel="alternate" title="John Paton RSS">
+
+    <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="" />
+
+    <!-- Chrome, Firefox OS and Opera -->
+    <meta name="theme-color" content="#3aa500">
+    <!-- Windows Phone -->
+    <meta name="msapplication-navbutton-color" content="#3aa500">
+    <!-- iOS Safari -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <!-- Microsoft EDGE -->
+    <meta name="msapplication-TileColor" content="#3aa500">
+
+<meta name="author" content="John Paton" />
+<meta name="description" content="I recently discovered that Pandas has a function to propagate time series events forward (or backward) in time across a DataFrame. Here&#39;s how it works." />
+<meta name="keywords" content="python, data, time series, pandas">
+
+<meta property="og:site_name" content="John Paton"/>
+<meta property="og:title" content="Propagate time series events with Pandas merge_asof"/>
+<meta property="og:description" content="I recently discovered that Pandas has a function to propagate time series events forward (or backward) in time across a DataFrame. Here&#39;s how it works."/>
+<meta property="og:locale" content="en_US"/>
+<meta property="og:url" content="https://johnpaton.net/posts/propagate-time-series-events-pandas/"/>
+<meta property="og:type" content="article"/>
+<meta property="article:published_time" content="2019-04-13 16:00:00-01:00"/>
+<!--<meta property="article:modified_time" content=""/> -->
+<meta property="article:author" content="https://johnpaton.net/author/john-paton.html">
+<meta property="article:section" content="posts"/>
+<meta property="article:tag" content="python"/>
+<meta property="article:tag" content="data"/>
+<meta property="article:tag" content="time series"/>
+<meta property="article:tag" content="pandas"/>
+<meta property="og:image" content="https://johnpaton.net//images/headshot_wide.jpg">
+
+  <title>John Paton &ndash; Propagate time series events with Pandas merge_asof</title>
+
+</head>
+<body>
+  <aside>
+    <div>
+      <a href="https://johnpaton.net">
+        <img src="/images/headshot.png" alt="John Paton" title="John Paton">
+      </a>
+      <h1><a href="https://johnpaton.net/about">John Paton</a></h1>
+
+<p><b style="color:#3aa500;margin-right:2px">/</b>data<b style="color:#3aa500;margin-right:2px;margin-left:2px">/</b>scientist</p>
+      <nav>
+        <ul class="list">
+
+          <li><a href="/">blog home</a></li>
+          <li><a href="/tags">tags</a></li>
+          <li><a href="/about">about me</a></li>
+          <li><a href="/writing-talks">writing & talks</a></li>
+        </ul>
+      </nav>
+
+      <ul class="social">
+        <li><a class="sc-github" href="http://www.github.com/johnpaton" target="_blank"><i class="fa fa-github"></i></a></li>
+        <li><a class="sc-twitter" href="http://www.twitter.com/jd_paton" target="_blank"><i class="fa fa-twitter"></i></a></li>
+        <li><a class="sc-linkedin" href="http://linkedin.com/in/john-paton" target="_blank"><i class="fa fa-linkedin"></i></a></li>
+        <li><a class="sc-file-pdf-o" href="/static/johnpaton-cv.pdf" target="_blank"><i class="fa fa-file-pdf-o"></i></a></li>
+        <li><a class="sc-rss" href="/feeds/all.atom.xml" target="_blank"><i class="fa fa-rss"></i></a></li>
+      </ul>
+    </div>
+
+
+  </aside>
+  <main>
+
+
+<article class="single">
+  <header>
+      
+    <h1 id="propagate-time-series-events-pandas">Propagate time series events with Pandas merge_asof</h1>
+    <p>
+          Posted on Sat 13 April 2019
+
+
+        &#8226; 5 min read
+    </p>
+  </header>
+
+
+  <div>
+    <p>Imagine the following situation: you have two tables, one with event logs, and the other with status changes. To make this concrete, let's take our events to be purchases by our users, and the status changes to be when the users attained a Gold Membership (wow so shiny). You want to use their membership status <em>at the time of each purchase</em> as a feature for some model, but you only have records of when the status <em>changed</em>, so you can't just naively join the tables.</p>
+<p>After inheriting some code that was performing this operation manually using <code>groupby</code>'s and fancy indexing, I decided to check if Pandas had a built in function for it, and I was pleasantly surprised: <a href="https://pandas.pydata.org/pandas-docs/version/0.22/generated/pandas.merge_asof.html"><code>pandas.merge_asof</code></a>. Let's check out how it works.</p>
+<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelt</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+<span class="c1"># https://johnpaton.net/posts/custom-color-schemes-in-matplotlib/</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;~/johnpaton.mplstyle&#39;</span><span class="p">)</span>
+</pre></div>
+
+
+<p>We'll begin by generating some fake sales data. We have three users, Alice, Bob, and Charlie, who made purchases over the last year. Sorry about the verbosity, there doesn't seem to be any easier way to generate random dates in a range. </p>
+<div class="highlight"><pre><span></span><span class="n">n_rows</span> <span class="o">=</span> <span class="mi">15</span>
+<span class="n">epoch</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcfromtimestamp</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">end</span> <span class="o">=</span> <span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span> <span class="o">-</span> <span class="n">epoch</span><span class="p">)</span><span class="o">.</span><span class="n">days</span>
+<span class="n">start</span> <span class="o">=</span> <span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span> <span class="o">-</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">365</span><span class="p">)</span> <span class="o">-</span> <span class="n">epoch</span><span class="p">)</span><span class="o">.</span><span class="n">days</span>
+
+<span class="n">users</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;alice&#39;</span><span class="p">,</span><span class="s1">&#39;bob&#39;</span><span class="p">,</span><span class="s1">&#39;charlie&#39;</span><span class="p">]</span>
+<span class="n">df_sales</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="p">{</span>
+    <span class="s1">&#39;timestamp&#39;</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">n_rows</span><span class="p">),</span> <span class="n">unit</span><span class="o">=</span><span class="s1">&#39;D&#39;</span><span class="p">),</span>
+    <span class="s1">&#39;user&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">users</span><span class="p">,</span> <span class="n">n_rows</span><span class="p">),</span>
+    <span class="s1">&#39;amount&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">100</span><span class="p">,</span> <span class="n">n_rows</span><span class="p">)</span>
+<span class="p">})</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">&#39;timestamp&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">df_sales</span>
+</pre></div>
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>timestamp</th>
+      <th>user</th>
+      <th>amount</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>2018-04-14</td>
+      <td>charlie</td>
+      <td>74</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2018-05-02</td>
+      <td>alice</td>
+      <td>61</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2018-05-17</td>
+      <td>charlie</td>
+      <td>85</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>2018-06-25</td>
+      <td>bob</td>
+      <td>71</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>2018-06-30</td>
+      <td>alice</td>
+      <td>50</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>2018-07-04</td>
+      <td>charlie</td>
+      <td>40</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>2018-09-22</td>
+      <td>bob</td>
+      <td>64</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>2018-11-02</td>
+      <td>alice</td>
+      <td>7</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>2018-11-18</td>
+      <td>bob</td>
+      <td>57</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>2018-11-21</td>
+      <td>alice</td>
+      <td>37</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>2018-11-27</td>
+      <td>charlie</td>
+      <td>42</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>2019-01-19</td>
+      <td>alice</td>
+      <td>29</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>2019-01-22</td>
+      <td>alice</td>
+      <td>46</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>2019-03-17</td>
+      <td>bob</td>
+      <td>11</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>2019-04-02</td>
+      <td>alice</td>
+      <td>77</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<p>Next up, we need the records of when each of them attained their coveted Gold Membership:</p>
+<div class="highlight"><pre><span></span><span class="n">df_flags</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="p">{</span>
+    <span class="s1">&#39;user&#39;</span><span class="p">:</span> <span class="n">users</span><span class="p">,</span>
+    <span class="s1">&#39;timestamp&#39;</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">users</span><span class="p">)),</span> <span class="n">unit</span><span class="o">=</span><span class="s1">&#39;D&#39;</span><span class="p">),</span>
+    <span class="s1">&#39;status&#39;</span><span class="p">:</span> <span class="s1">&#39;gold_member&#39;</span>
+<span class="p">})</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">&#39;timestamp&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">df_flags</span>
+</pre></div>
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>user</th>
+      <th>timestamp</th>
+      <th>status</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>charlie</td>
+      <td>2018-04-18</td>
+      <td>gold_member</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>bob</td>
+      <td>2018-06-09</td>
+      <td>gold_member</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>alice</td>
+      <td>2018-09-24</td>
+      <td>gold_member</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<p>Now it's time to do our merge. We call <code>pd.merge_asof</code>, specifying the following arguments:</p>
+<ul>
+<li>The <code>left</code> and <code>right</code> DataFrames</li>
+<li>The column to merge <code>on</code> (this is generally a time column or some other ordering field)</li>
+<li>The column(s) to group <code>by</code>. The <code>by</code> keyword is very nice, as we can use it to make sure that the status changes only get propagated across the correct users' purchases. Otherwise we would have to ensure this manually.</li>
+</ul>
+<div class="highlight"><pre><span></span><span class="n">df_merged</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge_asof</span><span class="p">(</span>
+    <span class="n">df_sales</span><span class="p">,</span>
+    <span class="n">df_flags</span><span class="p">,</span>
+    <span class="n">on</span><span class="o">=</span><span class="s1">&#39;timestamp&#39;</span><span class="p">,</span>
+    <span class="n">by</span><span class="o">=</span><span class="s1">&#39;user&#39;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">df_merged</span>
+</pre></div>
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>timestamp</th>
+      <th>user</th>
+      <th>amount</th>
+      <th>status</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>2018-04-14</td>
+      <td>charlie</td>
+      <td>74</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2018-05-02</td>
+      <td>alice</td>
+      <td>61</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2018-05-17</td>
+      <td>charlie</td>
+      <td>85</td>
+      <td>gold_member</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>2018-06-25</td>
+      <td>bob</td>
+      <td>71</td>
+      <td>gold_member</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>2018-06-30</td>
+      <td>alice</td>
+      <td>50</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>2018-07-04</td>
+      <td>charlie</td>
+      <td>40</td>
+      <td>gold_member</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>2018-09-22</td>
+      <td>bob</td>
+      <td>64</td>
+      <td>gold_member</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>2018-11-02</td>
+      <td>alice</td>
+      <td>7</td>
+      <td>gold_member</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>2018-11-18</td>
+      <td>bob</td>
+      <td>57</td>
+      <td>gold_member</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>2018-11-21</td>
+      <td>alice</td>
+      <td>37</td>
+      <td>gold_member</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>2018-11-27</td>
+      <td>charlie</td>
+      <td>42</td>
+      <td>gold_member</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>2019-01-19</td>
+      <td>alice</td>
+      <td>29</td>
+      <td>gold_member</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>2019-01-22</td>
+      <td>alice</td>
+      <td>46</td>
+      <td>gold_member</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>2019-03-17</td>
+      <td>bob</td>
+      <td>11</td>
+      <td>gold_member</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>2019-04-02</td>
+      <td>alice</td>
+      <td>77</td>
+      <td>gold_member</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<p>The result is kind of like a left join, in that all "matching" rows are filled and unmatched rows are <code>NaN</code>. However, unlike in a left join (which looks for an exact match), in this the join applied to case all rows on the left that have a <code>timestamp</code> that comes <em>after</em> the paired rows on the right. To ensure that this before/after comparison is possible, the DataFrames must be sorted by the <code>on</code> column.</p>
+<p>To create our Gold Membership flag, all we do is just replace the name of the event with a <code>1</code> and fill the <code>NaN</code>s (which are rows that came before the status change) with <code>0</code>s.</p>
+<div class="highlight"><pre><span></span><span class="n">df_merged</span><span class="p">[</span><span class="s1">&#39;gold_member&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_merged</span><span class="p">[</span><span class="s1">&#39;status&#39;</span><span class="p">]</span>\
+    <span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;gold_member&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>\
+    <span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>\
+    <span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+<span class="n">df_merged</span>
+</pre></div>
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>timestamp</th>
+      <th>user</th>
+      <th>amount</th>
+      <th>status</th>
+      <th>gold_member</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>2018-04-14</td>
+      <td>charlie</td>
+      <td>74</td>
+      <td>NaN</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2018-05-02</td>
+      <td>alice</td>
+      <td>61</td>
+      <td>NaN</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2018-05-17</td>
+      <td>charlie</td>
+      <td>85</td>
+      <td>gold_member</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>2018-06-25</td>
+      <td>bob</td>
+      <td>71</td>
+      <td>gold_member</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>2018-06-30</td>
+      <td>alice</td>
+      <td>50</td>
+      <td>NaN</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>2018-07-04</td>
+      <td>charlie</td>
+      <td>40</td>
+      <td>gold_member</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>2018-09-22</td>
+      <td>bob</td>
+      <td>64</td>
+      <td>gold_member</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>2018-11-02</td>
+      <td>alice</td>
+      <td>7</td>
+      <td>gold_member</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>2018-11-18</td>
+      <td>bob</td>
+      <td>57</td>
+      <td>gold_member</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>2018-11-21</td>
+      <td>alice</td>
+      <td>37</td>
+      <td>gold_member</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>2018-11-27</td>
+      <td>charlie</td>
+      <td>42</td>
+      <td>gold_member</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>2019-01-19</td>
+      <td>alice</td>
+      <td>29</td>
+      <td>gold_member</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>2019-01-22</td>
+      <td>alice</td>
+      <td>46</td>
+      <td>gold_member</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>2019-03-17</td>
+      <td>bob</td>
+      <td>11</td>
+      <td>gold_member</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>2019-04-02</td>
+      <td>alice</td>
+      <td>77</td>
+      <td>gold_member</td>
+      <td>1</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<p>To make sure there's no funny business going on, we can also visualize exactly what happened:</p>
+<div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">user</span> <span class="ow">in</span> <span class="n">users</span><span class="p">:</span>
+    <span class="n">df_tmp</span> <span class="o">=</span> <span class="n">df_merged</span><span class="p">[</span><span class="n">df_merged</span><span class="p">[</span><span class="s1">&#39;user&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">user</span><span class="p">]</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">df_tmp</span><span class="p">[</span><span class="s1">&#39;timestamp&#39;</span><span class="p">],</span> <span class="n">df_tmp</span><span class="p">[</span><span class="s1">&#39;gold_member&#39;</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="n">user</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">row</span> <span class="ow">in</span> <span class="n">df_flags</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">&#39;user&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;timestamp&#39;</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">f</span><span class="s1">&#39;C{i}&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span>
+        <span class="n">f</span><span class="s2">&quot; {row[&#39;user&#39;]} gets gold&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;timestamp&#39;</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mf">0.25</span><span class="p">,</span><span class="mf">0.75</span><span class="p">))</span>
+    <span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">yticks</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;regular&#39;</span><span class="p">,</span> <span class="s1">&#39;gold&#39;</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Membership status&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Sale date&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Sales by membership status&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span>
+</pre></div>
+
+
+<p><img alt="png" src="/images/propagate_12_1.png"></p>
+<p>So now we have a nice feature that can be used in a training set, without any data leakage (no events from the future are visible before they happened in the training set).</p>
+<p>This also works for multiple status changes. For example, say Bob got demoted on February 1st back to being a normal user.</p>
+<div class="highlight"><pre><span></span><span class="n">df_flags</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span>
+    <span class="n">df_flags</span><span class="p">,</span>
+    <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="p">{</span>
+        <span class="s1">&#39;user&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;bob&#39;</span><span class="p">],</span>
+        <span class="s1">&#39;status&#39;</span><span class="p">:</span> <span class="s1">&#39;normal&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;timestamp&#39;</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="s1">&#39;2019-02-01&#39;</span><span class="p">)</span>
+    <span class="p">})</span>
+<span class="p">])</span>
+<span class="n">df_flags</span>
+</pre></div>
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>status</th>
+      <th>timestamp</th>
+      <th>user</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>gold_member</td>
+      <td>2018-04-18</td>
+      <td>charlie</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>gold_member</td>
+      <td>2018-06-09</td>
+      <td>bob</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>gold_member</td>
+      <td>2018-09-24</td>
+      <td>alice</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>normal</td>
+      <td>2019-02-01</td>
+      <td>bob</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<p>If we perform the <code>merge_asof</code> again, we see that Bob's status changes twice, just how we would expect:</p>
+<div class="highlight"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">merge_asof</span><span class="p">(</span>
+    <span class="n">df_sales</span><span class="p">,</span>
+    <span class="n">df_flags</span><span class="p">,</span>
+    <span class="n">on</span><span class="o">=</span><span class="s1">&#39;timestamp&#39;</span><span class="p">,</span>
+    <span class="n">by</span><span class="o">=</span><span class="s1">&#39;user&#39;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>timestamp</th>
+      <th>user</th>
+      <th>amount</th>
+      <th>status</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>2018-04-14</td>
+      <td>charlie</td>
+      <td>74</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2018-05-02</td>
+      <td>alice</td>
+      <td>61</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2018-05-17</td>
+      <td>charlie</td>
+      <td>85</td>
+      <td>gold_member</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>2018-06-25</td>
+      <td>bob</td>
+      <td>71</td>
+      <td>gold_member</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>2018-06-30</td>
+      <td>alice</td>
+      <td>50</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>2018-07-04</td>
+      <td>charlie</td>
+      <td>40</td>
+      <td>gold_member</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>2018-09-22</td>
+      <td>bob</td>
+      <td>64</td>
+      <td>gold_member</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>2018-11-02</td>
+      <td>alice</td>
+      <td>7</td>
+      <td>gold_member</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>2018-11-18</td>
+      <td>bob</td>
+      <td>57</td>
+      <td>gold_member</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>2018-11-21</td>
+      <td>alice</td>
+      <td>37</td>
+      <td>gold_member</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>2018-11-27</td>
+      <td>charlie</td>
+      <td>42</td>
+      <td>gold_member</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>2019-01-19</td>
+      <td>alice</td>
+      <td>29</td>
+      <td>gold_member</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>2019-01-22</td>
+      <td>alice</td>
+      <td>46</td>
+      <td>gold_member</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>2019-03-17</td>
+      <td>bob</td>
+      <td>11</td>
+      <td>normal</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>2019-04-02</td>
+      <td>alice</td>
+      <td>77</td>
+      <td>gold_member</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<p>Finally, these have all been examples of so-called "backwards searches". From the <a href="https://pandas.pydata.org/pandas-docs/version/0.22/generated/pandas.merge_asof.html">Pandas docs</a>: </p>
+<blockquote>
+<p>A "backward" search selects the last row in the right DataFrame whose <code>on</code> key is less than or equal to the left's key.</p>
+</blockquote>
+<p>Somewhat counter-intuitively, this causes the status changes to propagate <em>forward</em> in time. This is the default behavior of <code>merge_asof</code>. To do the reverse (a <em>forward</em> search, a.k.a. propagate changes <em>backwards</em> in time), you can provide the keyword argument <code>direction="forward"</code>. </p>
+  </div>
+  <div class="tag-cloud">
+    <p>
+      <a href="https://johnpaton.net/tag/python.html">python</a>
+      <a href="https://johnpaton.net/tag/data.html">data</a>
+      <a href="https://johnpaton.net/tag/time-series.html">time series</a>
+      <a href="https://johnpaton.net/tag/pandas.html">pandas</a>
+    </p>
+  </div>
+
+
+
+    <div class="addthis_relatedposts_inline">
+
+
+<!-- Disqus -->
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_shortname = 'johnpatonblog';
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>
+        Please enable JavaScript to view comments.
+
+</noscript>
+<!-- End Disqus -->
+</article>
+
+    <footer>
+<p>&copy; John Paton 2017</p>
+<p>    Powered by <a href="http://getpelican.com" target="_blank">Pelican</a> - Theme <a href="https://github.com/JohnPaton/flex-mod" target="_blank">modified</a> from <a href="http://alexandrevicenzi.com" target="_blank">Alexandre Vicenzi</a>'s <a href="https://github.com/alexandrevicenzi/flex" target="_blank">Flex</a>
+</p>    </footer>
+  </main>
+
+<!-- Google Analytics -->
+<script type="text/javascript">
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-92349567-1', 'auto');
+  ga('send', 'pageview');
+</script>
+<!-- End Google Analytics -->
+
+
+
+<script type="application/ld+json">
+{
+  "@context" : "http://schema.org",
+  "@type" : "Blog",
+  "name": " John Paton ",
+  "url" : "https://johnpaton.net",
+  "image": "/images/headshot.png",
+  "description": "John's deep musings and cheap tricks for Python, data science, machine learning, and more."
+}
+</script>
+
+</body>
+</html>
