@@ -15,7 +15,7 @@ After inheriting some code that was performing this operation manually using `gr
 
 
 ```python
-from datetime import datetime, timedelt
+from datetime import datetime, timedelta
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
