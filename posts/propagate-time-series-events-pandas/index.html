@@ -106,7 +106,7 @@
   <div>
     <p>Imagine the following situation: you have two tables, one with event logs, and the other with status changes. To make this concrete, let's take our events to be purchases by our users, and the status changes to be when the users attained a Gold Membership (wow so shiny). You want to use their membership status <em>at the time of each purchase</em> as a feature for some model, but you only have records of when the status <em>changed</em>, so you can't just naively join the tables.</p>
 <p>After inheriting some code that was performing this operation manually using <code>groupby</code>'s and fancy indexing, I decided to check if Pandas had a built in function for it, and I was pleasantly surprised: <a href="https://pandas.pydata.org/pandas-docs/version/0.22/generated/pandas.merge_asof.html"><code>pandas.merge_asof</code></a>. Let's check out how it works.</p>
-<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelt</span>
+<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
