@@ -36,7 +36,7 @@ BROWSER_COLOR = '#3aa500'
 
 SUMMARY_MAX_LENGTH = 50
 
-THEME = '../flex-mod'
+THEME = 'themes/flex-mod'
 USE_LESS = False
 
 #GOOGLE_ANALYTICS = 'UA-92349567-1'
@@ -104,7 +104,7 @@ ARTICLE_EXCLUDES  = STATIC_PATHS
 RELATIVE_URLS = False
 
 # Plugins
-PLUGIN_PATHS = ['../pelican-plugins']
+PLUGIN_PATHS = ['plugins/pelican-plugins']
 PLUGINS=['sitemap', 'render_math', 'post_stats']
 
 SITEMAP = {
