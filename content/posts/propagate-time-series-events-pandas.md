@@ -30,7 +30,7 @@ We'll begin by generating some fake sales data. We have three users, Alice, Bob,
 n_rows = 15
 epoch = datetime.utcfromtimestamp(0)
 end = (datetime.now() - epoch).days
-start = (datetime.now() - timedelta(days=365) - epoch).days
+start = end - 365
 
 users = ['alice','bob','charlie']
 df_sales = pd.DataFrame(data={
