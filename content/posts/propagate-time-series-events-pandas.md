@@ -383,7 +383,7 @@ df_merged
 
 
 
-The result is kind of like a left join, in that all "matching" rows are filled and unmatched rows are `NaN`. However, unlike in a left join (which looks for an exact match), in this the join applied to case all rows on the left that have a `timestamp` that comes _after_ the paired rows on the right. To ensure that this before/after comparison is possible, the DataFrames must be sorted by the `on` column.
+The result is kind of like a left join, in that all "matching" rows are filled and unmatched rows are `NaN`. However, unlike in a left join (which looks for an exact match), in this case the join applied to all rows on the left that have a `timestamp` that comes _after_ the paired rows on the right. To ensure that this before/after comparison is possible, the DataFrames must be sorted by the `on` column.
 
 To create our Gold Membership flag, all we do is just replace the name of the event with a `1` and fill the `NaN`s (which are rows that came before the status change) with `0`s.
 
