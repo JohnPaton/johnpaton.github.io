@@ -2,6 +2,7 @@ title: Propagate time series events with Pandas merge_asof
 slug: propagate-time-series-events-pandas
 date: 2019-04-13 16:00:00 UTC+01:00
 tags: python, data, time series, pandas
+cover: /images/propagate_12_1.png
 category: 
 link: 
 status:
