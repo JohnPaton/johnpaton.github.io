@@ -455,7 +455,7 @@
 </table>
 </div>
 
-<p>The result is kind of like a left join, in that all "matching" rows are filled and unmatched rows are <code>NaN</code>. However, unlike in a left join (which looks for an exact match), in this the join applied to case all rows on the left that have a <code>timestamp</code> that comes <em>after</em> the paired rows on the right. To ensure that this before/after comparison is possible, the DataFrames must be sorted by the <code>on</code> column.</p>
+<p>The result is kind of like a left join, in that all "matching" rows are filled and unmatched rows are <code>NaN</code>. However, unlike in a left join (which looks for an exact match), in this case the join applied to all rows on the left that have a <code>timestamp</code> that comes <em>after</em> the paired rows on the right. To ensure that this before/after comparison is possible, the DataFrames must be sorted by the <code>on</code> column.</p>
 <p>To create our Gold Membership flag, all we do is just replace the name of the event with a <code>1</code> and fill the <code>NaN</code>s (which are rows that came before the status change) with <code>0</code>s.</p>
 <div class="highlight"><pre><span></span><span class="n">df_merged</span><span class="p">[</span><span class="s1">&#39;gold_member&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_merged</span><span class="p">[</span><span class="s1">&#39;status&#39;</span><span class="p">]</span>\
     <span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;gold_member&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>\
