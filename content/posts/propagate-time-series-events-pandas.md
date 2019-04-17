@@ -2,6 +2,7 @@ title: Propagate time series events with Pandas merge_asof
 slug: propagate-time-series-events-pandas
 date: 2019-04-13 16:00:00 UTC+01:00
 tags: python, data, time series, pandas
+cover: /images/propagate_12_1.png
 category: 
 link: 
 status:
@@ -30,7 +31,7 @@ We'll begin by generating some fake sales data. We have three users, Alice, Bob,
 n_rows = 15
 epoch = datetime.utcfromtimestamp(0)
 end = (datetime.now() - epoch).days
-start = (datetime.now() - timedelta(days=365) - epoch).days
+start = end - 365
 
 users = ['alice','bob','charlie']
 df_sales = pd.DataFrame(data={
@@ -383,7 +384,7 @@ df_merged
 
 
 
-The result is kind of like a left join, in that all "matching" rows are filled and unmatched rows are `NaN`. However, unlike in a left join (which looks for an exact match), in this the join applied to case all rows on the left that have a `timestamp` that comes _after_ the paired rows on the right. To ensure that this before/after comparison is possible, the DataFrames must be sorted by the `on` column.
+The result is kind of like a left join, in that all "matching" rows are filled and unmatched rows are `NaN`. However, unlike in a left join (which looks for an exact match), in this case the join applied to all rows on the left that have a `timestamp` that comes _after_ the paired rows on the right. To ensure that this before/after comparison is possible, the DataFrames must be sorted by the `on` column.
 
 To create our Gold Membership flag, all we do is just replace the name of the event with a `1` and fill the `NaN`s (which are rows that came before the status change) with `0`s.
 
