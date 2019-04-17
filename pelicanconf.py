@@ -77,7 +77,7 @@ DISPLAY_CATEGORIES_ON_MENU = False
 LINKS = (('blog home', '/'),
          ('tags', '/tags'),
          ('about me', '/about'),
-         ('writing & talks', '/writing-talks'),
+         ('writing&nbsp;&&nbsp;talks', '/writing-talks'),
          )
 
 
