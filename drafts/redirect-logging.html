@@ -35,12 +35,12 @@
     <meta name="msapplication-TileColor" content="#3aa500">
 
 <meta name="author" content="John Paton" />
-<meta name="description" content="" />
-<meta name="keywords" content="python">
+<meta name="description" content="Python&#39;s logging functionality is very nice once you get the hang of it, but many people either disagree or don&#39;t bother to use it. Learn how to redirect other people&#39;s pesky print statements into your nice logging setup." />
+<meta name="keywords" content="python, snippets">
 
 <meta property="og:site_name" content="John Paton"/>
-<meta property="og:title" content="Redirect Standard Out to Python&#39;s logging module with contextlib"/>
-<meta property="og:description" content=""/>
+<meta property="og:title" content="Redirect standard out to Python&#39;s logging module with contextlib"/>
+<meta property="og:description" content="Python&#39;s logging functionality is very nice once you get the hang of it, but many people either disagree or don&#39;t bother to use it. Learn how to redirect other people&#39;s pesky print statements into your nice logging setup."/>
 <meta property="og:locale" content="en_US"/>
 <meta property="og:url" content="https://johnpaton.net/drafts/redirect-logging.html"/>
 <meta property="og:type" content="article"/>
@@ -49,9 +49,10 @@
 <meta property="article:author" content="https://johnpaton.net/author/john-paton.html">
 <meta property="article:section" content="posts"/>
 <meta property="article:tag" content="python"/>
-<meta property="og:image" content="https://johnpaton.net/">
+<meta property="article:tag" content="snippets"/>
+<meta property="og:image" content="https://johnpaton.net/images/logs_cover.jpg">
 
-  <title>John Paton &ndash; Redirect Standard Out to Python&#39;s logging module with contextlib</title>
+  <title>John Paton &ndash; Redirect standard out to Python&#39;s logging module with contextlib</title>
 
 </head>
 <body>
@@ -90,18 +91,20 @@
 <article class="single">
   <header>
       
-    <h1 id="redirect-logging">Redirect Standard Out to Python's logging module with contextlib</h1>
+    <h1 id="redirect-logging">Redirect standard out to Python's logging module with contextlib</h1>
     <p>
           Posted on Mon 20 May 2019
 
 
-        &#8226; 3 min read
+        &#8226; 5 min read
     </p>
   </header>
 
 
   <div>
-    <p>Python's logging functionality is very nice once you get the hang of it, but many people (including library developers) either disagree or don't bother to use it. Instead, you often see things like this:</p>
+    <p><img alt="Logging" src="/images/logs_cover.jpg">
+<div style="text-align:center"><small><a href="https://en.wikipedia.org/wiki/Logging">Logging</a> on Wikipedia</small></div></p>
+<p>Python's built in logging functionality is very nice once you get the hang of it, but many people (including library developers) either disagree or don't bother to use it. Instead, you often see things like this:</p>
 <div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 <span class="n">Epoch</span> <span class="mi">0</span>
 <span class="n">Epoch</span> <span class="mi">1</span>
@@ -111,10 +114,10 @@
 
 
 <p>and onwards for 100 lines or whatever. </p>
-<p>Writing status messages to standard out is <em>okay</em>, but if you want anything like consistent/parsable logs, log level handling, logging to multiple locations, etc. this can get a bit annoying. How can we redirect standard out to Python's logging system to get all these juicy benefits?</p>
-<p>Another builtin module, <code>contextlib</code>, comes to our rescue.</p>
+<p>Printing status messages to standard out is <em>okay</em>, but if you want anything like consistent/parseable logs, log level handling, logging to multiple locations, etc. this can get a bit annoying. How can we redirect standard out to Python's logging system to get all these juicy benefits?</p>
+<p>Another built in module, <code>contextlib</code>, comes to our rescue.</p>
 <h2>Aside: Context Managers</h2>
-<p>Roughly speaking, a context manager in Python is an object that implements 2 methods: <code>__enter__</code> and <code>__exit__</code>. Usually you enter the context by using the <code>with</code> keyword, which triggers a call to <code>__enter__</code>. You execure some code in an indented block, and (roughly speaking) when you exit the block, the <code>__exit__</code> method is called. The context manager interface is what makes these two pieces of code more or less equivalent:</p>
+<p>A <a href="https://docs.python.org/3/reference/datamodel.html#with-statement-context-managers">context manager</a> in Python is basically an object that implements two methods: <code>__enter__</code> and <code>__exit__</code>. Usually you enter the context by using the <code>with</code> keyword, which triggers a call to <code>__enter__</code>. You execute some code in an indented block, and (roughly speaking) when you exit the block, the <code>__exit__</code> method is called with information about any exceptions that occurred. The context manager interface is what makes these two pieces of code more or less equivalent:</p>
 <div class="highlight"><pre><span></span><span class="n">h</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;file.txt&quot;</span><span class="p">)</span>
 <span class="n">text</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
 <span class="n">h</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
@@ -127,12 +130,13 @@
 </pre></div>
 
 
-<p>The file handle returned by <code>open</code> implements <code>__enter__</code> and <code>__exit__</code>, which is why it can be used in this way. The nice benefit here is that we never forget to close the file, as <code>__exit__</code> is called automagically at the end of the block.</p>
+<p>The file handle returned by <code>open</code> implements both <code>__enter__</code> and <code>__exit__</code>, which is why it can be used in this way. The nice benefit here is that we never forget to close the file, as <code>__exit__</code> (which closes the file in this case) is called automagically at the end of the block.</p>
 <h2>Redirecting <code>stdout</code></h2>
-<p>So how does this help us? Well, <code>contextlib</code> (which is the library for htings related to context managers, in case you didn't catch that) has a very handy context manager called <code>redirect_stdout</code> (and also the matching <code>redirect_stdin</code>). We can use it to redirect text written to standard out to another file-like object. For example, to write to a file, we could do:</p>
+<p>So how does this help us? Well, <code>contextlib</code> (which is the library for things related to context managers, in case you didn't catch that) has a very handy context manager called <code>redirect_stdout</code> (and also the matching <code>redirect_stderr</code>). We can use it to redirect text written to standard out to another file-like object. For example, to write to a file, we could do:</p>
 <div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">contextlib</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;output.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">h</span><span class="p">,</span> <span class="n">contextlib</span><span class="o">.</span><span class="n">redirect_stdout</span><span class="p">(</span><span class="n">h</span><span class="p">):</span>
 <span class="o">...</span>     <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Hello world!&quot;</span><span class="p">)</span>
+<span class="o">...</span>
 <span class="o">&gt;&gt;&gt;</span>
 </pre></div>
 
@@ -144,22 +148,93 @@ Hello world!
 
 
 <p>I realize that there are better ways of writing to a file in Python, but writing to a file isn't the point. The point is that any arbitrary code executed in the context block above would have its output redirected to the file, <em>without</em> having to modify its print statements, including library code that we can't easily modify. </p>
-<p>Now, <code>redirect_stdout</code> requires a file-like object that it can <code>write</code> to, which is why we first had to <code>open</code> out output file above. However, Python's loggers are not file-like. I think you see where this is going.</p>
+<p>Now, <code>redirect_stdout</code> requires a file-like object that it can <code>write</code> to, which is why we first had to <code>open</code> our output file above. However, Python's loggers are not file-like. I think you see where this is going.</p>
 <h2>A file-like logger</h2>
+<p>To redirect standard out to <code>logging</code>, we write a simple class that implements the <code>write</code> method, and passes everything that is written to the logger of our choice. We'll also add a <code>flush</code> method that doesn't do anything, just to avoid exceptions in case some code tries to use it. We can specify the desired logger by name since Python's loggers are <a href="https://docs.python.org/3/library/logging.html#logger-objects">singletons</a>.</p>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">contextlib</span>
+
+<span class="k">class</span> <span class="nc">OutputLogger</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;root&quot;</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="s2">&quot;INFO&quot;</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">level</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">logging</span><span class="p">,</span> <span class="n">level</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">msg</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">msg</span><span class="o">.</span><span class="n">isspace</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">level</span><span class="p">,</span> <span class="n">msg</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">flush</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="k">pass</span>
+</pre></div>
+
+
+<p>I added a quick check for empty messages since I don't want blank lines in my logging. </p>
+<p>This is already enough to pass our object to <code>redirect_stdout</code> and thereby redirect standard out to <code>logging</code>:</p>
+<div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">with</span> <span class="n">contextlib</span><span class="o">.</span><span class="n">redirect_stdout</span><span class="p">(</span><span class="n">OutputLogger</span><span class="p">(</span><span class="s2">&quot;my_logger&quot;</span><span class="p">,</span> <span class="s2">&quot;INFO&quot;</span><span class="p">)):</span>
+<span class="o">...</span>     <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Hello logging!&quot;</span><span class="p">)</span> 
+<span class="o">...</span>
+<span class="n">INFO</span><span class="p">:</span><span class="n">my_logger</span><span class="p">:</span><span class="n">Hello</span> <span class="n">logging</span><span class="err">!</span>
+</pre></div>
+
+
+<p>Note that we had to minimally call <code>logging.basicConfig()</code> to get a bit of formatting on the logs and set the log level to at least the level we selected for our redirector (<code>INFO</code>). Since our class is just functioning as a redirector for messages, we leave ourselves free to configure the logger however we want elsewhere in the application (check out the <a href="https://docs.python.org/3/howto/logging-cookbook.html">Python logging cookbook</a> for tips).</p>
 <h2>Baby's first context manager</h2>
-<p>What we can do is the following:</p>
-<ul>
-<li>Create a class that implements a subset of the file-like interface (in this case we only really need <code>write</code>)</li>
-<li>Make our <code>write</code> pass messages to a logger</li>
-<li>Also implement our own context manager interface, where we pass our <code>self</code> to <code>redirect_stdout</code> so that anything that gets written in our context actually is redirected to the logger</li>
-<li>Clean everything up when we exit</li>
-</ul>
-<p>This sounds complicated, but it turns out actually to be quite easy. Here is a barebones implementation:</p>
+<p>This implementation is already functional, but it's a bit verbose. Since we're already in the <code>contextlib</code> realm we might as well just make our object into a context manager itself, eliminating the need to call <code>contextlib.redirect_stdout</code> directly every time we want to use it. To do so, we add a new attribute called <code>_redirector</code> to our class, which is an instance of <code>redirect_stdout</code> with <code>self</code> as the redirect destination. Then our <code>__enter__</code> and <code>__exit__</code> methods just call the matching methods of our <code>_redirector</code>, ensuring that everything printed in our context will get redirected to our own <code>write</code> method (which in turn passes messages to our <code>logger</code>). Our implementation becomes:</p>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">contextlib</span>
+
+<span class="k">class</span> <span class="nc">OutputLogger</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;root&quot;</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="s2">&quot;INFO&quot;</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">level</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">logging</span><span class="p">,</span> <span class="n">level</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_redirector</span> <span class="o">=</span> <span class="n">contextlib</span><span class="o">.</span><span class="n">redirect_stdout</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">msg</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">msg</span><span class="o">.</span><span class="n">isspace</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">level</span><span class="p">,</span> <span class="n">msg</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">flush</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_redirector</span><span class="o">.</span><span class="fm">__enter__</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="fm">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_value</span><span class="p">,</span> <span class="n">traceback</span><span class="p">):</span>
+        <span class="c1"># let contextlib do any exception handling here</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_redirector</span><span class="o">.</span><span class="fm">__exit__</span><span class="p">(</span><span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_value</span><span class="p">,</span> <span class="n">traceback</span><span class="p">)</span>
+</pre></div>
+
+
+<p>Now we're cooking! We can use <code>OutputLogger</code> as a context manager, and since we returned <code>self</code> from <code>__enter__</code> we can even reuse the same instance later by giving it a name using the <code>as</code> keyword:</p>
+<div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Normal&quot;</span><span class="p">)</span>
+<span class="n">Normal</span>
+<span class="o">&gt;&gt;&gt;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">with</span> <span class="n">OutputLogger</span><span class="p">(</span><span class="s2">&quot;my_logger&quot;</span><span class="p">,</span> <span class="s2">&quot;WARN&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">redirector</span><span class="p">:</span>
+<span class="o">...</span>     <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Logged!&quot;</span><span class="p">)</span>
+<span class="o">...</span>
+<span class="n">WARNING</span><span class="p">:</span><span class="n">my_logger</span><span class="p">:</span><span class="n">Logged</span><span class="err">!</span>
+<span class="o">&gt;&gt;&gt;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Back to normal&quot;</span><span class="p">)</span>
+<span class="n">Back</span> <span class="n">to</span> <span class="n">normal</span>
+<span class="o">&gt;&gt;&gt;</span> 
+<span class="o">&gt;&gt;&gt;</span> <span class="k">with</span> <span class="n">redirector</span><span class="p">:</span>
+<span class="o">...</span>     <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Logged again!&quot;</span><span class="p">)</span>
+<span class="o">...</span>
+<span class="n">WARNING</span><span class="p">:</span><span class="n">my_logger</span><span class="p">:</span><span class="n">Logged</span> <span class="n">again</span><span class="err">!</span>
+</pre></div>
+
+
+<p>There are all sorts of extensions possible here: redirecting standard error to another log level, making sure that changes to <code>OutputLogger.name</code> and <code>OutputLogger.level</code> get applied to the underlying logger properly, input checking on the log level string, etc. But this is enough to get started and will work as a quick and relatively clean way to capture the output from some other code and redirect it to your application's logging system.</p>
 <h2>Disclaimer</h2>
+<p>Though <code>contextlib.redirect_stdout</code> is built in to Python, it does redefine <code>sys.stdout</code> for your whole process while the execution is within its context. For this reason, it can have unintended results for other pieces of code that are trying to do fancier stuff with <code>sys.stdout</code> than just write to it. This is a solution if you are writing an application that just needs to get something done, but if you are writing a library that other people might use, it's best not do mess with these system properties without being very explicit about it. As always: Just because you can, doesn't mean you should!</p>
+<p><small><small>Cover image by <a rel="nofollow" class="external text" href="https://flickr.com/people/7787236@N07">Greenpeace Finland</a> - originally posted to <a href="//commons.wikimedia.org/wiki/Flickr" class="mw-redirect" title="Flickr">Flickr</a> as <a rel="nofollow" class="external text" href="https://flickr.com/photos/7787236@N07/3227543977">Logging in Finnish Lapland: ancient trees for pulp and paper</a>, <a href="https://creativecommons.org/licenses/by/2.0" title="Creative Commons Attribution 2.0">CC BY 2.0</a>, <a href="https://commons.wikimedia.org/w/index.php?curid=11805001">Link</a></small></small></p>
   </div>
   <div class="tag-cloud">
     <p>
       <a href="https://johnpaton.net/tag/python.html">python</a>
+      <a href="https://johnpaton.net/tag/snippets.html">snippets</a>
     </p>
   </div>
 
