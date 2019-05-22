@@ -6,7 +6,7 @@ type: text
 cover: images/logs_cover.jpg
 author: John Paton
 summary: Python's logging functionality is very nice once you get the hang of it, but many people either disagree or don't bother to use it. Learn how to redirect other people's pesky print statements into your nice logging setup.
-status: draft
+status: 
 
 ![Logging](/images/logs_cover.jpg)
 <div style="text-align:center"><small>[Logging](https://en.wikipedia.org/wiki/Logging) on Wikipedia</small></div>
