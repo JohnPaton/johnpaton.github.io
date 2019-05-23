@@ -1,6 +1,6 @@
 title: Redirect standard out to Python's logging module with contextlib
 slug: redirect-logging
-date: 2019-05-20 17:00:00 UTC+01:00
+date: 2019-05-22 17:00:00 UTC+01:00
 tags: python, snippets
 type: text
 cover: images/logs_cover.jpg
