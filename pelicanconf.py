@@ -74,7 +74,7 @@ AUTHOR_FEED_RSS = None
 DISPLAY_PAGES_ON_MENU = False
 DISPLAY_CATEGORIES_ON_MENU = False
 
-LINKS = (('blog home', '/'),
+LINKS = (('blog', '/'),
          ('tags', '/tags'),
          ('about me', '/about'),
          ('writing&nbsp;&&nbsp;talks', '/writing-talks'),
