@@ -2744,7 +2744,7 @@ dtype: float64
 Sample generated sentence lengths: [12, 37, 22, 16, 15]
 &lt;/pre&gt;
 
-&lt;p&gt;Wow, so easy! Thing language simulation thing is a breeze.&lt;/p&gt;
+&lt;p&gt;Wow, so easy! This language simulation thing is a breeze.&lt;/p&gt;
 &lt;h4&gt;Sentences&lt;/h4&gt;
 &lt;p&gt;Sentences are more or less just a chain of words, with a bit of flair. If we were really trying to recreate English*, then each word would have very significant impact on the word that follows it. However, all we want is to recreate the &lt;em&gt;feel&lt;/em&gt; of the language. We aren't expecting most of the words to even be real, let alone flow along with each other. So, we can just create each word individually and string them together. &lt;/p&gt;
 &lt;p&gt;To add a bit more structure, we alter the words we generate using a few rules. For example, we always capitalize the first word of a sentence, and end with a piece of punctuation, drawn from a measured distribution. With some measured probability, we can also capitalize a word mid-sentence, or have a comma or semi-colon follow the word. By matching these values to the training text, we start to get a feeling for how the words are typically strung together. In our NYT set, the measured values are:&lt;/p&gt;
