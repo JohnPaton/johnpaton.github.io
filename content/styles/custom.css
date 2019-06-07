@@ -256,7 +256,9 @@ a.btn{background-color:#3aa500;
 	text-align:center;
 	white-space:nowrap;
 	vertical-align:baseline;
-	border-radius:.25em}
+	border-radius:.25em;
+	font-family:source sans pro,trebuchet ms,sans-serif;
+}
 	
 a.btn:hover{background-color:#4cdb00}
 
