@@ -98,7 +98,7 @@ print('Sample generated sentence lengths:', lengths)
 Sample generated sentence lengths: [12, 37, 22, 16, 15]
 </pre>
 
-Wow, so easy! Thing language simulation thing is a breeze.
+Wow, so easy! This language simulation thing is a breeze.
 
 #### Sentences
 
