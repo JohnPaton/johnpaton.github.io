@@ -96,7 +96,7 @@ DISABLE_URL_HASH = True
 PAGE_URL = '{slug}/'
 PAGE_SAVE_AS = '{slug}/index.html'
 
-DEFAULT_PAGINATION = 10
+DEFAULT_PAGINATION = 25
 
 STATIC_PATHS = ['images','styles','static', 'posts/*']
 ARTICLE_EXCLUDES  = STATIC_PATHS
