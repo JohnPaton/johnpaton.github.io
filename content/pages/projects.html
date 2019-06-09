@@ -1,0 +1,54 @@
+<html>
+<head>
+  <title>Projects</title>
+  <meta name="slug" content="projects" />
+  <meta name="author" content="John Paton"/>
+</head>
+<body>
+<script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+<script src="/static/pull-requests.js"></script>
+<p>Other projects that I've done or contributed to.</p>
+
+<div class="masonry grid" data-masonry='{ "itemSelector": ".grid-item", "horizontalOrder": true }'>
+  <div class="masonry grid-item">
+    <div class="masonry card-title"><a href="https://github.com/johnpaton/ratelimitqueue">ratelimitqueue</a></div>
+    <div class="masonry card-content">A rate limited wrapper for Python's thread safe queues. <a href="https://ratelimitqueue.readthedocs.io/en/latest/">Read the Docs</a> | <code style="white-space: pre-wrap;">pip install ratelimitqueue</code>
+    </div>
+  </div>
+  <div class="masonry grid-item">
+    <div class="masonry card-title"><a href="https://github.com/johnpaton/airbase">airbase</a></div>
+    <div class="masonry card-content">An easy downloader for the European AirBase air quality data. <a href="https://airbase.readthedocs.io/en/latest/">Read the Docs</a> | <code style="white-space: pre-wrap;">pip install airbase</code>
+    </div>
+  </div>
+    <div class="masonry grid-item">
+    <div class="masonry card-title"><a href="https://github.com/search?o=desc&q=is%3Apr+author%3Ajohnpaton&s=created&type=Issues">Assorted typo- and bug fixes</a></div>
+    <div class="masonry card-content">
+    Occasionally I find something to fix :)
+    <ul id="pr-list"></ul> <!-- filled by /static/pull-requests.js-->
+    </div>
+  </div>
+  <div class="masonry grid-item">
+    <div class="masonry card-title"><a href="https://github.com/johnpaton/nbviewerbot">nbviewerbot</a></div>
+    <div class="masonry card-content">A <a href="https://www.reddit.com/user/nbviewerbot">Reddit bot</a> to improve mobile viewing and provide interactive Binder links for Jupyter Notebooks. Hosted on a RaspberryPi.</div>
+  </div>
+<!--   <div class="masonry grid-item">
+    <div class="masonry card-title"><a href="https://github.com/googleapis/google-cloud-python/pull/7552">google-cloud-python #7552</a></div>
+    <div class="masonry card-content">Adds a progress bar when downloading data from Google BigQuery.</div>
+  </div> -->
+  <div class="masonry grid-item">
+    <div class="masonry card-title"><a href="https://patonkoning.com">patonkoning.com</a></div>
+    <div class="masonry card-content">Info website for my wedding. <a href="https://github.com/johnpaton/wedding">Hosted on GitHub</a>.</div>
+  </div>
+  <div class="masonry grid-item">
+    <div class="masonry card-title"><a href="https://github.com/johnpaton/numpy-neural-networks">numpy-neural-networks</a></div>
+    <div class="masonry card-content">A small collection of explanatory notebooks about basic neural network concepts.
+    </div>
+  </div>
+  <div class="masonry grid-item">
+    <div class="masonry card-title"><a href="https://johnpaton.net/blackjack">Blackjack</a></div>
+    <div class="masonry card-content">A little blackjack game I made to teach myself basic JavaScript syntax. <a href="https://github.com/johnpaton/blackjack">Source on GitHub</a>
+    </div>
+  </div>
+
+</body>
+</html>

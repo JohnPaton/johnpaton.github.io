@@ -54,7 +54,7 @@ MAIN_MENU = False
 #    'styles/custom.css': {'path': 'static/custom.css'},
 #}
 
-CUSTOM_CSS = '/styles/custom.css'
+CUSTOM_CSS = 'styles/custom.css'
 
 # Feed generation is usually not desired when developing
 FEED_ALL_ATOM = 'feeds/all.atom.xml'
@@ -76,6 +76,7 @@ DISPLAY_CATEGORIES_ON_MENU = False
 
 LINKS = (('blog', '/'),
          ('tags', '/tags'),
+         ('projects', '/projects'),
          ('about me', '/about'),
          ('writing&nbsp;&&nbsp;talks', '/writing-talks'),
          )
