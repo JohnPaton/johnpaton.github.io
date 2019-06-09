@@ -44,8 +44,7 @@
 <meta property="og:url" content="https://johnpaton.net"/>
 <meta property="og:image" content="https://johnpaton.net//images/headshot_wide.jpg">
 
-  <title>John Paton &ndash;     Tag pandas
-</title>
+  <title>John Paton &ndash; Projects</title>
 
 </head>
 <body>
@@ -82,97 +81,60 @@
   <main>
 
 
-
-
-<article>
+<article class="single">
   <header>
-    <h2><a href="https://johnpaton.net/posts/propagate-time-series-events-pandas/">Propagate time series events with Pandas merge_asof</a></h2>
-    <p>
-          Posted on Sat 13 April 2019
-
-
-          &#8226;     Tagged with
-
-              <a href="https://johnpaton.net/tag/python.html">python</a>,              <a href="https://johnpaton.net/tag/data.html">data</a>,              <a href="https://johnpaton.net/tag/time-series.html">time series</a>,              <a href="https://johnpaton.net/tag/pandas.html">pandas</a>
-        &#8226; 5 min read
-    </p>
+    
+    <h1 id="projects">Projects</h1>
   </header>
   <div>
-      <p>I recently discovered that Pandas has a function to propagate time series events forward (or backward) in time across a DataFrame. Here's how it works.</p>
-      <br>
-      <a class="btn" href="https://johnpaton.net/posts/propagate-time-series-events-pandas/">    Continue reading...
-</a>
+
+<script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+<script src="/static/pull-requests.js"></script>
+<p>Other projects that I've done or contributed to.</p>
+
+<div class="masonry grid" data-masonry='{ "itemSelector": ".grid-item", "horizontalOrder": true }'>
+  <div class="masonry grid-item">
+    <div class="masonry card-title"><a href="https://github.com/johnpaton/ratelimitqueue">ratelimitqueue</a></div>
+    <div class="masonry card-content">A rate limited wrapper for Python's thread safe queues. <a href="https://ratelimitqueue.readthedocs.io/en/latest/">Read the Docs</a> | <code style="white-space: pre-wrap;">pip install ratelimitqueue</code>
+    </div>
   </div>
-  <hr />
-</article>
-<article>
-  <header>
-    <h2><a href="https://johnpaton.net/posts/forward-fill-spark/">Forward-fill missing data in Spark</a></h2>
-    <p>
-          Posted on Fri 22 September 2017
-
-
-          &#8226;     Tagged with
-
-              <a href="https://johnpaton.net/tag/python.html">python</a>,              <a href="https://johnpaton.net/tag/spark.html">spark</a>,              <a href="https://johnpaton.net/tag/data.html">data</a>,              <a href="https://johnpaton.net/tag/pandas.html">pandas</a>,              <a href="https://johnpaton.net/tag/time-series.html">time series</a>
-        &#8226; 4 min read
-    </p>
-  </header>
-  <div>
-      <p>Since I've started using Apache Spark, one of the frequent annoyances I've come up against is having an idea that would be very easy to implement in Pandas, but turns out to require a really verbose workaround in Spark. A recent example of this is doing a forward fill (filling <code>null</code> values with the last known non-<code>null</code> value).</p>
-      <br>
-      <a class="btn" href="https://johnpaton.net/posts/forward-fill-spark/">    Continue reading...
-</a>
+  <div class="masonry grid-item">
+    <div class="masonry card-title"><a href="https://github.com/johnpaton/airbase">airbase</a></div>
+    <div class="masonry card-content">An easy downloader for the European AirBase air quality data. <a href="https://airbase.readthedocs.io/en/latest/">Read the Docs</a> | <code style="white-space: pre-wrap;">pip install airbase</code>
+    </div>
   </div>
-  <hr />
-</article>
-<article>
-  <header>
-    <h2><a href="https://johnpaton.net/posts/groupby-without-aggregation/">Groupby without aggregation in Pandas</a></h2>
-    <p>
-          Posted on Mon 17 July 2017
-
-
-          &#8226;     Tagged with
-
-              <a href="https://johnpaton.net/tag/python.html">python</a>,              <a href="https://johnpaton.net/tag/pandas.html">pandas</a>,              <a href="https://johnpaton.net/tag/data.html">data</a>,              <a href="https://johnpaton.net/tag/time-series.html">time series</a>
-        &#8226; 2 min read
-    </p>
-  </header>
-  <div>
-      <p>Pandas has a useful feature that I didn't appreciate enough when I first started using it: <code>groupby</code>s without aggregation. What do I mean by that? Let's look at an example.</p>
-      <br>
-      <a class="btn" href="https://johnpaton.net/posts/groupby-without-aggregation/">    Continue reading...
-</a>
+    <div class="masonry grid-item">
+    <div class="masonry card-title"><a href="https://github.com/search?o=desc&amp;q=is%3Apr+author%3Ajohnpaton&amp;s=created&amp;type=Issues">Assorted typo- and bug fixes</a></div>
+    <div class="masonry card-content">
+    Occasionally I find something to fix :)
+    <ul id="pr-list"></ul> <!-- filled by /static/pull-requests.js-->
+    </div>
   </div>
-  <hr />
-</article>
-<article>
-  <header>
-    <h2><a href="https://johnpaton.net/posts/periods-since-time-series-events/">Counting the number of periods since time-series events with Pandas</a></h2>
-    <p>
-          Posted on Sat 15 July 2017
+  <div class="masonry grid-item">
+    <div class="masonry card-title"><a href="https://github.com/johnpaton/nbviewerbot">nbviewerbot</a></div>
+    <div class="masonry card-content">A <a href="https://www.reddit.com/user/nbviewerbot">Reddit bot</a> to improve mobile viewing and provide interactive Binder links for Jupyter Notebooks. Hosted on a RaspberryPi.</div>
+  </div>
+<!--   <div class="masonry grid-item">
+    <div class="masonry card-title"><a href="https://github.com/googleapis/google-cloud-python/pull/7552">google-cloud-python #7552</a></div>
+    <div class="masonry card-content">Adds a progress bar when downloading data from Google BigQuery.</div>
+  </div> -->
+  <div class="masonry grid-item">
+    <div class="masonry card-title"><a href="https://patonkoning.com">patonkoning.com</a></div>
+    <div class="masonry card-content">Info website for my wedding. <a href="https://github.com/johnpaton/wedding">Hosted on GitHub</a>.</div>
+  </div>
+  <div class="masonry grid-item">
+    <div class="masonry card-title"><a href="https://github.com/johnpaton/numpy-neural-networks">numpy-neural-networks</a></div>
+    <div class="masonry card-content">A small collection of explanatory notebooks about basic neural network concepts.
+    </div>
+  </div>
+  <div class="masonry grid-item">
+    <div class="masonry card-title"><a href="https://johnpaton.net/blackjack">Blackjack</a></div>
+    <div class="masonry card-content">A little blackjack game I made to teach myself basic JavaScript syntax. <a href="https://github.com/johnpaton/blackjack">Source on GitHub</a>
+    </div>
+  </div>
 
-
-          &#8226;     Tagged with
-
-              <a href="https://johnpaton.net/tag/python.html">python</a>,              <a href="https://johnpaton.net/tag/pandas.html">pandas</a>,              <a href="https://johnpaton.net/tag/data.html">data</a>,              <a href="https://johnpaton.net/tag/time-series.html">time series</a>
-        &#8226; 4 min read
-    </p>
-  </header>
-  <div>
-      <p>This is a cute trick I discovered the other day for quickly computing the time since an event on regularly spaced time series data (like monthly reporting), without looping over the data.</p>
-      <br>
-      <a class="btn" href="https://johnpaton.net/posts/periods-since-time-series-events/">    Continue reading...
-</a>
   </div>
 </article>
-
-  <div class="pagination">
-  </div>
-
-
-
 
     <footer>
 <p>&copy; John Paton 2017</p>

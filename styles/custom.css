@@ -9,6 +9,48 @@ h1,h2,h3,h4,h5,h6{font-weight:300;
 /*fix mathjax/pygments conflict*/
 .MathJax *{color:inherit}
 
+#pr-list{
+    padding-left: 1em;
+}
+
+/*Masonry */
+.masonry .grid {
+  margin-top: 2em auto;
+  margin-bottom: 2em auto;
+}
+
+.masonry .grid-item{
+    margin-top: 10px;
+    margin-bottom: 10px;
+    background: #F8F8F8;
+    width: 100%; /*column porperty in media query*/
+    min-width: 225px;
+    box-sizing: border-box;
+    border-radius: 10px;
+    border: 1px solid #CCCCCC;
+}
+
+.masonry .card-title{
+    font-size:1.36em;
+    font-weight:300;
+    line-height:1.1;
+    font-family:"Source Sans Pro","Trebuchet MS",sans-serif;
+    padding-top: 1em;
+    padding-bottom: 0.5em;
+    padding-left: 13px;
+    padding-right: 13px;
+}
+
+.masonry .card-content{
+    padding-bottom: 1em;
+    padding-left: 13px;
+    padding-right: 13px;
+}
+
+.masonry .h*{
+    margin-bottom: 0;
+}
+
 h1{font-size:2.4em}
 
 h2{font-size:2em}
@@ -307,7 +349,7 @@ ul.social a{display:inline-block;
 	border-radius:100%;
 	text-align:center;
 	font-size:.8em;
-	line-height:36px}
+	line-height:39px}
 	
 ul.social a.sc-facebook{background-color:#3e5b98}
 
@@ -353,6 +395,11 @@ ul.social a.sc-xing{background-color:#007575}
 	margin-left:5%}
 	
 @media screen and (min-width:768px){
+    .masonry .grid-item {
+        width: 30%;
+        margin-left: 10px;
+        margin-right: 10px;
+    }
 
     aside{width:25%;
     	height:100%;
