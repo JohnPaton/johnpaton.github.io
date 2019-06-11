@@ -1640,7 +1640,7 @@ function dragended_wor(d) {
 
 
 &lt;p&gt;Using a decorator instead of making two versions of every function isn't really necessary in this simple example, but if you are defining 20 UDFs your namespace will get awfully cluttered and it'll become harder to track what's going on. With four lines of code you can bring sanity back to your function naming scheme.&lt;/p&gt;
-&lt;p&gt;Finally, the code for DIY decorators is notoriously difficult to read, so if you're going to copy-paste, here is the snippet with a docstring (and a shameless plug):&lt;/p&gt;
+&lt;p&gt;Finally, the code for DIY decorators is notoriously difficult to read, so if you're going to copy-paste, here is the snippet with a docstring:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pyspark.sql.functions&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;f&lt;/span&gt;
 
 &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;typed_udf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;return_type&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
@@ -1653,8 +1653,6 @@ function dragended_wor(d) {
 &lt;span class="sd"&gt;    ...     return x + 1&lt;/span&gt;
 &lt;span class="sd"&gt;    ...&lt;/span&gt;
 &lt;span class="sd"&gt;    &amp;gt;&amp;gt;&amp;gt; df = df.withColumn(&amp;#39;col_plus_1&amp;#39;, increment(&amp;#39;col&amp;#39;))&lt;/span&gt;
-
-&lt;span class="sd"&gt;    See http://johnpaton.net/posts/clean-spark-udfs for more detail.&lt;/span&gt;
 
 &lt;span class="sd"&gt;    Args:&lt;/span&gt;
 &lt;span class="sd"&gt;        return_type (pyspark.sql.types type): the type that will be&lt;/span&gt;
@@ -2686,13 +2684,15 @@ dtype: float64
 
 &lt;p&gt;There are a &lt;a href="http://matplotlib.org/users/customizing.html"&gt;bunch more settings&lt;/a&gt; that you can define in the matplotlib style file, but since I'm a terrible designer I know I'll make bad choices, so I'll leave that to the experts. For now, I'm just happy to see the exponential growth of colors in my life.&lt;/p&gt;
 &lt;p&gt;&lt;img alt="colors" src="/images/colors.png"&gt;&lt;/p&gt;</content><category term="python"></category><category term="dataviz"></category><category term="matplotlib"></category></entry><entry><title>engl_ish: Simulate your language. ish.</title><link href="https://johnpaton.net/posts/engl_ish/" rel="alternate"></link><published>2017-02-04T20:00:00-01:00</published><updated>2017-02-04T20:00:00-01:00</updated><author><name>John Paton</name></author><id>tag:johnpaton.net,2017-02-04:/posts/engl_ish/</id><summary type="html">&lt;p&gt;Quite a while ago I saw a short film called &lt;a href="https://www.youtube.com/watch?v=Vt4Dfa4fOEY"&gt;Skwerl&lt;/a&gt;, meant to demonstrate "how English sounds to non-English speakers". As a native English speaker, watching it is quite surreal. The sounds and accents are totally familiar, and there are definitely words in there that you recognize, but there is no discernible overall meaning whatsoever. It's actually kind of hard to listen to. All you've got to hang onto is that what you're hearing somehow &lt;em&gt;feels&lt;/em&gt; like English. And that's the point. Skwerl gave me the idea to attempt to create a similar effect, but with reading instead of listening. I wanted to see how English looks to non-English readers. And so I created &lt;code&gt;engl_ish&lt;/code&gt;.&lt;/p&gt;</summary><content type="html">&lt;p&gt;Quite a while ago I saw a short film called &lt;a href="https://www.youtube.com/watch?v=Vt4Dfa4fOEY"&gt;Skwerl&lt;/a&gt;, meant to demonstrate "how English sounds to non-English speakers". As a native English speaker, watching it is quite surreal. The sounds and accents are totally familiar, and there are definitely words in there that you recognize, but there is no discernible overall meaning whatsoever. It's actually kind of hard to listen to. All you've got to hang onto is that what you're hearing somehow &lt;em&gt;feels&lt;/em&gt; like English. And that's the point.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# embed the YouTube video&lt;/span&gt;
-&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;IPython.display&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;YouTubeVideo&lt;/span&gt;
-&lt;span class="n"&gt;YouTubeVideo&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Vt4Dfa4fOEY&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
+&lt;!-- https://embedresponsively.com/ --&gt;
 
+&lt;style&gt; .embed-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; } .embed-container iframe, .embed-container object, .embed-container embed { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+&lt;/style&gt;
 
-&lt;iframe width="560" height="315" src="https://www.youtube.com/embed/Vt4Dfa4fOEY" frameborder="0" allowfullscreen&gt;&lt;/iframe&gt;
+&lt;div class='embed-container'&gt;
+    &lt;iframe src='https://www.youtube.com/embed/Vt4Dfa4fOEY' frameborder='0' allowfullscreen&gt;
+    &lt;/iframe&gt;
+&lt;/div&gt;
 
 &lt;p&gt;Skwerl gave me the idea to attempt to create a similar effect, but with reading instead of listening. I wanted to see how English looks to non-English readers. And so I created &lt;code&gt;engl_ish&lt;/code&gt;.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;engl_ish&lt;/span&gt;

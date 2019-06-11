@@ -166,7 +166,7 @@
 
 
 <p>Using a decorator instead of making two versions of every function isn't really necessary in this simple example, but if you are defining 20 UDFs your namespace will get awfully cluttered and it'll become harder to track what's going on. With four lines of code you can bring sanity back to your function naming scheme.</p>
-<p>Finally, the code for DIY decorators is notoriously difficult to read, so if you're going to copy-paste, here is the snippet with a docstring (and a shameless plug):</p>
+<p>Finally, the code for DIY decorators is notoriously difficult to read, so if you're going to copy-paste, here is the snippet with a docstring:</p>
 <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pyspark.sql.functions</span> <span class="kn">as</span> <span class="nn">f</span>
 
 <span class="k">def</span> <span class="nf">typed_udf</span><span class="p">(</span><span class="n">return_type</span><span class="p">):</span>
@@ -179,8 +179,6 @@
 <span class="sd">    ...     return x + 1</span>
 <span class="sd">    ...</span>
 <span class="sd">    &gt;&gt;&gt; df = df.withColumn(&#39;col_plus_1&#39;, increment(&#39;col&#39;))</span>
-
-<span class="sd">    See http://johnpaton.net/posts/clean-spark-udfs for more detail.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        return_type (pyspark.sql.types type): the type that will be</span>
