@@ -82,7 +82,7 @@ df = df.withColumn('col_plus_1', increment('col'))
 
 Using a decorator instead of making two versions of every function isn't really necessary in this simple example, but if you are defining 20 UDFs your namespace will get awfully cluttered and it'll become harder to track what's going on. With four lines of code you can bring sanity back to your function naming scheme.
 
-Finally, the code for DIY decorators is notoriously difficult to read, so if you're going to copy-paste, here is the snippet with a docstring (and a shameless plug):
+Finally, the code for DIY decorators is notoriously difficult to read, so if you're going to copy-paste, here is the snippet with a docstring:
 
 ```python
 import pyspark.sql.functions as f
@@ -97,8 +97,6 @@ def typed_udf(return_type):
     ...     return x + 1
     ...
     >>> df = df.withColumn('col_plus_1', increment('col'))
-
-    See http://johnpaton.net/posts/clean-spark-udfs for more detail.
 
     Args:
         return_type (pyspark.sql.types type): the type that will be
