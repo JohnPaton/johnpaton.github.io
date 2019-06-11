@@ -156,7 +156,7 @@ main article header .translations .active{font-weight:600}
 
 main article code,main article kbd,main article pre,main article samp{font-family:"Source Code Pro",Consolas,monospace}
 
-main article blockquote,main article pre{border-top-right-radius:5px;
+main article blockquote{border-top-right-radius:5px;
 	border-bottom-right-radius:5px;
 	/*border-left:8px solid hsla(0,0%,50%,.075);*/
 	border-left-width:10px}
@@ -173,11 +173,23 @@ main article blockquote{background-color:hsla(0,0%,50%,.05);
 	border-left:8px solid #3aa500}
 
 	
-main article pre{padding:4px;
+main article pre{
+    padding: 18px;
 	font-size:.9em;
-	background-color:#4C4B41;
+	background-color:#30291f;
 	color:#F8F8F2;
-	overflow-x:auto}
+	overflow-x:auto;
+    border:0;
+    border-radius: 5px;
+    line-height: 133%;
+}
+
+.highlight{
+    background-color: #30291f;
+    border-radius: 5px;
+    padding: 0;
+    line-height: 133%;
+}
 
 
 main article samp{white-space:pre;
