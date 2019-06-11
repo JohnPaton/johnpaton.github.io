@@ -12,21 +12,19 @@ summary: Quite a while ago I saw a short film called [Skwerl](https://www.youtub
 
 Quite a while ago I saw a short film called [Skwerl](https://www.youtube.com/watch?v=Vt4Dfa4fOEY), meant to demonstrate "how English sounds to non-English speakers". As a native English speaker, watching it is quite surreal. The sounds and accents are totally familiar, and there are definitely words in there that you recognize, but there is no discernible overall meaning whatsoever. It's actually kind of hard to listen to. All you've got to hang onto is that what you're hearing somehow *feels* like English. And that's the point.
 
-```python
-# embed the YouTube video
-from IPython.display import YouTubeVideo
-YouTubeVideo('Vt4Dfa4fOEY')
-``` 
-
-<iframe width="560" height="315" src="https://www.youtube.com/embed/Vt4Dfa4fOEY" frameborder="0" allowfullscreen></iframe>
-
+<!-- https://embedresponsively.com/ -->
+<style> .embed-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; } .embed-container iframe, .embed-container object, .embed-container embed { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+</style>
+<div class='embed-container'>
+    <iframe src='https://www.youtube.com/embed/Vt4Dfa4fOEY' frameborder='0' allowfullscreen>
+    </iframe>
+</div>
 
 Skwerl gave me the idea to attempt to create a similar effect, but with reading instead of listening. I wanted to see how English looks to non-English readers. And so I created `engl_ish`.
 
 ```python
 import engl_ish
 ```
-
 
 *If you don't care about what kind of sources I used or how I created the model, this is the point where you should [skip down to the Good Part™](#good_part).*
 
