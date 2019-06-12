@@ -156,10 +156,6 @@ main article header .translations .active{font-weight:600}
 
 main article code,main article kbd,main article pre,main article samp{font-family:"Source Code Pro",Consolas,monospace}
 
-main article blockquote{
-	/*border-left:8px solid hsla(0,0%,50%,.075);*/
-}
-
 main article pre::selection{color:#fff;
 }
 	
@@ -391,7 +387,7 @@ ul.social a.sc-youtube{background-color:#e02a20}
 ul.social a.sc-file-pdf-o{background-color:#eb212d}
 
 ul.social a.sc-github,ul.social a.sc-github-alt{background-color:#111010;
-	border: 1px solid #C0C0C0}
+	border: 1px solid #555}
 
 ul.social a.sc-envelope-o{background-color:#578ad6}
 
