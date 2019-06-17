@@ -126,5 +126,5 @@ SITEMAP = {
 JINJA_ENVIRONMENT = {'extensions': ['jinja2.ext.do']}
 
 # MATH_JAX = {'responsive':True,'linebreak_automatic':True}
-MATH_JAX = {'source':'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML'}
+MATH_JAX = {'source':"'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML'"}
 
