@@ -88,7 +88,7 @@ $ python3 download_model.py 117M
 &lt;blockquote&gt;
 &lt;p&gt;&lt;strong&gt;GPT-2 SAMPLE: 25 Epochs&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;We are pleased to present the third of over 1,000 stories published by the New England Journal of Medicine, from all continents. The authors have collected information on over 50,000 individuals in the United States who were examined at the National Heart, Lung and Blood Institute (NHBI) and included information on symptoms and treatments. The research was focused on coronary artery bypass grafting, cardiovascular dysfunction, cardiovascular disease, and coronary artery disease.&lt;/p&gt;
-&lt;p&gt;For complete details and results, visit http://www.nlm.nih.gov/pubmed/257720.&lt;/p&gt;
+&lt;p&gt;For complete details and results, visit &lt;a href="http://www.nlm.nih.gov/pubmed/257720" style="word-wrap : break-word;"&gt;http://www.nlm.nih.gov/pubmed/257720&lt;/a&gt;.&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;p&gt;The URL doesn't work, I checked. This is generated text. &lt;/p&gt;
 &lt;p&gt;After 50 epochs, we're already seeing some promising output, though there's definitely work to do:&lt;/p&gt;
