@@ -119,7 +119,7 @@ The script will create a `samples` directory and save the samples there, and als
 <a id='fake-reviews'></a>
 ## Fake whiskey reviews
 
-The first thing to notice about the output is that the generated is usually really coherent at first glance. After 25 epochs, the model isn't really talking about whiskey yet, so we mostly get a peek into the kind of text generation that it's capable of:
+The first thing to notice about the output is that the generated text is usually really coherent at first glance. After 25 epochs, the model isn't really talking about whiskey yet, so we mostly get a peek into the kind of text generation that it's capable of:
 
 >**GPT-2 SAMPLE: 25 Epochs**
 >
