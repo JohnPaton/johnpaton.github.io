@@ -84,7 +84,7 @@ $ python3 download_model.py 117M
 &lt;p&gt;The script will create a &lt;code&gt;samples&lt;/code&gt; directory and save the samples there, and also a &lt;code&gt;checkpoints&lt;/code&gt; directory. It runs until you kill it with &lt;code&gt;ctrl+C&lt;/code&gt;, so feel free to go get a coffee.&lt;/p&gt;
 &lt;p&gt;&lt;a id='fake-reviews'&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;h2&gt;Fake whiskey reviews&lt;/h2&gt;
-&lt;p&gt;The first thing to notice about the output is that the generated is usually really coherent at first glance. After 25 epochs, the model isn't really talking about whiskey yet, so we mostly get a peek into the kind of text generation that it's capable of:&lt;/p&gt;
+&lt;p&gt;The first thing to notice about the output is that the generated text is usually really coherent at first glance. After 25 epochs, the model isn't really talking about whiskey yet, so we mostly get a peek into the kind of text generation that it's capable of:&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;&lt;strong&gt;GPT-2 SAMPLE: 25 Epochs&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;We are pleased to present the third of over 1,000 stories published by the New England Journal of Medicine, from all continents. The authors have collected information on over 50,000 individuals in the United States who were examined at the National Heart, Lung and Blood Institute (NHBI) and included information on symptoms and treatments. The research was focused on coronary artery bypass grafting, cardiovascular dysfunction, cardiovascular disease, and coronary artery disease.&lt;/p&gt;
