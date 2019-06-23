@@ -5,58 +5,65 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>https://johnpaton.net/</loc>
-<lastmod>2019-06-17T05:07:14-00:00</lastmod>
+<lastmod>2019-06-23T21:46:56-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://johnpaton.net/archives.html</loc>
-<lastmod>2019-06-17T05:07:14-00:00</lastmod>
+<lastmod>2019-06-23T21:46:56-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://johnpaton.net/tags.html</loc>
-<lastmod>2019-06-17T05:07:14-00:00</lastmod>
+<lastmod>2019-06-23T21:46:56-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://johnpaton.net/categories.html</loc>
-<lastmod>2019-06-17T05:07:14-00:00</lastmod>
+<lastmod>2019-06-23T21:46:56-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://johnpaton.net/404.html</loc>
-<lastmod>2019-06-17T05:07:14-00:00</lastmod>
+<lastmod>2019-06-23T21:46:56-00:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.6</priority>
 </url>
 
 <url>
 <loc>https://johnpaton.net/about/</loc>
-<lastmod>2019-06-17T05:07:14-00:00</lastmod>
+<lastmod>2019-06-23T21:46:56-00:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.6</priority>
 </url>
 
 <url>
 <loc>https://johnpaton.net/projects/</loc>
-<lastmod>2019-06-17T05:07:14-00:00</lastmod>
+<lastmod>2019-06-23T21:46:56-00:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.6</priority>
 </url>
 
 <url>
 <loc>https://johnpaton.net/writing-talks/</loc>
-<lastmod>2019-06-17T05:07:14-00:00</lastmod>
+<lastmod>2019-06-23T21:46:56-00:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.6</priority>
+</url>
+
+<url>
+<loc>https://johnpaton.net/posts/whiskey-reviews/</loc>
+<lastmod>2019-06-23T19:00:00-01:00</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.7</priority>
 </url>
 
 <url>
@@ -138,14 +145,28 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>https://johnpaton.net/category/posts.html</loc>
-<lastmod>2019-05-22T17:00:00+00:20</lastmod>
+<lastmod>2019-06-23T19:00:00+00:20</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://johnpaton.net/tag/python.html</loc>
-<lastmod>2019-05-22T17:00:00+00:20</lastmod>
+<lastmod>2019-06-23T19:00:00+00:20</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
+<loc>https://johnpaton.net/tag/deep-learning.html</loc>
+<lastmod>2019-06-23T19:00:00+00:20</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
+<loc>https://johnpaton.net/tag/natural-language.html</loc>
+<lastmod>2019-06-23T19:00:00+00:20</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
@@ -188,13 +209,6 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
 <loc>https://johnpaton.net/tag/puzzles.html</loc>
 <lastmod>2018-07-19T17:00:00+00:20</lastmod>
-<changefreq>daily</changefreq>
-<priority>0.5</priority>
-</url>
-
-<url>
-<loc>https://johnpaton.net/tag/natural-language.html</loc>
-<lastmod>2017-12-02T19:34:00+00:20</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
@@ -264,7 +278,7 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>https://johnpaton.net/author/john-paton.html</loc>
-<lastmod>2019-05-22T17:00:00+00:20</lastmod>
+<lastmod>2019-06-23T19:00:00+00:20</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
