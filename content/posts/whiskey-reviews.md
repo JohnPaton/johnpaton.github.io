@@ -125,7 +125,8 @@ The first thing to notice about the output is that the generated text is usually
 >
 >We are pleased to present the third of over 1,000 stories published by the New England Journal of Medicine, from all continents. The authors have collected information on over 50,000 individuals in the United States who were examined at the National Heart, Lung and Blood Institute (NHBI) and included information on symptoms and treatments. The research was focused on coronary artery bypass grafting, cardiovascular dysfunction, cardiovascular disease, and coronary artery disease.
 >
->For complete details and results, visit http://www.nlm.nih.gov/pubmed/257720.
+>For complete details and results, visit <a href="http://www.nlm.nih.gov/pubmed/257720" style="word-wrap : break-word;">http://www.nlm.nih.gov/pubmed/257720</a>.
+
 
 The URL doesn't work, I checked. This is generated text. 
 
