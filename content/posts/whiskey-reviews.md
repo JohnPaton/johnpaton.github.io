@@ -23,9 +23,7 @@ I've enjoyed whiskey for a while now, but I can never vocalize all the flavors p
 
 Obviously this piqued my interest. I've dabbled in [purposely _bad_ language generation](https://johnpaton.net/posts/engl_ish/), but this time I was curious about doing something vaguely believable. I decided to try to sound more impressive in my whiskey-ing by generating my very own fake whiskey reviews, fine-tuning the small version of GPT-2 on existing reviews.
 
-<a href="/images/robot-whiskey.jpg">
 <img style="max-height: 350px" src="/images/robot-whiskey.jpg" alt="Robot hand holding whiskey">
-</a>
 <div style="text-align:center"><small> Image by the <a href="https://nypost.com/2019/05/14/microsoft-partners-with-distillery-to-create-worlds-first-ai-whiskey/">New York Post</a> </small></div>
 
 
