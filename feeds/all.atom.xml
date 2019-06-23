@@ -9,9 +9,7 @@
 &lt;/ul&gt;
 &lt;p&gt;&lt;a href="https://openai.com/"&gt;OpenAI&lt;/a&gt; recently made headlines with their blog post &lt;a href="https://openai.com/blog/better-language-models/"&gt;Better Language Models and Their Implications&lt;/a&gt; in which they described their latest general language model, dubbed GPT-2. In the post, they claim to be practicing responsible (non)disclosure by not releasing the full pre-trained model due to concerns that it is so good, it could be used for fake news generation or social media manipulation. However, they &lt;em&gt;did&lt;/em&gt; release smaller versions of the model which are nonetheless still quite performant. You can play with one of them at &lt;a href="https://talktotransformer.com/"&gt;talktotransformer.com&lt;/a&gt;. &lt;/p&gt;
 &lt;p&gt;Obviously this piqued my interest. I've dabbled in &lt;a href="https://johnpaton.net/posts/engl_ish/"&gt;purposely &lt;em&gt;bad&lt;/em&gt; language generation&lt;/a&gt;, but this time I was curious about doing something vaguely believable. I decided to try to sound more impressive in my whiskey-ing by generating my very own fake whiskey reviews, fine-tuning the small version of GPT-2 on existing reviews.&lt;/p&gt;
-&lt;p&gt;&lt;a href="/images/robot-whiskey.jpg"&gt;
-&lt;img style="max-height: 350px" src="/images/robot-whiskey.jpg" alt="Robot hand holding whiskey"&gt;
-&lt;/a&gt;
+&lt;p&gt;&lt;img style="max-height: 350px" src="/images/robot-whiskey.jpg" alt="Robot hand holding whiskey"&gt;
 &lt;div style="text-align:center"&gt;&lt;small&gt; Image by the &lt;a href="https://nypost.com/2019/05/14/microsoft-partners-with-distillery-to-create-worlds-first-ai-whiskey/"&gt;New York Post&lt;/a&gt; &lt;/small&gt;&lt;/div&gt;&lt;/p&gt;
 &lt;p&gt;&lt;a id='the-data'&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;h2&gt;The data&lt;/h2&gt;
