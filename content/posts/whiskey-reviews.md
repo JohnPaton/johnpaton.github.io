@@ -148,7 +148,7 @@ At 100 epochs, we have a review that at first glance seems reasonable:
 >
 > The nose was very light and crisp, with chocolate, banana candy flavor, honey, espresso, toffee, and herbal aromas. The palate was warm, with vanilla, cinnamon, and chocolate sweetness. The finish was medium in length, with plenty of vanilla and chocolate, and the finish was strong and well-balanced: chocolate, caramel, milk chocolate, milk chocolate, caramel, and sweet almond.                        
 
-Note that the model is even mimicking our formatting. This one ticks all the boxes of a review, but check out the tasting notes: vanilla, cinnamon, chocolate, caramel, sweet almond. There's definitely a theme: these are baking ingredients! Many food words are used in tasting notes. The model is learning this, but the text it was trained on seemed to include many recipes, as all sorts of baking instructions are also being generated. This was another sample from the same batch:
+Note that the model is even mimicking our formatting. This one ticks all the boxes of a review, but check out the tasting notes: vanilla, cinnamon, chocolate, caramel, sweet almond. There's definitely a theme: these are baking ingredients! Many food words are used in tasting notes. The model is learning this, but the text it was trained on seems to have included many recipes, as all sorts of baking instructions are also being generated. This was another sample from the same batch:
 
 >**GPT-2 SAMPLE: 100 Epochs**
 >
