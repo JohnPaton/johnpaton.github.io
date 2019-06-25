@@ -75,7 +75,7 @@ This gives us nice clean review snippets in the following format:
 >
 >This is mature whiskey at its most refined: a balance of fruits, nuts, sweetness, and restrained oak. The nose has it all: salted, buttered pecans, rock candy, Dr. Pepper, blackberry jam, dried blueberries, caramel corn, tobacco barn, and old leather chair. It’s practically dessert-like in the mouth, with dark chocolate-covered caramel, candied pecans, Goo Goo Clusters, cherry cola, blackberry and blueberry jam, and a kiss of white pepper. The finish stays consistent, a mouthwatering mélange of caramel, chocolate, and nuts. Harmonious, seamless, and silky—you’d never guess the proof.
 
-Looks (and sounds) good to me! The last step is to save out reviews back to a text file for processing by GPT-2. The model distinguishes between separate pieces of text using a special token, `<|endoftext|>`. So we join all the reviews back together, separated by this token, and save it to a text file:
+Looks (and sounds) good to me! The last step is to save our reviews back to a text file for processing by GPT-2. The model distinguishes between separate pieces of text using a special token, `<|endoftext|>`. So we join all the reviews back together, separated by this token, and save it to a text file:
 
 ```python
 with open("data/clean/reviews.txt", "w") as h:
