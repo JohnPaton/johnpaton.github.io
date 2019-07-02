@@ -59,7 +59,7 @@ for a in articles:
         for line in a.text.split("\n") 
         if line is not ''  # drop empty lines
     ]
-    # rejoin into one formatted snipped
+    # rejoin into one formatted snippet
     reviews_clean.append("\n".join(a_clean)) 
 ```
 
