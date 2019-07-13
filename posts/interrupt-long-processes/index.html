@@ -1,0 +1,259 @@
+
+<!DOCTYPE html>
+<html lang="english">
+<head>
+  <link href='//fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,400italic' rel='stylesheet' type='text/css'>
+
+    <link rel="stylesheet" type="text/css" href="https://johnpaton.net/theme/stylesheet/style.min.css">
+
+  <link rel="stylesheet" type="text/css" href="https://johnpaton.net/theme/pygments/monokai.min.css">
+  <link rel="stylesheet" type="text/css" href="https://johnpaton.net/theme/font-awesome/css/font-awesome.min.css">
+
+    <link href="https://johnpaton.net/styles/custom.css" rel="stylesheet">
+
+    <link href="https://johnpaton.net/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="John Paton Atom">
+
+    <link href="https://johnpaton.net/feeds/all.rss.xml" type="application/rss+xml" rel="alternate" title="John Paton RSS">
+
+    <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="" />
+
+    <!-- Chrome, Firefox OS and Opera -->
+    <meta name="theme-color" content="#3aa500">
+    <!-- Windows Phone -->
+    <meta name="msapplication-navbutton-color" content="#3aa500">
+    <!-- iOS Safari -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <!-- Microsoft EDGE -->
+    <meta name="msapplication-TileColor" content="#3aa500">
+
+<meta name="author" content="John Paton" />
+<meta name="description" content="A lightweight method to interrupt (hung) Python processes after a set time using the signal library." />
+<meta name="keywords" content="python, snippets">
+
+<meta property="og:site_name" content="John Paton"/>
+<meta property="og:title" content="Schedule the interruption of hung Python processes with signals"/>
+<meta property="og:description" content="A lightweight method to interrupt (hung) Python processes after a set time using the signal library."/>
+<meta property="og:locale" content="en_US"/>
+<meta property="og:url" content="https://johnpaton.net/posts/interrupt-long-processes/"/>
+<meta property="og:type" content="article"/>
+<meta property="article:published_time" content="2019-07-13 13:00:00-01:00"/>
+<!--<meta property="article:modified_time" content=""/> -->
+<meta property="article:author" content="https://johnpaton.net/author/john-paton.html">
+<meta property="article:section" content="posts"/>
+<meta property="article:tag" content="python"/>
+<meta property="article:tag" content="snippets"/>
+<meta property="og:image" content="https://johnpaton.net//images/headshot_wide.jpg">
+
+  <title>John Paton &ndash; Schedule the interruption of hung Python processes with signals</title>
+
+</head>
+<body>
+  <aside>
+    <div>
+      <a href="https://johnpaton.net">
+        <img src="/images/headshot.png" alt="John Paton" title="John Paton">
+      </a>
+      <h1><a href="https://johnpaton.net/about">John Paton</a></h1>
+
+<p><b style="color:#3aa500;margin-right:2px">/</b>data<b style="color:#3aa500;margin-right:2px;margin-left:2px">/</b>scientist</p>
+      <nav>
+        <ul class="list">
+
+          <li><a href="/">blog</a></li>
+          <li><a href="/tags">tags</a></li>
+          <li><a href="/projects">projects</a></li>
+          <li><a href="/about">about me</a></li>
+          <li><a href="/writing-talks">writing&nbsp;&&nbsp;talks</a></li>
+        </ul>
+      </nav>
+
+      <ul class="social">
+        <li><a class="sc-github" href="http://www.github.com/johnpaton" target="_blank"><i class="fa fa-github"></i></a></li>
+        <li><a class="sc-twitter" href="http://www.twitter.com/jd_paton" target="_blank"><i class="fa fa-twitter"></i></a></li>
+        <li><a class="sc-linkedin" href="http://linkedin.com/in/john-paton" target="_blank"><i class="fa fa-linkedin"></i></a></li>
+        <li><a class="sc-file-pdf-o" href="/static/johnpaton-cv.pdf" target="_blank"><i class="fa fa-file-pdf-o"></i></a></li>
+        <li><a class="sc-rss" href="/feeds/all.atom.xml" target="_blank"><i class="fa fa-rss"></i></a></li>
+      </ul>
+    </div>
+
+
+  </aside>
+  <main>
+
+
+<article class="single">
+  <header>
+      
+    <h1 id="interrupt-long-processes">Schedule the interruption of hung Python processes with signals</h1>
+    <p>
+          Posted on Sat 13 July 2019
+
+
+        &#8226; 3 min read
+    </p>
+  </header>
+
+
+  <div>
+    <p>At Catawiki, we have a lot of scheduled cron-type jobs that move data around, train models, and do other processing tasks. Often, they are dependent on external resources like database connections. If one of these jobs actually fails, emails are sent, and we can fix the problem. However, we have had issues in the past with scheduled jobs silently hanging, which can often go unnoticed until someone's output hasn't been refreshed. One solution to this would be to schedule these small jobs in our Airflow pipeline, but for little things that just need to run every night without hassle we use this lightweight trick instead.</p>
+<p>To make a Python process fail and get a precious notification, we can force it to raise a <code>TimeoutError</code> after a certain number of seconds using the <a href="https://docs.python.org/3/library/signal.html"><code>signal</code> library</a>. This library is responsible for handling <a href="https://en.wikipedia.org/wiki/Signal_(IPC)">Unix Signals</a>, which are a way to communicate asynchronously with running processes.</p>
+<p><strong>Note:</strong> If you are doing fancy stuff with multiple threads, please read the signal docs as there can be weird behavior here. Also, alarm scheduling is only available on Unix-like systems.</p>
+<p>Technically Step 3 below is already enough to cause the timeout by itself, but your output will be very terse. Defining the signal handler with a friendly message ensures that both your colleagues and your future self will be able to read your code and your logs.</p>
+<h2>Step 1: Define a Signal Handler</h2>
+<p>A signal handler is a function that can be called when a signal is received. Signal handlers must accept <a href="https://docs.python.org/3/library/signal.html#signal.signal">two arguments</a>, but our handler will just ignore them and raise a <code>TimeoutError</code>:</p>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">signal</span>
+
+<span class="k">def</span> <span class="nf">timeout_handler</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">frame</span><span class="p">):</span>
+    <span class="k">raise</span> <span class="n">TimeoutError</span><span class="p">(</span><span class="s2">&quot;Your process has timed out!&quot;</span><span class="p">)</span>
+</pre></div>
+
+
+<p>Raising an exception will interrupt the process, killing whatever was going on. If this is too extreme and you just want to be alerted that a process is still running without killing it, you could also do something like send an email or send yourself a <a href="https://github.com/slackapi/python-slackclient#sending-a-message-to-slack">Slack message</a>:</p>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">slack</span>
+
+<span class="k">def</span> <span class="nf">slack_handler</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">frame</span><span class="p">):</span>
+    <span class="c1"># Don&#39;t keep your token in plain text :)</span>
+    <span class="n">token</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;SLACK_API_TOKEN&quot;</span><span class="p">]</span>
+    <span class="n">client</span> <span class="o">=</span> <span class="n">slack</span><span class="o">.</span><span class="n">WebClient</span><span class="p">(</span><span class="n">token</span><span class="o">=</span><span class="n">token</span><span class="p">)</span>
+
+    <span class="n">client</span><span class="o">.</span><span class="n">chat_postMessage</span><span class="p">(</span>
+        <span class="n">channel</span><span class="o">=</span><span class="s2">&quot;#python_alerts&quot;</span><span class="p">,</span>
+        <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Your process is still running!&quot;</span>
+    <span class="p">)</span>
+</pre></div>
+
+
+<h2>Step 2: Assign the signal hander to the alarm signal</h2>
+<p>Next we use <a href="https://docs.python.org/3/library/signal.html#signal.signal"> <code>signal.signal</code> </a> to tell Python that our new handler should be called whenever the running process receives the alarm signal, denoted by <code>signal.SIGALRM</code>. </p>
+<div class="highlight"><pre><span></span><span class="c1"># Call `timeout_handler` when we receive an alarm signal</span>
+<span class="n">signal</span><span class="o">.</span><span class="n">signal</span><span class="p">(</span><span class="n">signal</span><span class="o">.</span><span class="n">SIGALRM</span><span class="p">,</span> <span class="n">timeout_handler</span><span class="p">)</span>
+</pre></div>
+
+
+<h2>Step 3: Schedule an alarm</h2>
+<p>Now we can <a href="https://docs.python.org/3/library/signal.html#signal.alarm">schedule an alarm</a> to be sent to our process after a set number of seconds. If the process has exited before that time has passed, nothing will happen. If the process is still running when the alarm is sent, then our handler will be called, interrupting the process and raising an exception. If you're going to interrupt a process, this timeout should be comfortably longer than you expect the process to take, so that it is only interrupted if something is really stuck.</p>
+<div class="highlight"><pre><span></span><span class="c1"># Schedule an alarm to be sent in 10 seconds </span>
+<span class="n">signal</span><span class="o">.</span><span class="n">alarm</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+
+
+<p>You can now run your main loop or do whatever work you are trying to do, and you're guaranteed that the process will fail if it takes longer than the time you specified. </p>
+<p>If you are writing a module with functions that might get imported elsewhere, make sure to put the <code>signal.signal</code> and <code>signal.alarm</code> lines under your <code>if __name__ == "__main__"</code> statement so that the alarm doesn't get triggered every time your module is imported.</p>
+<h2>Complete Example</h2>
+<div class="highlight"><pre><span></span><span class="c1"># timeout.py</span>
+<span class="kn">import</span> <span class="nn">signal</span>  
+
+<span class="k">def</span> <span class="nf">timeout_handler</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">frame</span><span class="p">):</span>
+    <span class="k">raise</span> <span class="n">TimeoutError</span><span class="p">(</span><span class="s2">&quot;Your process has timed out!&quot;</span><span class="p">)</span>
+
+<span class="c1"># Call `timeout_handler` when we receive an alarm signal</span>
+<span class="n">signal</span><span class="o">.</span><span class="n">signal</span><span class="p">(</span><span class="n">signal</span><span class="o">.</span><span class="n">SIGALRM</span><span class="p">,</span> <span class="n">timeout_handler</span><span class="p">)</span>
+
+<span class="c1"># --- Example Usage</span>
+
+<span class="c1"># Schedule an alarm in 10 seconds </span>
+<span class="c1"># (will raise TimeoutError as specified)</span>
+<span class="n">signal</span><span class="o">.</span><span class="n">alarm</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+
+<span class="c1"># Do some work which takes too long</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="s2">&quot;seconds passed&quot;</span><span class="p">)</span>
+    <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+
+
+<p>Running our example yields the following output:</p>
+<div class="highlight"><pre><span></span>$ python timeout.py
+<span class="m">0</span> seconds passed
+<span class="m">1</span> seconds passed
+<span class="m">2</span> seconds passed
+<span class="m">3</span> seconds passed
+<span class="m">4</span> seconds passed
+<span class="m">5</span> seconds passed
+<span class="m">6</span> seconds passed
+<span class="m">7</span> seconds passed
+<span class="m">8</span> seconds passed
+<span class="m">9</span> seconds passed
+Traceback <span class="o">(</span>most recent call last<span class="o">)</span>:
+  File <span class="s2">&quot;timeout.py&quot;</span>, line <span class="m">21</span>, in &lt;module&gt;
+    time.sleep<span class="o">(</span><span class="m">1</span><span class="o">)</span>
+  File <span class="s2">&quot;timeout.py&quot;</span>, line <span class="m">5</span>, in timeout_handler
+    raise TimeoutError<span class="o">(</span><span class="s2">&quot;Your process has timed out!&quot;</span><span class="o">)</span>
+TimeoutError: Your process has timed out!
+<span class="nb">exit</span> <span class="m">1</span>
+</pre></div>
+  </div>
+  <div class="tag-cloud">
+    <p>
+      <a href="https://johnpaton.net/tag/python.html">python</a>
+      <a href="https://johnpaton.net/tag/snippets.html">snippets</a>
+    </p>
+  </div>
+
+
+
+    <div class="addthis_relatedposts_inline">
+
+
+<!-- Disqus -->
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_shortname = 'johnpatonblog';
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>
+        Please enable JavaScript to view comments.
+
+</noscript>
+<!-- End Disqus -->
+</article>
+
+    <footer>
+<p>&copy; John Paton 2017</p>
+<p>    Powered by <a href="http://getpelican.com" target="_blank">Pelican</a> - Theme <a href="https://github.com/JohnPaton/flex-mod" target="_blank">modified</a> from <a href="http://alexandrevicenzi.com" target="_blank">Alexandre Vicenzi</a>'s <a href="https://github.com/alexandrevicenzi/flex" target="_blank">Flex</a>
+</p>    </footer>
+  </main>
+
+<!-- Google Analytics -->
+<script type="text/javascript">
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-92349567-1', 'auto');
+  ga('send', 'pageview');
+</script>
+<!-- End Google Analytics -->
+
+
+
+<script type="application/ld+json">
+{
+  "@context" : "http://schema.org",
+  "@type" : "Blog",
+  "name": " John Paton ",
+  "url" : "https://johnpaton.net",
+  "image": "/images/headshot.png",
+  "description": "John's deep musings and cheap tricks for Python, data science, machine learning, and more."
+}
+</script>
+
+</body>
+</html>

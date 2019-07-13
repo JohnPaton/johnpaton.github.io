@@ -1,5 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>John Paton</title><link href="https://johnpaton.net/" rel="alternate"></link><link href="https://johnpaton.net/feeds/all.atom.xml" rel="self"></link><id>https://johnpaton.net/</id><updated>2019-06-23T19:00:00-01:00</updated><entry><title>Generating fake whiskey reviews with GPT-2</title><link href="https://johnpaton.net/posts/whiskey-reviews/" rel="alternate"></link><published>2019-06-23T19:00:00-01:00</published><updated>2019-06-23T19:00:00-01:00</updated><author><name>John Paton</name></author><id>tag:johnpaton.net,2019-06-23:/posts/whiskey-reviews/</id><summary type="html">&lt;p&gt;I've enjoyed whiskey for a while now, but I can never vocalize all the flavors present in a bottle. I read all these flowery reviews and tasting notes online and I just have no idea how these people come up with &lt;a href="http://whiskyadvocate.com/ratings-reviews/?search=Johnnie+Walker+Blue+Label&amp;amp;submit=+&amp;amp;brand_id=0&amp;amp;rating=0&amp;amp;price=0&amp;amp;category=0&amp;amp;styles_id=0&amp;amp;issue_id=0"&gt;descriptions like&lt;/a&gt; "caramels, dried peats, elegant cigar smoke, seeds scraped from vanilla beans, brand new pencils, peppercorn, coriander seeds, and star anise"... until now.&lt;/p&gt;</summary><content type="html">&lt;p&gt;I've enjoyed whiskey for a while now, but I can never vocalize all the flavors present in a bottle. I read all these flowery reviews and tasting notes online and I just have no idea how these people come up with &lt;a href="http://whiskyadvocate.com/ratings-reviews/?search=Johnnie+Walker+Blue+Label&amp;amp;submit=+&amp;amp;brand_id=0&amp;amp;rating=0&amp;amp;price=0&amp;amp;category=0&amp;amp;styles_id=0&amp;amp;issue_id=0"&gt;descriptions like&lt;/a&gt; "caramels, dried peats, elegant cigar smoke, seeds scraped from vanilla beans, brand new pencils, peppercorn, coriander seeds, and star anise"... until now. &lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>John Paton</title><link href="https://johnpaton.net/" rel="alternate"></link><link href="https://johnpaton.net/feeds/all.atom.xml" rel="self"></link><id>https://johnpaton.net/</id><updated>2019-07-13T13:00:00-01:00</updated><entry><title>Schedule the interruption of hung Python processes with signals</title><link href="https://johnpaton.net/posts/interrupt-long-processes/" rel="alternate"></link><published>2019-07-13T13:00:00-01:00</published><updated>2019-07-13T13:00:00-01:00</updated><author><name>John Paton</name></author><id>tag:johnpaton.net,2019-07-13:/posts/interrupt-long-processes/</id><summary type="html">&lt;p&gt;A lightweight method to interrupt (hung) Python processes after a set time using the &lt;code&gt;signal&lt;/code&gt; library.&lt;/p&gt;</summary><content type="html">&lt;p&gt;At Catawiki, we have a lot of scheduled cron-type jobs that move data around, train models, and do other processing tasks. Often, they are dependent on external resources like database connections. If one of these jobs actually fails, emails are sent, and we can fix the problem. However, we have had issues in the past with scheduled jobs silently hanging, which can often go unnoticed until someone's output hasn't been refreshed. One solution to this would be to schedule these small jobs in our Airflow pipeline, but for little things that just need to run every night without hassle we use this lightweight trick instead.&lt;/p&gt;
+&lt;p&gt;To make a Python process fail and get a precious notification, we can force it to raise a &lt;code&gt;TimeoutError&lt;/code&gt; after a certain number of seconds using the &lt;a href="https://docs.python.org/3/library/signal.html"&gt;&lt;code&gt;signal&lt;/code&gt; library&lt;/a&gt;. This library is responsible for handling &lt;a href="https://en.wikipedia.org/wiki/Signal_(IPC)"&gt;Unix Signals&lt;/a&gt;, which are a way to communicate asynchronously with running processes.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; If you are doing fancy stuff with multiple threads, please read the signal docs as there can be weird behavior here. Also, alarm scheduling is only available on Unix-like systems.&lt;/p&gt;
+&lt;p&gt;Technically Step 3 below is already enough to cause the timeout by itself, but your output will be very terse. Defining the signal handler with a friendly message ensures that both your colleagues and your future self will be able to read your code and your logs.&lt;/p&gt;
+&lt;h2&gt;Step 1: Define a Signal Handler&lt;/h2&gt;
+&lt;p&gt;A signal handler is a function that can be called when a signal is received. Signal handlers must accept &lt;a href="https://docs.python.org/3/library/signal.html#signal.signal"&gt;two arguments&lt;/a&gt;, but our handler will just ignore them and raise a &lt;code&gt;TimeoutError&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;signal&lt;/span&gt;
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;timeout_handler&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sig&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;frame&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="k"&gt;raise&lt;/span&gt; &lt;span class="n"&gt;TimeoutError&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Your process has timed out!&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Raising an exception will interrupt the process, killing whatever was going on. If this is too extreme and you just want to be alerted that a process is still running without killing it, you could also do something like send an email or send yourself a &lt;a href="https://github.com/slackapi/python-slackclient#sending-a-message-to-slack"&gt;Slack message&lt;/a&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;os&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;slack&lt;/span&gt;
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;slack_handler&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sig&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;frame&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="c1"&gt;# Don&amp;#39;t keep your token in plain text :)&lt;/span&gt;
+    &lt;span class="n"&gt;token&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;os&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;environ&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;SLACK_API_TOKEN&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+    &lt;span class="n"&gt;client&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;slack&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;WebClient&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;token&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;token&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+    &lt;span class="n"&gt;client&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;chat_postMessage&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+        &lt;span class="n"&gt;channel&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;#python_alerts&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+        &lt;span class="n"&gt;text&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Your process is still running!&amp;quot;&lt;/span&gt;
+    &lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;Step 2: Assign the signal hander to the alarm signal&lt;/h2&gt;
+&lt;p&gt;Next we use &lt;a href="https://docs.python.org/3/library/signal.html#signal.signal"&gt; &lt;code&gt;signal.signal&lt;/code&gt; &lt;/a&gt; to tell Python that our new handler should be called whenever the running process receives the alarm signal, denoted by &lt;code&gt;signal.SIGALRM&lt;/code&gt;. &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# Call `timeout_handler` when we receive an alarm signal&lt;/span&gt;
+&lt;span class="n"&gt;signal&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;signal&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;signal&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;SIGALRM&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;timeout_handler&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;Step 3: Schedule an alarm&lt;/h2&gt;
+&lt;p&gt;Now we can &lt;a href="https://docs.python.org/3/library/signal.html#signal.alarm"&gt;schedule an alarm&lt;/a&gt; to be sent to our process after a set number of seconds. If the process has exited before that time has passed, nothing will happen. If the process is still running when the alarm is sent, then our handler will be called, interrupting the process and raising an exception. If you're going to interrupt a process, this timeout should be comfortably longer than you expect the process to take, so that it is only interrupted if something is really stuck.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# Schedule an alarm to be sent in 10 seconds &lt;/span&gt;
+&lt;span class="n"&gt;signal&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;alarm&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;10&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;You can now run your main loop or do whatever work you are trying to do, and you're guaranteed that the process will fail if it takes longer than the time you specified. &lt;/p&gt;
+&lt;p&gt;If you are writing a module with functions that might get imported elsewhere, make sure to put the &lt;code&gt;signal.signal&lt;/code&gt; and &lt;code&gt;signal.alarm&lt;/code&gt; lines under your &lt;code&gt;if __name__ == "__main__"&lt;/code&gt; statement so that the alarm doesn't get triggered every time your module is imported.&lt;/p&gt;
+&lt;h2&gt;Complete Example&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# timeout.py&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;signal&lt;/span&gt;  
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;timeout_handler&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sig&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;frame&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="k"&gt;raise&lt;/span&gt; &lt;span class="n"&gt;TimeoutError&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Your process has timed out!&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="c1"&gt;# Call `timeout_handler` when we receive an alarm signal&lt;/span&gt;
+&lt;span class="n"&gt;signal&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;signal&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;signal&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;SIGALRM&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;timeout_handler&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="c1"&gt;# --- Example Usage&lt;/span&gt;
+
+&lt;span class="c1"&gt;# Schedule an alarm in 10 seconds &lt;/span&gt;
+&lt;span class="c1"&gt;# (will raise TimeoutError as specified)&lt;/span&gt;
+&lt;span class="n"&gt;signal&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;alarm&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;10&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="c1"&gt;# Do some work which takes too long&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;time&lt;/span&gt;
+&lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;
+&lt;span class="k"&gt;while&lt;/span&gt; &lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;seconds passed&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;+=&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;
+    &lt;span class="n"&gt;time&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sleep&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Running our example yields the following output:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ python timeout.py
+&lt;span class="m"&gt;0&lt;/span&gt; seconds passed
+&lt;span class="m"&gt;1&lt;/span&gt; seconds passed
+&lt;span class="m"&gt;2&lt;/span&gt; seconds passed
+&lt;span class="m"&gt;3&lt;/span&gt; seconds passed
+&lt;span class="m"&gt;4&lt;/span&gt; seconds passed
+&lt;span class="m"&gt;5&lt;/span&gt; seconds passed
+&lt;span class="m"&gt;6&lt;/span&gt; seconds passed
+&lt;span class="m"&gt;7&lt;/span&gt; seconds passed
+&lt;span class="m"&gt;8&lt;/span&gt; seconds passed
+&lt;span class="m"&gt;9&lt;/span&gt; seconds passed
+Traceback &lt;span class="o"&gt;(&lt;/span&gt;most recent call last&lt;span class="o"&gt;)&lt;/span&gt;:
+  File &lt;span class="s2"&gt;&amp;quot;timeout.py&amp;quot;&lt;/span&gt;, line &lt;span class="m"&gt;21&lt;/span&gt;, in &amp;lt;module&amp;gt;
+    time.sleep&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+  File &lt;span class="s2"&gt;&amp;quot;timeout.py&amp;quot;&lt;/span&gt;, line &lt;span class="m"&gt;5&lt;/span&gt;, in timeout_handler
+    raise TimeoutError&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Your process has timed out!&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+TimeoutError: Your process has timed out!
+&lt;span class="nb"&gt;exit&lt;/span&gt; &lt;span class="m"&gt;1&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;</content><category term="python"></category><category term="snippets"></category></entry><entry><title>Generating fake whiskey reviews with GPT-2</title><link href="https://johnpaton.net/posts/whiskey-reviews/" rel="alternate"></link><published>2019-06-23T19:00:00-01:00</published><updated>2019-06-23T19:00:00-01:00</updated><author><name>John Paton</name></author><id>tag:johnpaton.net,2019-06-23:/posts/whiskey-reviews/</id><summary type="html">&lt;p&gt;I've enjoyed whiskey for a while now, but I can never vocalize all the flavors present in a bottle. I read all these flowery reviews and tasting notes online and I just have no idea how these people come up with &lt;a href="http://whiskyadvocate.com/ratings-reviews/?search=Johnnie+Walker+Blue+Label&amp;amp;submit=+&amp;amp;brand_id=0&amp;amp;rating=0&amp;amp;price=0&amp;amp;category=0&amp;amp;styles_id=0&amp;amp;issue_id=0"&gt;descriptions like&lt;/a&gt; "caramels, dried peats, elegant cigar smoke, seeds scraped from vanilla beans, brand new pencils, peppercorn, coriander seeds, and star anise"... until now.&lt;/p&gt;</summary><content type="html">&lt;p&gt;I've enjoyed whiskey for a while now, but I can never vocalize all the flavors present in a bottle. I read all these flowery reviews and tasting notes online and I just have no idea how these people come up with &lt;a href="http://whiskyadvocate.com/ratings-reviews/?search=Johnnie+Walker+Blue+Label&amp;amp;submit=+&amp;amp;brand_id=0&amp;amp;rating=0&amp;amp;price=0&amp;amp;category=0&amp;amp;styles_id=0&amp;amp;issue_id=0"&gt;descriptions like&lt;/a&gt; "caramels, dried peats, elegant cigar smoke, seeds scraped from vanilla beans, brand new pencils, peppercorn, coriander seeds, and star anise"... until now. &lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a href="#the-data"&gt;The data&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="#fine-tuning"&gt;Fine-tuning GPT-2&lt;/a&gt;&lt;/li&gt;
