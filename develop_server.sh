@@ -21,7 +21,7 @@ PELICAN_PID=$BASEDIR/pelican.pid
 function usage(){
   echo "usage: $0 (stop) (start) (restart) [port]"
   echo "This starts Pelican in debug and reload mode and then launches"
-  echo "a Livereload HTTP server to help site development. It doesn't read"
+  echo "a Python HTTP server to help site development. It doesn't read"
   echo "your Pelican settings, so if you edit any paths in your Makefile"
   echo "you will need to edit your settings as well."
   exit 3
@@ -35,14 +35,14 @@ function shut_down(){
   PID=$(cat $SRV_PID)
   if [[ $? -eq 0 ]]; then
     if alive $PID; then
-      echo "Stopping Livereload HTTP server"
+      echo "Stopping HTTP server"
       kill $PID
     else
       echo "Stale PID, deleting"
     fi
     rm $SRV_PID
   else
-    echo "Livereload HTTP server PIDFile not found"
+    echo "HTTP server PIDFile not found"
   fi
 
   PID=$(cat $PELICAN_PID)
@@ -61,13 +61,13 @@ function shut_down(){
 
 function start_up(){
   local port=${1:-8000}
-  echo "Starting up Pelican and Livereload HTTP server"
+  echo "Starting up Pelican and HTTP server"
   shift
   $PELICAN --debug --autoreload -r $INPUTDIR -o $OUTPUTDIR -s $CONFFILE $PELICANOPTS &
   pelican_pid=$!
   echo $pelican_pid > $PELICAN_PID
   mkdir -p $OUTPUTDIR && cd $OUTPUTDIR
-  livereload -p $port . &
+  python -m http.server $port -d . &
   srv_pid=$!
   echo $srv_pid > $SRV_PID
   cd $BASEDIR
@@ -76,12 +76,11 @@ function start_up(){
     echo "Pelican didn't start. Is the Pelican package installed?"
     return 1
   elif ! alive $srv_pid ; then
-    echo "The Livereload HTTP server didn't start."
+    echo "The HTTP server didn't start."
     echo "Is there another service using port" $port "?"
-    echo "Is the livereload package installed?"
     return 1
   fi
-  echo 'Pelican and Livereload HTTP server processes now running in background.'
+  echo 'Pelican and HTTP server processes now running in background.'
 }
 
 ###
