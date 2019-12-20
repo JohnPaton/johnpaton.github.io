@@ -59,5 +59,5 @@ xhr.onload = function () {
 // Create and send a GET request
 // The first argument is the post type (GET, POST, PUT, DELETE, etc.)
 // The second argument is the endpoint URL
-xhr.open('GET', 'https://api.github.com/search/issues?q=is:pr+author:johnpaton&sort=created&order=desc');
+xhr.open('GET', 'https://api.github.com/search/issues?q=is:pr+is:merged+author:johnpaton&sort=created&order=desc');
 xhr.send();
