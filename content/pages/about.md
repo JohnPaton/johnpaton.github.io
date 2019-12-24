@@ -4,7 +4,7 @@ link: https://johnpaton.github.io/about/
 type: text
 author: John Paton
 
-I am a data scientist at [Catawiki.com](https://www.catawiki.com/) in Amsterdam, the Netherlands. My primary goal is to delight our customers by helping them to find their perfect unique objects _before_ their auctions end. That is the fancy way of saying I mostly work on personalization, but as Catawiki is a growing company my role also includes various other data science projects as they arise.
+I am a data scientist at [Catawiki.com](https://www.catawiki.com/) in Amsterdam, the Netherlands. My primary goal is to delight our customers by helping them to find their perfect unique objects _before_ their auctions end. That is the fancy way of saying I mostly work on personalization, but as Catawiki is a growing company my role also includes various other data science projects as they arise. I'm also responsible for developing and maintaining our data science platform and production machine learning infrastructure. 
 
 I have a background in theoretical physics, but these days I mostly think about how to apply machine learning to practical problems, how to keep models fresh and up to date in the face of changing preferences, and generally how to get the most out of our data. I'm also very interested in _sustainable data science_, which I consider to be basically any automation of the technical but non-data-science tasks that data scientists do: model deployments, maintaining single sources of truth, compute resource provisioning, code formatting, whatever.
 
