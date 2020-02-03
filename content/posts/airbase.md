@@ -1,7 +1,7 @@
 title: Introducing airbase: A Python client for the European Air Quality e-Reporting Database
 slug: airbase
 date: 2020-02-03 15:00:00 UTC+01:00
-tags: python, open source, data, timeseries
+tags: python, open source, data, time series
 category: 
 cover: images/airbase-screenshot.png
 link: 
