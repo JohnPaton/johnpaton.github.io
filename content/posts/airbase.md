@@ -1,11 +1,11 @@
 title: Introducing airbase: A Python client for the European Air Quality e-Reporting Database
 slug: airbase
-date: 2019-12-30 18:00:00 UTC+01:00
+date: 2020-02-03 15:00:00 UTC+01:00
 tags: python, open source, data, timeseries
 category: 
 cover: images/airbase-screenshot.png
 link: 
-status: draft
+status: 
 description:
 type: text
 author: John Paton
@@ -64,13 +64,10 @@ If you want to update your dataset later (e.g. getting the last week's worth of 
 Hunting for correlations between locations? Make sure to download the metadata file that contains the locations and other properties of the measurement stations that supply the data:
 
 ```python
->>> client.download_metadata("./data/metadata.csv")
-Writing metadata to ./data/metadata.csv...
+>>> client.download_metadata("./data/metadata.tsv")
+Writing metadata to ./data/metadata.tsv...
 ```
 
 Full documentation is availble on [ReadTheDocs](https://airbase.readthedocs.io/en/latest), and of course the whole package is [open sourced on GitHub](https://github.com/johnpaton/airbase) too. I know at least a handful of people have used the package, including [one confirmed publication](https://www.atmos-chem-phys.net/19/11821/2019) (by my friend who I made the original script for), which is very cool!
 
 Have you used `airbase` in your research or learning? Let me know! I'd love to hear about it! 
-
-
-
