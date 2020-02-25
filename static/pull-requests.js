@@ -6,10 +6,14 @@ function prlist_li(pr){
     var repo = re.exec(url.pathname)[1];
     var number = re.exec(url.pathname)[2];
 
+    // Allow breaking on slashes
+    // https://stackoverflow.com/a/21780096
+    repo = repo.replace("/", "/<wbr>")
+
     var name = repo + " #" + number;
 
     var a = document.createElement("a");
-    a.appendChild(document.createTextNode(name));
+    a.innerHTML = name;
     a.setAttribute("href", url.href);
 
     var li = document.createElement("li");
