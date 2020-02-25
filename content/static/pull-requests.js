@@ -41,6 +41,8 @@ var xhr = new XMLHttpRequest();
 // Setup our listener to process completed requests
 xhr.onload = function () {
 
+    var min_stars = 12;
+
     // Process our return data
     if (xhr.status >= 200 && xhr.status < 300) {
         var pulls = JSON.parse(xhr.responseText).items
@@ -48,7 +50,7 @@ xhr.onload = function () {
 
         for (var i = 0; i < pulls.length; i++) {
             var pr = pulls[i];
-            append_if_stars(prdisplay, pr, 25)
+            append_if_stars(prdisplay, pr, min_stars)
         }
     } else {
         // What do when the request fails
