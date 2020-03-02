@@ -202,12 +202,12 @@
 <h1>Making the jinja template</h1>
 <p>This site is powered by <a href="https://blog.getpelican.com/">Pelican</a>, which uses <a href="http://jinja.pocoo.org/">jinja</a> to make a set of HTML templates that are filled with content I write whenever I regenerate the site. The template I care about in this case is the one that generates my tags page. The theme I'm using is a fork of <a href="https://github.com/alexandrevicenzi/Flex">Flex</a> that I'm <a href="https://github.com/johnpaton/flex-mod">slowly hacking</a> into something that suits my own whimsical desires.</p>
 <p>To generate the table structure above, we need to know what the largest data value will be so that we can make everything else relative to that. Pelican provides a variable called <code>tags</code> to jinja that as best I can tell is a dictionary in the form of <code>{tag: [list of articles]}</code>. The existing Flex template looped through this, using the values of <code>tag</code> and the length (in jinja: <code>|count</code>) of the articles list to get the number of articles for each tag. Unfortunately jinja doesn't seem to have a maximum function, so I realized I would have to loop through the tags and find the largest count myself. However, jinja also doesn't seem to let you assign variables dynamically within a loop; you can only call methods on them. In the end I settled on the following ghetto solution:</p>
-<div class="highlight"><pre><span></span>{% set max_articles = [0] %}
-{% for tag, articles in tags %}
-  {% if articles|count &gt; max_articles|last %}
-    {% do max_articles.append(articles|count) %}
-  {% endif %}
-{% endfor %}
+<div class="highlight"><pre><span></span><span class="cp">{%</span> <span class="k">set</span> <span class="nv">max_articles</span> <span class="o">=</span> <span class="o">[</span><span class="m">0</span><span class="o">]</span> <span class="cp">%}</span>
+<span class="cp">{%</span> <span class="k">for</span> <span class="nv">tag</span><span class="o">,</span> <span class="nv">articles</span> <span class="k">in</span> <span class="nv">tags</span> <span class="cp">%}</span>
+  <span class="cp">{%</span> <span class="k">if</span> <span class="nv">articles</span><span class="o">|</span><span class="nf">count</span> <span class="o">&gt;</span> <span class="nv">max_articles</span><span class="o">|</span><span class="nf">last</span> <span class="cp">%}</span>
+    <span class="cp">{%</span> <span class="k">do</span> <span class="nv">max_articles.append</span><span class="o">(</span><span class="nv">articles</span><span class="o">|</span><span class="nf">count</span><span class="o">)</span> <span class="cp">%}</span>
+  <span class="cp">{%</span> <span class="k">endif</span> <span class="cp">%}</span>
+<span class="cp">{%</span> <span class="k">endfor</span> <span class="cp">%}</span>
 </pre></div>
 
 
@@ -215,24 +215,24 @@
 <p>In order to use the <code>do</code> statement, we need to make the <code>do</code> extension available to jinja (don't worry, it comes included by default). Gaining access to this functionality was why I included <code>jinja2.ext.do</code> in my jinja environment in my Pelican configuration.</p>
 <p>Now that we know what value to use for our percentages, we can construct the table. I added an <code>if</code> statement to my template file so that I can still return to my old theme's design just by changing the <code>TAG_GRAPH</code> variable in my Pelican configuration file.</p>
 <p>I ended up with the following in my template:</p>
-<div class="highlight"><pre><span></span>{% if TAG_GRAPH %}
+<div class="highlight"><pre><span></span><span class="cp">{%</span> <span class="k">if</span> <span class="nv">TAG_GRAPH</span> <span class="cp">%}</span>
   <span class="p">&lt;</span><span class="nt">table</span> <span class="na">id</span><span class="o">=</span><span class="s">&quot;tags&quot;</span><span class="p">&gt;</span>
-    {% for tag, articles in tags|sort %}
+    <span class="cp">{%</span> <span class="k">for</span> <span class="nv">tag</span><span class="o">,</span> <span class="nv">articles</span> <span class="k">in</span> <span class="nv">tags</span><span class="o">|</span><span class="nf">sort</span> <span class="cp">%}</span>
       <span class="p">&lt;</span><span class="nt">tr</span><span class="p">&gt;</span>
         <span class="p">&lt;</span><span class="nt">td</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;tag&quot;</span><span class="p">&gt;</span> 
-          <span class="p">&lt;</span><span class="nt">a</span> <span class="na">href</span><span class="o">=</span><span class="s">&quot;{{ SITEURL }}/{{ tag.url }}&quot;</span><span class="p">&gt;</span>{{ tag }}<span class="p">&lt;/</span><span class="nt">a</span><span class="p">&gt;</span>
+          <span class="p">&lt;</span><span class="nt">a</span> <span class="na">href</span><span class="o">=</span><span class="s">&quot;</span><span class="cp">{{</span> <span class="nv">SITEURL</span> <span class="cp">}}</span><span class="s">/</span><span class="cp">{{</span> <span class="nv">tag.url</span> <span class="cp">}}</span><span class="s">&quot;</span><span class="p">&gt;</span><span class="cp">{{</span> <span class="nv">tag</span> <span class="cp">}}</span><span class="p">&lt;/</span><span class="nt">a</span><span class="p">&gt;</span>
         <span class="p">&lt;/</span><span class="nt">td</span><span class="p">&gt;</span>
         <span class="p">&lt;</span><span class="nt">td</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;tagbarcol&quot;</span><span class="p">&gt;</span>  
-          <span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;tagbar&quot;</span> <span class="na">style</span><span class="o">=</span><span class="s">&quot;width:{{ 100 * articles|count / max_articles|last }}%&quot;</span><span class="p">&gt;</span>
-            {{ articles|count }} 
+          <span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;tagbar&quot;</span> <span class="na">style</span><span class="o">=</span><span class="s">&quot;width:</span><span class="cp">{{</span> <span class="m">100</span> <span class="o">*</span> <span class="nv">articles</span><span class="o">|</span><span class="nf">count</span> <span class="o">/</span> <span class="nv">max_articles</span><span class="o">|</span><span class="nf">last</span> <span class="cp">}}</span><span class="s">%&quot;</span><span class="p">&gt;</span>
+            <span class="cp">{{</span> <span class="nv">articles</span><span class="o">|</span><span class="nf">count</span> <span class="cp">}}</span> 
           <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span> 
         <span class="p">&lt;/</span><span class="nt">td</span><span class="p">&gt;</span>
       <span class="p">&lt;/</span><span class="nt">tr</span><span class="p">&gt;</span>
-    {% endfor %}
+    <span class="cp">{%</span> <span class="k">endfor</span> <span class="cp">%}</span>
   <span class="p">&lt;/</span><span class="nt">table</span><span class="p">&gt;</span>
-{% else %}
+<span class="cp">{%</span> <span class="k">else</span> <span class="cp">%}</span>
   <span class="c">&lt;!-- The old theme --&gt;</span>
-{% endif%}
+<span class="cp">{%</span> <span class="k">endif</span><span class="cp">%}</span>
 </pre></div>
 
 

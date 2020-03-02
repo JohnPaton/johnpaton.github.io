@@ -113,7 +113,7 @@
 <p>For this particular query this isn't <em>too</em> bad, but if you want to query many types of pollutant or a bigger group of countries, this is going to cost you some serious time. </p>
 <h1>A better way</h1>
 <p>To make this process easier, I developed <a href="https://airbase.readthedocs.io/en/latest/"><code>airbase</code>: an easy Python client</a> for accessing the data (this database was <a href="https://www.eea.europa.eu/data-and-maps/data/airbase-the-european-air-quality-database-7">formerly known</a> as AirBase, and I thought it was a catchy name). It started off as a script to help a friend of mine who is in climate research, and I realized with a bit of cleanup it might be useful to other people as well. It's available on PyPI, so to install you can simply </p>
-<div class="highlight"><pre><span></span>$ pip install airbase
+<div class="highlight"><pre><span></span><span class="gp">$</span> pip install airbase
 </pre></div>
 
 
@@ -131,19 +131,19 @@
 
 <p>If you don't include a parameter, the client will construct a request for all possible values (so you can just user <code>client.request()</code> to get the whole dataset).</p>
 <p>With your request constructed, all that's left to do is to choose how you want to download the data. You can choose to either <a href="https://airbase.readthedocs.io/en/latest/airbase.html#airbase.AirbaseRequest.download_to_directory"><code>download_to_directory()</code></a> to get all those CSVs individually, or you can <a href="https://airbase.readthedocs.io/en/latest/airbase.html#airbase.AirbaseRequest.download_to_file"><code>download_to_file()</code></a> to concatenate them into one big CSV. Either way, the request object will first contact the portal to get the links to all the CSVs you need, and then start downloading them as instructed. Of course, you can follow the progress with nice progress bars.</p>
-<div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="n">request</span><span class="o">.</span><span class="n">download_to_directory</span><span class="p">(</span><span class="s2">&quot;./data&quot;</span><span class="p">)</span>
-<span class="n">Generating</span> <span class="n">CSV</span> <span class="n">download</span> <span class="n">links</span><span class="o">...</span>
-<span class="mi">100</span><span class="o">%|</span><span class="err">██████████████████████████</span><span class="o">|</span> <span class="mi">1</span><span class="o">/</span><span class="mi">1</span> <span class="p">[</span><span class="mo">00</span><span class="p">:</span><span class="mo">03</span><span class="o">&lt;</span><span class="mo">00</span><span class="p">:</span><span class="mo">00</span><span class="p">,</span>  <span class="mf">3.14</span><span class="n">s</span><span class="o">/</span><span class="n">it</span><span class="p">]</span>
-<span class="n">Generated</span> <span class="mi">16</span> <span class="n">CSV</span> <span class="n">links</span> <span class="n">ready</span> <span class="k">for</span> <span class="n">downloading</span>
-<span class="n">Downloading</span> <span class="n">CSVs</span> <span class="n">to</span> <span class="o">./</span><span class="n">data</span><span class="o">...</span>
-<span class="mi">100</span><span class="o">%|</span><span class="err">██████████████████████████</span><span class="o">|</span> <span class="mi">16</span><span class="o">/</span><span class="mi">16</span> <span class="p">[</span><span class="mo">00</span><span class="p">:</span><span class="mo">03</span><span class="o">&lt;</span><span class="mo">00</span><span class="p">:</span><span class="mo">00</span><span class="p">,</span>  <span class="mf">5.34</span><span class="n">it</span><span class="o">/</span><span class="n">s</span><span class="p">]</span>
+<div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">request</span><span class="o">.</span><span class="n">download_to_directory</span><span class="p">(</span><span class="s2">&quot;./data&quot;</span><span class="p">)</span>
+<span class="go">Generating CSV download links...</span>
+<span class="go">100%|██████████████████████████| 1/1 [00:03&lt;00:00,  3.14s/it]</span>
+<span class="go">Generated 16 CSV links ready for downloading</span>
+<span class="go">Downloading CSVs to ./data...</span>
+<span class="go">100%|██████████████████████████| 16/16 [00:03&lt;00:00,  5.34it/s]</span>
 </pre></div>
 
 
 <p>If you want to update your dataset later (e.g. getting the last week's worth of data), <code>download_to_directory()</code> will automatically skip downloading most of the files that are already there. </p>
 <p>Hunting for correlations between locations? Make sure to download the metadata file that contains the locations and other properties of the measurement stations that supply the data:</p>
-<div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="n">client</span><span class="o">.</span><span class="n">download_metadata</span><span class="p">(</span><span class="s2">&quot;./data/metadata.tsv&quot;</span><span class="p">)</span>
-<span class="n">Writing</span> <span class="n">metadata</span> <span class="n">to</span> <span class="o">./</span><span class="n">data</span><span class="o">/</span><span class="n">metadata</span><span class="o">.</span><span class="n">tsv</span><span class="o">...</span>
+<div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">client</span><span class="o">.</span><span class="n">download_metadata</span><span class="p">(</span><span class="s2">&quot;./data/metadata.tsv&quot;</span><span class="p">)</span>
+<span class="go">Writing metadata to ./data/metadata.tsv...</span>
 </pre></div>
 
 

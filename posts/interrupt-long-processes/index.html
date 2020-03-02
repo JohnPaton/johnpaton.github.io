@@ -175,24 +175,24 @@
 
 
 <p>Running our example yields the following output:</p>
-<div class="highlight"><pre><span></span>$ python timeout.py
-<span class="m">0</span> seconds passed
-<span class="m">1</span> seconds passed
-<span class="m">2</span> seconds passed
-<span class="m">3</span> seconds passed
-<span class="m">4</span> seconds passed
-<span class="m">5</span> seconds passed
-<span class="m">6</span> seconds passed
-<span class="m">7</span> seconds passed
-<span class="m">8</span> seconds passed
-<span class="m">9</span> seconds passed
-Traceback <span class="o">(</span>most recent call last<span class="o">)</span>:
-  File <span class="s2">&quot;timeout.py&quot;</span>, line <span class="m">21</span>, in &lt;module&gt;
-    time.sleep<span class="o">(</span><span class="m">1</span><span class="o">)</span>
-  File <span class="s2">&quot;timeout.py&quot;</span>, line <span class="m">5</span>, in timeout_handler
-    raise TimeoutError<span class="o">(</span><span class="s2">&quot;Your process has timed out!&quot;</span><span class="o">)</span>
-TimeoutError: Your process has timed out!
-<span class="nb">exit</span> <span class="m">1</span>
+<div class="highlight"><pre><span></span><span class="gp">$</span> python timeout.py
+<span class="go">0 seconds passed</span>
+<span class="go">1 seconds passed</span>
+<span class="go">2 seconds passed</span>
+<span class="go">3 seconds passed</span>
+<span class="go">4 seconds passed</span>
+<span class="go">5 seconds passed</span>
+<span class="go">6 seconds passed</span>
+<span class="go">7 seconds passed</span>
+<span class="go">8 seconds passed</span>
+<span class="go">9 seconds passed</span>
+<span class="go">Traceback (most recent call last):</span>
+<span class="go">  File &quot;timeout.py&quot;, line 21, in &lt;module&gt;</span>
+<span class="go">    time.sleep(1)</span>
+<span class="go">  File &quot;timeout.py&quot;, line 5, in timeout_handler</span>
+<span class="go">    raise TimeoutError(&quot;Your process has timed out!&quot;)</span>
+<span class="go">TimeoutError: Your process has timed out!</span>
+<span class="go">exit 1</span>
 </pre></div>
   </div>
   <div class="tag-cloud">

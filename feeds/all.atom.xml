@@ -7,7 +7,7 @@
 &lt;p&gt;For this particular query this isn't &lt;em&gt;too&lt;/em&gt; bad, but if you want to query many types of pollutant or a bigger group of countries, this is going to cost you some serious time. &lt;/p&gt;
 &lt;h1&gt;A better way&lt;/h1&gt;
 &lt;p&gt;To make this process easier, I developed &lt;a href="https://airbase.readthedocs.io/en/latest/"&gt;&lt;code&gt;airbase&lt;/code&gt;: an easy Python client&lt;/a&gt; for accessing the data (this database was &lt;a href="https://www.eea.europa.eu/data-and-maps/data/airbase-the-european-air-quality-database-7"&gt;formerly known&lt;/a&gt; as AirBase, and I thought it was a catchy name). It started off as a script to help a friend of mine who is in climate research, and I realized with a bit of cleanup it might be useful to other people as well. It's available on PyPI, so to install you can simply &lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ pip install airbase
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="gp"&gt;$&lt;/span&gt; pip install airbase
 &lt;/pre&gt;&lt;/div&gt;
 
 
@@ -25,19 +25,19 @@
 
 &lt;p&gt;If you don't include a parameter, the client will construct a request for all possible values (so you can just user &lt;code&gt;client.request()&lt;/code&gt; to get the whole dataset).&lt;/p&gt;
 &lt;p&gt;With your request constructed, all that's left to do is to choose how you want to download the data. You can choose to either &lt;a href="https://airbase.readthedocs.io/en/latest/airbase.html#airbase.AirbaseRequest.download_to_directory"&gt;&lt;code&gt;download_to_directory()&lt;/code&gt;&lt;/a&gt; to get all those CSVs individually, or you can &lt;a href="https://airbase.readthedocs.io/en/latest/airbase.html#airbase.AirbaseRequest.download_to_file"&gt;&lt;code&gt;download_to_file()&lt;/code&gt;&lt;/a&gt; to concatenate them into one big CSV. Either way, the request object will first contact the portal to get the links to all the CSVs you need, and then start downloading them as instructed. Of course, you can follow the progress with nice progress bars.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;download_to_directory&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;./data&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;Generating&lt;/span&gt; &lt;span class="n"&gt;CSV&lt;/span&gt; &lt;span class="n"&gt;download&lt;/span&gt; &lt;span class="n"&gt;links&lt;/span&gt;&lt;span class="o"&gt;...&lt;/span&gt;
-&lt;span class="mi"&gt;100&lt;/span&gt;&lt;span class="o"&gt;%|&lt;/span&gt;&lt;span class="err"&gt;██████████████████████████&lt;/span&gt;&lt;span class="o"&gt;|&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mo"&gt;00&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="mo"&gt;03&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="mo"&gt;00&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="mo"&gt;00&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;  &lt;span class="mf"&gt;3.14&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;it&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
-&lt;span class="n"&gt;Generated&lt;/span&gt; &lt;span class="mi"&gt;16&lt;/span&gt; &lt;span class="n"&gt;CSV&lt;/span&gt; &lt;span class="n"&gt;links&lt;/span&gt; &lt;span class="n"&gt;ready&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;downloading&lt;/span&gt;
-&lt;span class="n"&gt;Downloading&lt;/span&gt; &lt;span class="n"&gt;CSVs&lt;/span&gt; &lt;span class="n"&gt;to&lt;/span&gt; &lt;span class="o"&gt;./&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="o"&gt;...&lt;/span&gt;
-&lt;span class="mi"&gt;100&lt;/span&gt;&lt;span class="o"&gt;%|&lt;/span&gt;&lt;span class="err"&gt;██████████████████████████&lt;/span&gt;&lt;span class="o"&gt;|&lt;/span&gt; &lt;span class="mi"&gt;16&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="mi"&gt;16&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mo"&gt;00&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="mo"&gt;03&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="mo"&gt;00&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="mo"&gt;00&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;  &lt;span class="mf"&gt;5.34&lt;/span&gt;&lt;span class="n"&gt;it&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="gp"&gt;&amp;gt;&amp;gt;&amp;gt; &lt;/span&gt;&lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;download_to_directory&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;./data&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="go"&gt;Generating CSV download links...&lt;/span&gt;
+&lt;span class="go"&gt;100%|██████████████████████████| 1/1 [00:03&amp;lt;00:00,  3.14s/it]&lt;/span&gt;
+&lt;span class="go"&gt;Generated 16 CSV links ready for downloading&lt;/span&gt;
+&lt;span class="go"&gt;Downloading CSVs to ./data...&lt;/span&gt;
+&lt;span class="go"&gt;100%|██████████████████████████| 16/16 [00:03&amp;lt;00:00,  5.34it/s]&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;If you want to update your dataset later (e.g. getting the last week's worth of data), &lt;code&gt;download_to_directory()&lt;/code&gt; will automatically skip downloading most of the files that are already there. &lt;/p&gt;
 &lt;p&gt;Hunting for correlations between locations? Make sure to download the metadata file that contains the locations and other properties of the measurement stations that supply the data:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;client&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;download_metadata&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;./data/metadata.tsv&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;Writing&lt;/span&gt; &lt;span class="n"&gt;metadata&lt;/span&gt; &lt;span class="n"&gt;to&lt;/span&gt; &lt;span class="o"&gt;./&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;metadata&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;tsv&lt;/span&gt;&lt;span class="o"&gt;...&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="gp"&gt;&amp;gt;&amp;gt;&amp;gt; &lt;/span&gt;&lt;span class="n"&gt;client&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;download_metadata&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;./data/metadata.tsv&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="go"&gt;Writing metadata to ./data/metadata.tsv...&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
@@ -114,24 +114,24 @@
 
 
 &lt;p&gt;Running our example yields the following output:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ python timeout.py
-&lt;span class="m"&gt;0&lt;/span&gt; seconds passed
-&lt;span class="m"&gt;1&lt;/span&gt; seconds passed
-&lt;span class="m"&gt;2&lt;/span&gt; seconds passed
-&lt;span class="m"&gt;3&lt;/span&gt; seconds passed
-&lt;span class="m"&gt;4&lt;/span&gt; seconds passed
-&lt;span class="m"&gt;5&lt;/span&gt; seconds passed
-&lt;span class="m"&gt;6&lt;/span&gt; seconds passed
-&lt;span class="m"&gt;7&lt;/span&gt; seconds passed
-&lt;span class="m"&gt;8&lt;/span&gt; seconds passed
-&lt;span class="m"&gt;9&lt;/span&gt; seconds passed
-Traceback &lt;span class="o"&gt;(&lt;/span&gt;most recent call last&lt;span class="o"&gt;)&lt;/span&gt;:
-  File &lt;span class="s2"&gt;&amp;quot;timeout.py&amp;quot;&lt;/span&gt;, line &lt;span class="m"&gt;21&lt;/span&gt;, in &amp;lt;module&amp;gt;
-    time.sleep&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
-  File &lt;span class="s2"&gt;&amp;quot;timeout.py&amp;quot;&lt;/span&gt;, line &lt;span class="m"&gt;5&lt;/span&gt;, in timeout_handler
-    raise TimeoutError&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Your process has timed out!&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
-TimeoutError: Your process has timed out!
-&lt;span class="nb"&gt;exit&lt;/span&gt; &lt;span class="m"&gt;1&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="gp"&gt;$&lt;/span&gt; python timeout.py
+&lt;span class="go"&gt;0 seconds passed&lt;/span&gt;
+&lt;span class="go"&gt;1 seconds passed&lt;/span&gt;
+&lt;span class="go"&gt;2 seconds passed&lt;/span&gt;
+&lt;span class="go"&gt;3 seconds passed&lt;/span&gt;
+&lt;span class="go"&gt;4 seconds passed&lt;/span&gt;
+&lt;span class="go"&gt;5 seconds passed&lt;/span&gt;
+&lt;span class="go"&gt;6 seconds passed&lt;/span&gt;
+&lt;span class="go"&gt;7 seconds passed&lt;/span&gt;
+&lt;span class="go"&gt;8 seconds passed&lt;/span&gt;
+&lt;span class="go"&gt;9 seconds passed&lt;/span&gt;
+&lt;span class="go"&gt;Traceback (most recent call last):&lt;/span&gt;
+&lt;span class="go"&gt;  File &amp;quot;timeout.py&amp;quot;, line 21, in &amp;lt;module&amp;gt;&lt;/span&gt;
+&lt;span class="go"&gt;    time.sleep(1)&lt;/span&gt;
+&lt;span class="go"&gt;  File &amp;quot;timeout.py&amp;quot;, line 5, in timeout_handler&lt;/span&gt;
+&lt;span class="go"&gt;    raise TimeoutError(&amp;quot;Your process has timed out!&amp;quot;)&lt;/span&gt;
+&lt;span class="go"&gt;TimeoutError: Your process has timed out!&lt;/span&gt;
+&lt;span class="go"&gt;exit 1&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;</content><category term="python"></category><category term="snippets"></category></entry><entry><title>Generating fake whiskey reviews with GPT-2</title><link href="https://johnpaton.net/posts/whiskey-reviews/" rel="alternate"></link><published>2019-06-23T19:00:00-01:00</published><updated>2019-06-23T19:00:00-01:00</updated><author><name>John Paton</name></author><id>tag:johnpaton.net,2019-06-23:/posts/whiskey-reviews/</id><summary type="html">&lt;p&gt;I've enjoyed whiskey for a while now, but I can never vocalize all the flavors present in a bottle. I read all these flowery reviews and tasting notes online and I just have no idea how these people come up with &lt;a href="http://whiskyadvocate.com/ratings-reviews/?search=Johnnie+Walker+Blue+Label&amp;amp;submit=+&amp;amp;brand_id=0&amp;amp;rating=0&amp;amp;price=0&amp;amp;category=0&amp;amp;styles_id=0&amp;amp;issue_id=0"&gt;descriptions like&lt;/a&gt; "caramels, dried peats, elegant cigar smoke, seeds scraped from vanilla beans, brand new pencils, peppercorn, coriander seeds, and star anise"... until now.&lt;/p&gt;</summary><content type="html">&lt;p&gt;I've enjoyed whiskey for a while now, but I can never vocalize all the flavors present in a bottle. I read all these flowery reviews and tasting notes online and I just have no idea how these people come up with &lt;a href="http://whiskyadvocate.com/ratings-reviews/?search=Johnnie+Walker+Blue+Label&amp;amp;submit=+&amp;amp;brand_id=0&amp;amp;rating=0&amp;amp;price=0&amp;amp;category=0&amp;amp;styles_id=0&amp;amp;issue_id=0"&gt;descriptions like&lt;/a&gt; "caramels, dried peats, elegant cigar smoke, seeds scraped from vanilla beans, brand new pencils, peppercorn, coriander seeds, and star anise"... until now. &lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a href="#the-data"&gt;The data&lt;/a&gt;&lt;/li&gt;
@@ -195,17 +195,17 @@ TimeoutError: Your process has timed out!
 &lt;p&gt;&lt;a id='fine-tuning'&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;h2&gt;Fine-tuning GPT-2&lt;/h2&gt;
 &lt;p&gt;Surprisingly, this is actually the easy part, thanks to work by &lt;a href="https://github.com/nshepperd"&gt;nshepperd&lt;/a&gt;. His/her &lt;a href="https://github.com/nshepperd/gpt-2"&gt;fork of GPT-2&lt;/a&gt; contains a super easy train script for finetuning GPT-2, with lots of options. To get started with it, we clone the repo and use the provided script to download the pre-trained model. This model has already been trained on a set of &lt;a href="https://openai.com/blog/better-language-models/#fn1"&gt;8 million web pages&lt;/a&gt;, so it already has a pretty big and diverse vocabulary. We'll download the smaller model, called &lt;code&gt;117M&lt;/code&gt;:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ git clone https://github.com/nshepperd/gpt-2.git
-$ &lt;span class="nb"&gt;cd&lt;/span&gt; gpt-2 
-$ pip3 install -r requirements.txt 
-$ python3 download_model.py 117M
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="gp"&gt;$&lt;/span&gt; git clone https://github.com/nshepperd/gpt-2.git
+&lt;span class="gp"&gt;$&lt;/span&gt; &lt;span class="nb"&gt;cd&lt;/span&gt; gpt-2 
+&lt;span class="gp"&gt;$&lt;/span&gt; pip3 install -r requirements.txt 
+&lt;span class="gp"&gt;$&lt;/span&gt; python3 download_model.py 117M
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;This will save the pre-trained model in the &lt;code&gt;models&lt;/code&gt; directory.&lt;/p&gt;
 &lt;p&gt;The set of reviews isn't very big (the whole site contains about 4,000, but I only grabbed 125 during this experiment due to the mistake mentioned above), so this will be less like fine-tuning and more like clobbering the model. When we are done, it will know nothing but whiskey reviews. For that reason, we output samples frequently during training, with the expectation that the sweet-spot for interesting new reviews will come somewhere before the model is totally overfit. &lt;/p&gt;
 &lt;p&gt;With our processed reviews in &lt;code&gt;data/clean/reviews.txt&lt;/code&gt;, we run the training script on our data, setting the &lt;code&gt;PYTHONPATH&lt;/code&gt; variable as indicated in the &lt;a href="https://github.com/nshepperd/gpt-2#fine-tuning-on-custom-datasets"&gt;readme&lt;/a&gt;. We output 30 samples every 25 epochs, with a length of 250 words (long enough that a full review should fit in there). We also checkpoint the model at that point so that we can return to it to generate more samples later if we want:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ &lt;span class="nv"&gt;PYTHONPATH&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;gpt-2/src python3 gpt-2/train.py &lt;span class="se"&gt;\&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="gp"&gt;$&lt;/span&gt; &lt;span class="nv"&gt;PYTHONPATH&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;gpt-2/src python3 gpt-2/train.py &lt;span class="se"&gt;\&lt;/span&gt;
       --dataset data/clean/reviews.txt &lt;span class="se"&gt;\&lt;/span&gt;
       --save_every &lt;span class="m"&gt;25&lt;/span&gt; --sample_every &lt;span class="m"&gt;25&lt;/span&gt; &lt;span class="se"&gt;\&lt;/span&gt;
       --sample_length &lt;span class="m"&gt;250&lt;/span&gt; --sample_num &lt;span class="m"&gt;30&lt;/span&gt;
@@ -345,11 +345,11 @@ $ python3 download_model.py 117M
 &lt;p&gt;Thanks to &lt;a href="http://whiskyadvocate.com/"&gt;WhiskyAdvocate&lt;/a&gt; for agreeing to let me use their reviews for this post!&lt;/p&gt;</content><category term="python"></category><category term="deep learning"></category><category term="natural language"></category></entry><entry><title>Redirect standard out to Python's logging module with contextlib</title><link href="https://johnpaton.net/posts/redirect-logging/" rel="alternate"></link><published>2019-05-22T17:00:00-01:00</published><updated>2019-05-22T17:00:00-01:00</updated><author><name>John Paton</name></author><id>tag:johnpaton.net,2019-05-22:/posts/redirect-logging/</id><summary type="html">&lt;p&gt;Python's logging functionality is very nice once you get the hang of it, but many people either disagree or don't bother to use it. Learn how to redirect other people's pesky print statements into your nice logging setup.&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;img alt="Logging" src="/images/logs_cover.jpg"&gt;
 &lt;div style="text-align:center"&gt;&lt;small&gt;&lt;a href="https://en.wikipedia.org/wiki/Logging"&gt;Logging&lt;/a&gt; on Wikipedia&lt;/small&gt;&lt;/div&gt;&lt;/p&gt;
 &lt;p&gt;Python's built in logging functionality is very nice once you get the hang of it, but many people (including library developers) either disagree or don't bother to use it. Instead, you often see things like this:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;model&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;fit&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;X&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;verbose&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;Epoch&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;
-&lt;span class="n"&gt;Epoch&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;
-&lt;span class="n"&gt;Epoch&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;
-&lt;span class="o"&gt;...&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="gp"&gt;&amp;gt;&amp;gt;&amp;gt; &lt;/span&gt;&lt;span class="n"&gt;model&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;fit&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;X&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;verbose&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="go"&gt;Epoch 0&lt;/span&gt;
+&lt;span class="go"&gt;Epoch 1&lt;/span&gt;
+&lt;span class="go"&gt;Epoch 2&lt;/span&gt;
+&lt;span class="gp"&gt;...&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
@@ -373,17 +373,17 @@ $ python3 download_model.py 117M
 &lt;p&gt;The file handle returned by &lt;code&gt;open&lt;/code&gt; implements both &lt;code&gt;__enter__&lt;/code&gt; and &lt;code&gt;__exit__&lt;/code&gt;, which is why it can be used in this way. The nice benefit here is that we never forget to close the file, as &lt;code&gt;__exit__&lt;/code&gt; (which closes the file in this case) is called automagically at the end of the block.&lt;/p&gt;
 &lt;h2&gt;Redirecting &lt;code&gt;stdout&lt;/code&gt;&lt;/h2&gt;
 &lt;p&gt;So how does this help us? Well, &lt;code&gt;contextlib&lt;/code&gt; (which is the library for things related to context managers, in case you didn't catch that) has a very handy context manager called &lt;code&gt;redirect_stdout&lt;/code&gt; (and also the matching &lt;code&gt;redirect_stderr&lt;/code&gt;). We can use it to redirect text written to standard out to another file-like object. For example, to write to a file, we could do:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;contextlib&lt;/span&gt;
-&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="k"&gt;with&lt;/span&gt; &lt;span class="nb"&gt;open&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;output.txt&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;w&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="n"&gt;h&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;contextlib&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;redirect_stdout&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;h&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-&lt;span class="o"&gt;...&lt;/span&gt;     &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Hello world!&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="o"&gt;...&lt;/span&gt;
-&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="gp"&gt;&amp;gt;&amp;gt;&amp;gt; &lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;contextlib&lt;/span&gt;
+&lt;span class="gp"&gt;&amp;gt;&amp;gt;&amp;gt; &lt;/span&gt;&lt;span class="k"&gt;with&lt;/span&gt; &lt;span class="nb"&gt;open&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;output.txt&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;w&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="n"&gt;h&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;contextlib&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;redirect_stdout&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;h&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;span class="gp"&gt;... &lt;/span&gt;    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Hello world!&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="gp"&gt;...&lt;/span&gt;
+&lt;span class="gp"&gt;&amp;gt;&amp;gt;&amp;gt; &lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;We don't see any output. If we now look at the newly-created &lt;code&gt;output.txt&lt;/code&gt;, we will see&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ cat output.txt
-Hello world!
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="gp"&gt;$&lt;/span&gt; cat output.txt
+&lt;span class="go"&gt;Hello world!&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
@@ -410,11 +410,11 @@ Hello world!
 
 &lt;p&gt;I added a quick check for empty messages since I don't want blank lines in my logging. &lt;/p&gt;
 &lt;p&gt;This is already enough to pass our object to &lt;code&gt;redirect_stdout&lt;/code&gt; and thereby redirect standard out to &lt;code&gt;logging&lt;/code&gt;:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;logging&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;basicConfig&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;level&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;logging&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;INFO&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="k"&gt;with&lt;/span&gt; &lt;span class="n"&gt;contextlib&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;redirect_stdout&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;OutputLogger&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;my_logger&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;INFO&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)):&lt;/span&gt;
-&lt;span class="o"&gt;...&lt;/span&gt;     &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Hello logging!&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; 
-&lt;span class="o"&gt;...&lt;/span&gt;
-&lt;span class="n"&gt;INFO&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="n"&gt;my_logger&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="n"&gt;Hello&lt;/span&gt; &lt;span class="n"&gt;logging&lt;/span&gt;&lt;span class="err"&gt;!&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="gp"&gt;&amp;gt;&amp;gt;&amp;gt; &lt;/span&gt;&lt;span class="n"&gt;logging&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;basicConfig&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;level&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;logging&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;INFO&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="gp"&gt;&amp;gt;&amp;gt;&amp;gt; &lt;/span&gt;&lt;span class="k"&gt;with&lt;/span&gt; &lt;span class="n"&gt;contextlib&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;redirect_stdout&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;OutputLogger&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;my_logger&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;INFO&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)):&lt;/span&gt;
+&lt;span class="gp"&gt;... &lt;/span&gt;    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Hello logging!&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; 
+&lt;span class="gp"&gt;...&lt;/span&gt;
+&lt;span class="go"&gt;INFO:my_logger:Hello logging!&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
@@ -448,21 +448,21 @@ Hello world!
 
 
 &lt;p&gt;Now we're cooking! We can use &lt;code&gt;OutputLogger&lt;/code&gt; as a context manager, and since we returned &lt;code&gt;self&lt;/code&gt; from &lt;code&gt;__enter__&lt;/code&gt; we can even reuse the same instance later by giving it a name using the &lt;code&gt;as&lt;/code&gt; keyword:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Normal&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;Normal&lt;/span&gt;
-&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt;
-&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="k"&gt;with&lt;/span&gt; &lt;span class="n"&gt;OutputLogger&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;my_logger&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;WARN&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="n"&gt;redirector&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-&lt;span class="o"&gt;...&lt;/span&gt;     &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Logged!&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="o"&gt;...&lt;/span&gt;
-&lt;span class="n"&gt;WARNING&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="n"&gt;my_logger&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="n"&gt;Logged&lt;/span&gt;&lt;span class="err"&gt;!&lt;/span&gt;
-&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt;
-&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Back to normal&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;Back&lt;/span&gt; &lt;span class="n"&gt;to&lt;/span&gt; &lt;span class="n"&gt;normal&lt;/span&gt;
-&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; 
-&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="k"&gt;with&lt;/span&gt; &lt;span class="n"&gt;redirector&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-&lt;span class="o"&gt;...&lt;/span&gt;     &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Logged again!&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="o"&gt;...&lt;/span&gt;
-&lt;span class="n"&gt;WARNING&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="n"&gt;my_logger&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="n"&gt;Logged&lt;/span&gt; &lt;span class="n"&gt;again&lt;/span&gt;&lt;span class="err"&gt;!&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="gp"&gt;&amp;gt;&amp;gt;&amp;gt; &lt;/span&gt;&lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Normal&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="go"&gt;Normal&lt;/span&gt;
+&lt;span class="gp"&gt;&amp;gt;&amp;gt;&amp;gt; &lt;/span&gt;
+&lt;span class="gp"&gt;&amp;gt;&amp;gt;&amp;gt; &lt;/span&gt;&lt;span class="k"&gt;with&lt;/span&gt; &lt;span class="n"&gt;OutputLogger&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;my_logger&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;WARN&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="n"&gt;redirector&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+&lt;span class="gp"&gt;... &lt;/span&gt;    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Logged!&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="gp"&gt;...&lt;/span&gt;
+&lt;span class="go"&gt;WARNING:my_logger:Logged!&lt;/span&gt;
+&lt;span class="gp"&gt;&amp;gt;&amp;gt;&amp;gt; &lt;/span&gt;
+&lt;span class="gp"&gt;&amp;gt;&amp;gt;&amp;gt; &lt;/span&gt;&lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Back to normal&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="go"&gt;Back to normal&lt;/span&gt;
+&lt;span class="gp"&gt;&amp;gt;&amp;gt;&amp;gt; &lt;/span&gt;
+&lt;span class="gp"&gt;&amp;gt;&amp;gt;&amp;gt; &lt;/span&gt;&lt;span class="k"&gt;with&lt;/span&gt; &lt;span class="n"&gt;redirector&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+&lt;span class="gp"&gt;... &lt;/span&gt;    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Logged again!&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="gp"&gt;...&lt;/span&gt;
+&lt;span class="go"&gt;WARNING:my_logger:Logged again!&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
@@ -2321,12 +2321,12 @@ only showing top 10 rows
 &lt;h1&gt;Making the jinja template&lt;/h1&gt;
 &lt;p&gt;This site is powered by &lt;a href="https://blog.getpelican.com/"&gt;Pelican&lt;/a&gt;, which uses &lt;a href="http://jinja.pocoo.org/"&gt;jinja&lt;/a&gt; to make a set of HTML templates that are filled with content I write whenever I regenerate the site. The template I care about in this case is the one that generates my tags page. The theme I'm using is a fork of &lt;a href="https://github.com/alexandrevicenzi/Flex"&gt;Flex&lt;/a&gt; that I'm &lt;a href="https://github.com/johnpaton/flex-mod"&gt;slowly hacking&lt;/a&gt; into something that suits my own whimsical desires.&lt;/p&gt;
 &lt;p&gt;To generate the table structure above, we need to know what the largest data value will be so that we can make everything else relative to that. Pelican provides a variable called &lt;code&gt;tags&lt;/code&gt; to jinja that as best I can tell is a dictionary in the form of &lt;code&gt;{tag: [list of articles]}&lt;/code&gt;. The existing Flex template looped through this, using the values of &lt;code&gt;tag&lt;/code&gt; and the length (in jinja: &lt;code&gt;|count&lt;/code&gt;) of the articles list to get the number of articles for each tag. Unfortunately jinja doesn't seem to have a maximum function, so I realized I would have to loop through the tags and find the largest count myself. However, jinja also doesn't seem to let you assign variables dynamically within a loop; you can only call methods on them. In the end I settled on the following ghetto solution:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;{% set max_articles = [0] %}
-{% for tag, articles in tags %}
-  {% if articles|count &amp;gt; max_articles|last %}
-    {% do max_articles.append(articles|count) %}
-  {% endif %}
-{% endfor %}
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="cp"&gt;{%&lt;/span&gt; &lt;span class="k"&gt;set&lt;/span&gt; &lt;span class="nv"&gt;max_articles&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="m"&gt;0&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt; &lt;span class="cp"&gt;%}&lt;/span&gt;
+&lt;span class="cp"&gt;{%&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="nv"&gt;tag&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="nv"&gt;articles&lt;/span&gt; &lt;span class="k"&gt;in&lt;/span&gt; &lt;span class="nv"&gt;tags&lt;/span&gt; &lt;span class="cp"&gt;%}&lt;/span&gt;
+  &lt;span class="cp"&gt;{%&lt;/span&gt; &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="nv"&gt;articles&lt;/span&gt;&lt;span class="o"&gt;|&lt;/span&gt;&lt;span class="nf"&gt;count&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="nv"&gt;max_articles&lt;/span&gt;&lt;span class="o"&gt;|&lt;/span&gt;&lt;span class="nf"&gt;last&lt;/span&gt; &lt;span class="cp"&gt;%}&lt;/span&gt;
+    &lt;span class="cp"&gt;{%&lt;/span&gt; &lt;span class="k"&gt;do&lt;/span&gt; &lt;span class="nv"&gt;max_articles.append&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nv"&gt;articles&lt;/span&gt;&lt;span class="o"&gt;|&lt;/span&gt;&lt;span class="nf"&gt;count&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="cp"&gt;%}&lt;/span&gt;
+  &lt;span class="cp"&gt;{%&lt;/span&gt; &lt;span class="k"&gt;endif&lt;/span&gt; &lt;span class="cp"&gt;%}&lt;/span&gt;
+&lt;span class="cp"&gt;{%&lt;/span&gt; &lt;span class="k"&gt;endfor&lt;/span&gt; &lt;span class="cp"&gt;%}&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
@@ -2334,24 +2334,24 @@ only showing top 10 rows
 &lt;p&gt;In order to use the &lt;code&gt;do&lt;/code&gt; statement, we need to make the &lt;code&gt;do&lt;/code&gt; extension available to jinja (don't worry, it comes included by default). Gaining access to this functionality was why I included &lt;code&gt;jinja2.ext.do&lt;/code&gt; in my jinja environment in my Pelican configuration.&lt;/p&gt;
 &lt;p&gt;Now that we know what value to use for our percentages, we can construct the table. I added an &lt;code&gt;if&lt;/code&gt; statement to my template file so that I can still return to my old theme's design just by changing the &lt;code&gt;TAG_GRAPH&lt;/code&gt; variable in my Pelican configuration file.&lt;/p&gt;
 &lt;p&gt;I ended up with the following in my template:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;{% if TAG_GRAPH %}
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="cp"&gt;{%&lt;/span&gt; &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="nv"&gt;TAG_GRAPH&lt;/span&gt; &lt;span class="cp"&gt;%}&lt;/span&gt;
   &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;table&lt;/span&gt; &lt;span class="na"&gt;id&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;tags&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
-    {% for tag, articles in tags|sort %}
+    &lt;span class="cp"&gt;{%&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="nv"&gt;tag&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="nv"&gt;articles&lt;/span&gt; &lt;span class="k"&gt;in&lt;/span&gt; &lt;span class="nv"&gt;tags&lt;/span&gt;&lt;span class="o"&gt;|&lt;/span&gt;&lt;span class="nf"&gt;sort&lt;/span&gt; &lt;span class="cp"&gt;%}&lt;/span&gt;
       &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;tr&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
         &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;td&lt;/span&gt; &lt;span class="na"&gt;class&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;tag&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt; 
-          &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;a&lt;/span&gt; &lt;span class="na"&gt;href&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;{{ SITEURL }}/{{ tag.url }}&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;{{ tag }}&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;a&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+          &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;a&lt;/span&gt; &lt;span class="na"&gt;href&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;&lt;/span&gt;&lt;span class="cp"&gt;{{&lt;/span&gt; &lt;span class="nv"&gt;SITEURL&lt;/span&gt; &lt;span class="cp"&gt;}}&lt;/span&gt;&lt;span class="s"&gt;/&lt;/span&gt;&lt;span class="cp"&gt;{{&lt;/span&gt; &lt;span class="nv"&gt;tag.url&lt;/span&gt; &lt;span class="cp"&gt;}}&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;{{&lt;/span&gt; &lt;span class="nv"&gt;tag&lt;/span&gt; &lt;span class="cp"&gt;}}&lt;/span&gt;&lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;a&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
         &lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;td&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
         &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;td&lt;/span&gt; &lt;span class="na"&gt;class&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;tagbarcol&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;  
-          &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;div&lt;/span&gt; &lt;span class="na"&gt;class&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;tagbar&amp;quot;&lt;/span&gt; &lt;span class="na"&gt;style&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;width:{{ 100 * articles|count / max_articles|last }}%&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
-            {{ articles|count }} 
+          &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;div&lt;/span&gt; &lt;span class="na"&gt;class&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;tagbar&amp;quot;&lt;/span&gt; &lt;span class="na"&gt;style&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;width:&lt;/span&gt;&lt;span class="cp"&gt;{{&lt;/span&gt; &lt;span class="m"&gt;100&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="nv"&gt;articles&lt;/span&gt;&lt;span class="o"&gt;|&lt;/span&gt;&lt;span class="nf"&gt;count&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt; &lt;span class="nv"&gt;max_articles&lt;/span&gt;&lt;span class="o"&gt;|&lt;/span&gt;&lt;span class="nf"&gt;last&lt;/span&gt; &lt;span class="cp"&gt;}}&lt;/span&gt;&lt;span class="s"&gt;%&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
+            &lt;span class="cp"&gt;{{&lt;/span&gt; &lt;span class="nv"&gt;articles&lt;/span&gt;&lt;span class="o"&gt;|&lt;/span&gt;&lt;span class="nf"&gt;count&lt;/span&gt; &lt;span class="cp"&gt;}}&lt;/span&gt; 
           &lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;div&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt; 
         &lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;td&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
       &lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;tr&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
-    {% endfor %}
+    &lt;span class="cp"&gt;{%&lt;/span&gt; &lt;span class="k"&gt;endfor&lt;/span&gt; &lt;span class="cp"&gt;%}&lt;/span&gt;
   &lt;span class="p"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="nt"&gt;table&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
-{% else %}
+&lt;span class="cp"&gt;{%&lt;/span&gt; &lt;span class="k"&gt;else&lt;/span&gt; &lt;span class="cp"&gt;%}&lt;/span&gt;
   &lt;span class="c"&gt;&amp;lt;!-- The old theme --&amp;gt;&lt;/span&gt;
-{% endif%}
+&lt;span class="cp"&gt;{%&lt;/span&gt; &lt;span class="k"&gt;endif&lt;/span&gt;&lt;span class="cp"&gt;%}&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
@@ -3008,9 +3008,9 @@ dtype: float64
 &lt;p&gt;This setting defines the cycle of colors that matplotlib uses for consecutive elements on plots when you don't specify the colors. Uncomment these lines and swap out the list for a list of your favorite (or corporately imposed) colors. As indicated by the comment, matplotlib will accept &lt;a href="https://matplotlib.org/api/colors_api.html"&gt;single letter&lt;/a&gt;, &lt;a href="https://www.w3schools.com/colors/colors_names.asp"&gt;long name&lt;/a&gt;, or hex colors. Use the HTML long name colors to get all your favorites like Gamboge, GrayTeaGreen, and PapayaWhip.&lt;/p&gt;
 &lt;p&gt;&lt;a href="http://math.ubbcluj.ro/~sberinde/wingraph/main.html"&gt;&lt;img alt="HTML long name colors vizualized" src="/images/long_names.gif"&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;Once you've got your color theme specified, you need to save the file in the &lt;code&gt;stylelib&lt;/code&gt; directory of your matplotlib &lt;code&gt;configdir&lt;/code&gt;. You can find your &lt;code&gt;configdir&lt;/code&gt; using&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;matplotlib&lt;/span&gt;
-&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;matplotlib&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get_configdir&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-&lt;span class="s1"&gt;&amp;#39;C:&lt;/span&gt;&lt;span class="se"&gt;\\&lt;/span&gt;&lt;span class="s1"&gt;Users&lt;/span&gt;&lt;span class="se"&gt;\\&lt;/span&gt;&lt;span class="s1"&gt;johnpaton&lt;/span&gt;&lt;span class="se"&gt;\\&lt;/span&gt;&lt;span class="s1"&gt;.matplotlib&amp;#39;&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="gp"&gt;&amp;gt;&amp;gt;&amp;gt; &lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;matplotlib&lt;/span&gt;
+&lt;span class="gp"&gt;&amp;gt;&amp;gt;&amp;gt; &lt;/span&gt;&lt;span class="n"&gt;matplotlib&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get_configdir&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="go"&gt;&amp;#39;C:\\Users\\johnpaton\\.matplotlib&amp;#39;&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
