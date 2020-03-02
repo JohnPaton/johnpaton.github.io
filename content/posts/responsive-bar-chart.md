@@ -122,7 +122,7 @@ This site is powered by [Pelican](https://blog.getpelican.com/), which uses [jin
 
 To generate the table structure above, we need to know what the largest data value will be so that we can make everything else relative to that. Pelican provides a variable called `tags` to jinja that as best I can tell is a dictionary in the form of `{tag: [list of articles]}`. The existing Flex template looped through this, using the values of `tag` and the length (in jinja: `|count`) of the articles list to get the number of articles for each tag. Unfortunately jinja doesn't seem to have a maximum function, so I realized I would have to loop through the tags and find the largest count myself. However, jinja also doesn't seem to let you assign variables dynamically within a loop; you can only call methods on them. In the end I settled on the following ghetto solution:
 
-```html
+```html+jinja
 {% set max_articles = [0] %}
 {% for tag, articles in tags %}
   {% if articles|count > max_articles|last %}
@@ -138,7 +138,7 @@ Now that we know what value to use for our percentages, we can construct the tab
 
 I ended up with the following in my template:
 
-```html
+```html+jinja
 {% if TAG_GRAPH %}
   <table id="tags">
     {% for tag, articles in tags|sort %}

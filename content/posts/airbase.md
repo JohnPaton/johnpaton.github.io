@@ -27,7 +27,7 @@ For this particular query this isn't _too_ bad, but if you want to query many ty
 
 To make this process easier, I developed [`airbase`: an easy Python client](https://airbase.readthedocs.io/en/latest/) for accessing the data (this database was [formerly known](https://www.eea.europa.eu/data-and-maps/data/airbase-the-european-air-quality-database-7) as AirBase, and I thought it was a catchy name). It started off as a script to help a friend of mine who is in climate research, and I realized with a bit of cleanup it might be useful to other people as well. It's available on PyPI, so to install you can simply 
 
-```bash
+```console
 $ pip install airbase
 ```
 
@@ -50,7 +50,7 @@ If you don't include a parameter, the client will construct a request for all po
 
 With your request constructed, all that's left to do is to choose how you want to download the data. You can choose to either [`download_to_directory()`](https://airbase.readthedocs.io/en/latest/airbase.html#airbase.AirbaseRequest.download_to_directory) to get all those CSVs individually, or you can [`download_to_file()`](https://airbase.readthedocs.io/en/latest/airbase.html#airbase.AirbaseRequest.download_to_file) to concatenate them into one big CSV. Either way, the request object will first contact the portal to get the links to all the CSVs you need, and then start downloading them as instructed. Of course, you can follow the progress with nice progress bars.
 
-```python
+```pycon
 >>> request.download_to_directory("./data")
 Generating CSV download links...
 100%|██████████████████████████| 1/1 [00:03<00:00,  3.14s/it]
@@ -63,7 +63,7 @@ If you want to update your dataset later (e.g. getting the last week's worth of 
 
 Hunting for correlations between locations? Make sure to download the metadata file that contains the locations and other properties of the measurement stations that supply the data:
 
-```python
+```pycon
 >>> client.download_metadata("./data/metadata.tsv")
 Writing metadata to ./data/metadata.tsv...
 ```

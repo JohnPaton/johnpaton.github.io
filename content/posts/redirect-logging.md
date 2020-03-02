@@ -13,7 +13,7 @@ status:
 
 Python's built in logging functionality is very nice once you get the hang of it, but many people (including library developers) either disagree or don't bother to use it. Instead, you often see things like this:
 
-```python
+```pycon
 >>> model.fit(X, y, verbose=True)
 Epoch 0
 Epoch 1
@@ -48,16 +48,16 @@ The file handle returned by `open` implements both `__enter__` and `__exit__`, w
 
 So how does this help us? Well, `contextlib` (which is the library for things related to context managers, in case you didn't catch that) has a very handy context manager called `redirect_stdout` (and also the matching `redirect_stderr`). We can use it to redirect text written to standard out to another file-like object. For example, to write to a file, we could do:
 
-```python
+```pycon
 >>> import contextlib
 >>> with open("output.txt", "w") as h, contextlib.redirect_stdout(h):
 ...     print("Hello world!")
 ...
->>>
+>>> 
 ```
 We don't see any output. If we now look at the newly-created `output.txt`, we will see
 
-```
+```console
 $ cat output.txt
 Hello world!
 ```
@@ -90,7 +90,7 @@ I added a quick check for empty messages since I don't want blank lines in my lo
 
 This is already enough to pass our object to `redirect_stdout` and thereby redirect standard out to `logging`:
 
-```python
+```pycon
 >>> logging.basicConfig(level=logging.INFO)
 >>> with contextlib.redirect_stdout(OutputLogger("my_logger", "INFO")):
 ...     print("Hello logging!") 
@@ -132,15 +132,15 @@ class OutputLogger:
 
 Now we're cooking! We can use `OutputLogger` as a context manager, and since we returned `self` from `__enter__` we can even reuse the same instance later by giving it a name using the `as` keyword:
 
-```python
+```pycon
 >>> print("Normal")
 Normal
->>>
+>>> 
 >>> with OutputLogger("my_logger", "WARN") as redirector:
 ...     print("Logged!")
 ...
 WARNING:my_logger:Logged!
->>>
+>>> 
 >>> print("Back to normal")
 Back to normal
 >>> 

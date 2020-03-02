@@ -35,7 +35,7 @@ This setting defines the cycle of colors that matplotlib uses for consecutive el
 
 Once you've got your color theme specified, you need to save the file in the `stylelib` directory of your matplotlib `configdir`. You can find your `configdir` using
 
-```python
+```pycon
 >>> import matplotlib
 >>> matplotlib.get_configdir()
 'C:\\Users\\johnpaton\\.matplotlib'
