@@ -92,7 +92,7 @@ After training the model, it turned out I was only using the [Summer 2019 Buying
 
 Surprisingly, this is actually the easy part, thanks to work by [nshepperd](https://github.com/nshepperd). His/her [fork of GPT-2](https://github.com/nshepperd/gpt-2) contains a super easy train script for finetuning GPT-2, with lots of options. To get started with it, we clone the repo and use the provided script to download the pre-trained model. This model has already been trained on a set of [8 million web pages](https://openai.com/blog/better-language-models/#fn1), so it already has a pretty big and diverse vocabulary. We'll download the smaller model, called `117M`:
 
-```bash
+```console
 $ git clone https://github.com/nshepperd/gpt-2.git
 $ cd gpt-2 
 $ pip3 install -r requirements.txt 
@@ -105,7 +105,7 @@ The set of reviews isn't very big (the whole site contains about 4,000, but I on
 
 With our processed reviews in `data/clean/reviews.txt`, we run the training script on our data, setting the `PYTHONPATH` variable as indicated in the [readme](https://github.com/nshepperd/gpt-2#fine-tuning-on-custom-datasets). We output 30 samples every 25 epochs, with a length of 250 words (long enough that a full review should fit in there). We also checkpoint the model at that point so that we can return to it to generate more samples later if we want:
 
-```bash
+```console
 $ PYTHONPATH=gpt-2/src python3 gpt-2/train.py \
       --dataset data/clean/reviews.txt \
       --save_every 25 --sample_every 25 \

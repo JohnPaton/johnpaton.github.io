@@ -97,7 +97,7 @@ while True:
 
 Running our example yields the following output:
 
-```bash
+```console
 $ python timeout.py
 0 seconds passed
 1 seconds passed
