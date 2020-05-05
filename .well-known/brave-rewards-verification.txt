@@ -1,0 +1,4 @@
+This is a Brave Rewards publisher verification file.
+
+Domain: johnpaton.net
+Token: 80943464defa8f03f0faa6ae7b5774b880843b358c744890c1ab0e51f4955db9
