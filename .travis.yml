@@ -5,8 +5,9 @@ git:
 install: pip install -r requirements.txt
 script: 
 - pelican -ds publishconf.py
-- cp README.md output/
+- cp -r README.md output/
 - cp -r content/.well-known output/
+- cp -r content/_config.yml output/
 branches:
   only:
   - dev
