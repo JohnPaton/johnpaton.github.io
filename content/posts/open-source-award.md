@@ -15,7 +15,7 @@ Over the past few years I've increasingly tried to make small [contributions](ht
 
 [![OSPB logo](/images/google-ospb.png)](https://opensource.googleblog.com/2020/01/announcing-2019-second-cycle-google.html)
 
-It turns out that Google's employees who maintain open source projects can nominate contributors as a thank you from Google and from the community. Receiving the award gets you a nice letter, a mention in their [blog post](https://opensource.googleblog.com/2020/01/announcing-2019-second-cycle-google.html)), and a small cash prize. I was nominated for contributing to the Python client libraries for [Google BigQuery](https://cloud.google.com/bigquery) ([`google-cloud-python`](https://github.com/googleapis/google-cloud-python/tree/master/bigquery) and its pandas-compatible layer, [`pandas-gbq`](https://github.com/pydata/pandas-gbq)), which we use every day at [Catawiki](https://www.catawiki.com/jobs). 
+It turns out that Google's employees who maintain open source projects can nominate contributors as a thank you from Google and from the community. Receiving the award gets you a nice letter, a mention in their [blog post](https://opensource.googleblog.com/2020/01/announcing-2019-second-cycle-google.html), and a small cash prize. I was nominated for contributing to the Python client libraries for [Google BigQuery](https://cloud.google.com/bigquery) ([`google-cloud-python`](https://github.com/googleapis/google-cloud-python/tree/master/bigquery) and its pandas-compatible layer, [`pandas-gbq`](https://github.com/pydata/pandas-gbq)), which we use every day at [Catawiki](https://www.catawiki.com/jobs). 
 
 These were the contributions I was nominated for:
 
