@@ -8,6 +8,8 @@ script:
 - cp -r README.md output/
 - cp -r content/.well-known output/
 - cp -r content/_config.yml output/
+- cp -r content/images/favicon.ico output/
+
 branches:
   only:
   - dev
