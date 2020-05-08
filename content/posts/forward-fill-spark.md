@@ -3,6 +3,7 @@ slug: forward-fill-spark
 date: 2017-09-22 20:00:00 UTC+01:00
 tags: python, spark, data, pandas, time series
 category:
+cover: images/temps_filled.png
 description:
 type: text
 author: John Paton

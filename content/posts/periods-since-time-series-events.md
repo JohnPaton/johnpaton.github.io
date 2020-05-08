@@ -3,6 +3,7 @@ slug: periods-since-time-series-events
 date: 2017-07-15 20:00:00 UTC+01:00
 tags: python, pandas, data, time series
 category: 
+cover: images/periods-since-time-series-events_22_0.png
 description:
 type: text
 author: John Paton

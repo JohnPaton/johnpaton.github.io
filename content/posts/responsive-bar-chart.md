@@ -3,6 +3,7 @@ slug: responsive-bar-chart
 date: 2017-07-21 23:30:00 UTC+01:00
 tags: web, css, pelican, jinja
 category: 
+cover: images/tag-graph.png
 link: 
 description:
 type: text

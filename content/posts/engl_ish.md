@@ -3,6 +3,7 @@ slug: engl_ish
 date: 2017-02-04 20:00:00 UTC+01:00
 tags: python, markov, natural language, open source
 category: 
+cover: images/sentence_lengths.png
 link: https://johnpaton.github.io/posts/engl_ish/
 description: I made a character-level Markov-based model to simulate the feel of a language, to investigate how English looks to non-English readers.
 type: text
