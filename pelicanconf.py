@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*- #
 from __future__ import unicode_literals
+from datetime import date
 
 
 AUTHOR = 'John Paton'
@@ -42,7 +43,7 @@ USE_LESS = False
 
 #GOOGLE_ANALYTICS = 'UA-92349567-1'
 
-COPYRIGHT_YEAR = 2017
+COPYRIGHT_YEAR = date.today().year
 COPYRIGHT_NAME = 'John Paton'
 
 GITHUB_URL = 'http://www.github.com/johnpaton/johnpaton.github.io'
