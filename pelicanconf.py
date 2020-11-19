@@ -7,8 +7,8 @@ from datetime import date
 AUTHOR = 'John Paton'
 SITENAME = "John Paton"
 SITEURL = 'http://localhost:8000'#'http://johnpaton.github.io'
-SITELOGO = '/images/headshot.png'
-SITE_PREVIEW_IMAGE = '/images/headshot_wide.jpg'
+SITELOGO = '/images/headshot2.jpg'
+SITE_PREVIEW_IMAGE = '/images/headshot_wide2.jpg'
 
 TAG_GRAPH = True
 
