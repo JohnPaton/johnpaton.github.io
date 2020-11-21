@@ -15,10 +15,21 @@ TAG_GRAPH = True
 FAVICON = '/images/favicon.ico'
 
 SITETITLE = AUTHOR
-SITESUBTITLE = '<b style="color:#3aa500;margin-right:2px">/</b>'+\
-               'data'+\
-               '<b style="color:#3aa500;margin-right:2px;margin-left:2px">/</b>'+\
-               'scientist'
+
+_slash_left = """<b style="color:#3aa500;margin-right:2px">/</b>"""
+_slash_mid = """<b style="color:#3aa500;margin-right:2px;margin-left:2px">/</b>"""
+SITESUBTITLE = f"""
+  <div style="width:100%;align-content:center;padding:0;">
+    <div style="margin:auto 0;padding:0;display:inline-block;">
+      <span style="float:left">
+        {_slash_left}data{_slash_mid}scientist
+      </span><br>
+      <span style="float:left">
+        {_slash_left}ml{_slash_mid}engineer
+      </span>
+    </div>
+  </div>
+"""
 
 SITEDESCRIPTION = "John's deep musings and cheap tricks for "\
                   +"Python, data science, machine learning, and more."
