@@ -5,58 +5,65 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>https://johnpaton.net/</loc>
-<lastmod>2020-11-21T12:30:08-00:00</lastmod>
+<lastmod>2020-11-21T13:21:53-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://johnpaton.net/archives.html</loc>
-<lastmod>2020-11-21T12:30:08-00:00</lastmod>
+<lastmod>2020-11-21T13:21:53-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://johnpaton.net/tags.html</loc>
-<lastmod>2020-11-21T12:30:08-00:00</lastmod>
+<lastmod>2020-11-21T13:21:53-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://johnpaton.net/categories.html</loc>
-<lastmod>2020-11-21T12:30:08-00:00</lastmod>
+<lastmod>2020-11-21T13:21:53-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://johnpaton.net/404.html</loc>
-<lastmod>2020-11-21T12:30:08-00:00</lastmod>
+<lastmod>2020-11-21T13:21:53-00:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.6</priority>
 </url>
 
 <url>
 <loc>https://johnpaton.net/about/</loc>
-<lastmod>2020-11-21T12:30:08-00:00</lastmod>
+<lastmod>2020-11-21T13:21:53-00:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.6</priority>
 </url>
 
 <url>
 <loc>https://johnpaton.net/projects/</loc>
-<lastmod>2020-11-21T12:30:08-00:00</lastmod>
+<lastmod>2020-11-21T13:21:53-00:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.6</priority>
 </url>
 
 <url>
 <loc>https://johnpaton.net/writing-talks/</loc>
-<lastmod>2020-11-21T12:30:08-00:00</lastmod>
+<lastmod>2020-11-21T13:21:53-00:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.6</priority>
+</url>
+
+<url>
+<loc>https://johnpaton.net/posts/console-highlighting/</loc>
+<lastmod>2020-11-21T14:00:00-01:00</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.7</priority>
 </url>
 
 <url>
@@ -166,20 +173,27 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>https://johnpaton.net/category/posts.html</loc>
-<lastmod>2020-05-07T11:00:00+00:20</lastmod>
+<lastmod>2020-11-21T14:00:00+00:20</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>https://johnpaton.net/tag/python.html</loc>
-<lastmod>2020-05-07T11:00:00+00:20</lastmod>
+<loc>https://johnpaton.net/tag/snippets.html</loc>
+<lastmod>2020-11-21T14:00:00+00:20</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://johnpaton.net/tag/open-source.html</loc>
+<lastmod>2020-11-21T14:00:00+00:20</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
+<loc>https://johnpaton.net/tag/python.html</loc>
 <lastmod>2020-05-07T11:00:00+00:20</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
@@ -202,13 +216,6 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
 <loc>https://johnpaton.net/tag/time-series.html</loc>
 <lastmod>2020-02-03T15:00:00+00:20</lastmod>
-<changefreq>daily</changefreq>
-<priority>0.5</priority>
-</url>
-
-<url>
-<loc>https://johnpaton.net/tag/snippets.html</loc>
-<lastmod>2019-07-13T13:00:00+00:20</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
@@ -306,7 +313,7 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>https://johnpaton.net/author/john-paton.html</loc>
-<lastmod>2020-05-07T11:00:00+00:20</lastmod>
+<lastmod>2020-11-21T14:00:00+00:20</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>

@@ -1,0 +1,211 @@
+
+<!DOCTYPE html>
+<html lang="english">
+<head>
+  <link href='//fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,400italic' rel='stylesheet' type='text/css'>
+
+    <link rel="stylesheet" type="text/css" href="https://johnpaton.net/theme/stylesheet/style.min.css">
+
+  <link rel="stylesheet" type="text/css" href="https://johnpaton.net/theme/pygments/monokai.min.css">
+  <link rel="stylesheet" type="text/css" href="https://johnpaton.net/theme/font-awesome/css/font-awesome.min.css">
+
+    <link href="https://johnpaton.net/styles/custom.css" rel="stylesheet">
+
+    <link href="https://johnpaton.net/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="John Paton Atom">
+
+    <link href="https://johnpaton.net/feeds/all.rss.xml" type="application/rss+xml" rel="alternate" title="John Paton RSS">
+
+    <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="" />
+
+    <!-- Chrome, Firefox OS and Opera -->
+    <meta name="theme-color" content="#3aa500">
+    <!-- Windows Phone -->
+    <meta name="msapplication-navbutton-color" content="#3aa500">
+    <!-- iOS Safari -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <!-- Microsoft EDGE -->
+    <meta name="msapplication-TileColor" content="#3aa500">
+
+<meta name="author" content="John Paton" />
+<meta name="description" content="It&#39;s a minor annoyance that comes up often in GitHub comments: syntax highlighting for Python console sessions. You want the input code (after the prompt) to be highlighted, but the output (which is generally just text or logs) to remain neutral. Turns out there&#39;s a syntax highlighter that does just that." />
+<meta name="keywords" content="snippets, open source">
+
+<meta property="og:site_name" content="John Paton"/>
+<meta property="og:title" content="Syntax highlighting for console sessions"/>
+<meta property="og:description" content="It&#39;s a minor annoyance that comes up often in GitHub comments: syntax highlighting for Python console sessions. You want the input code (after the prompt) to be highlighted, but the output (which is generally just text or logs) to remain neutral. Turns out there&#39;s a syntax highlighter that does just that."/>
+<meta property="og:locale" content="en_US"/>
+<meta property="og:url" content="https://johnpaton.net/posts/console-highlighting/"/>
+<meta property="og:type" content="article"/>
+<meta property="article:published_time" content="2020-11-21 14:00:00-01:00"/>
+<!--<meta property="article:modified_time" content=""/> -->
+<meta property="article:author" content="https://johnpaton.net/author/john-paton.html">
+<meta property="article:section" content="posts"/>
+<meta property="article:tag" content="snippets"/>
+<meta property="article:tag" content="open source"/>
+<meta property="og:image" content="https://johnpaton.net/images/console-syntax-highlighting.png">
+
+  <title>John Paton &ndash; Syntax highlighting for console sessions</title>
+
+</head>
+<body>
+  <aside>
+    <div>
+      <a href="https://johnpaton.net">
+        <img src="/images/headshot2.jpg" alt="John Paton" title="John Paton">
+      </a>
+      <h1><a href="https://johnpaton.net/about">John Paton</a></h1>
+
+<p>
+  <div style="width:100%;align-content:center;padding:0;">
+    <div style="margin:auto 0;padding:0;display:inline-block;">
+      <span style="float:left">
+        <b style="color:#3aa500;margin-right:2px">/</b>data<b style="color:#3aa500;margin-right:2px;margin-left:2px">/</b>scientist
+      </span><br>
+      <span style="float:left">
+        <b style="color:#3aa500;margin-right:2px">/</b>ml<b style="color:#3aa500;margin-right:2px;margin-left:2px">/</b>engineer
+      </span>
+    </div>
+  </div>
+</p>
+      <nav>
+        <ul class="list">
+
+          <li><a href="/">blog</a></li>
+          <li><a href="/tags">tags</a></li>
+          <li><a href="/projects">projects</a></li>
+          <li><a href="/about">about me</a></li>
+          <li><a href="/writing-talks">writing&nbsp;&&nbsp;talks</a></li>
+        </ul>
+      </nav>
+
+      <ul class="social">
+        <li><a class="sc-github" href="http://www.github.com/johnpaton" target="_blank"><i class="fa fa-github"></i></a></li>
+        <li><a class="sc-twitter" href="http://www.twitter.com/jd_paton" target="_blank"><i class="fa fa-twitter"></i></a></li>
+        <li><a class="sc-linkedin" href="http://linkedin.com/in/john-paton" target="_blank"><i class="fa fa-linkedin"></i></a></li>
+        <li><a class="sc-file-pdf-o" href="/static/johnpaton-cv.pdf" target="_blank"><i class="fa fa-file-pdf-o"></i></a></li>
+        <li><a class="sc-rss" href="/feeds/all.atom.xml" target="_blank"><i class="fa fa-rss"></i></a></li>
+      </ul>
+    </div>
+
+
+  </aside>
+  <main>
+
+
+<article class="single">
+  <header>
+      
+    <h1 id="console-highlighting">Syntax highlighting for console sessions</h1>
+    <p>
+          Posted on Sat 21 November 2020
+
+
+        &#8226; 2 min read
+    </p>
+  </header>
+
+
+  <div>
+    <p>It's a minor annoyance that comes up often in GitHub comments: syntax highlighting for Python console sessions. You want the input code (after the prompt) to be highlighted, but the output (which is generally just text or logs) to remain neutral. As far as I can tell, most people opt for one of two options: no highlighting at all (boring, can be harder to read), or Python syntax highlighting (looks nicer but probably makes all kinds of weird colors in your output). </p>
+<p>Here's a classic example where the output includes a progress bar:</p>
+<div class="highlight"><pre><span></span>&gt;&gt;&gt; my_str = &quot;hello&quot;
+&gt;&gt;&gt; some_int = 123
+&gt;&gt;&gt; func_with_output(a=1, b=my_str)
+Processing: 100%|██████████████████| 10/10 [00:01&lt;00:00,  9.71it/s]
+</pre></div>
+
+
+<p>We would like to spruce this up a bit with some syntax highlighting. If we start our code block with <code>```python</code> instead of just the plain regular triple backticks (which start a code block in Markdown), we end up with something that looks like</p>
+<div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="n">my_str</span> <span class="o">=</span> <span class="s2">&quot;hello&quot;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">some_int</span> <span class="o">=</span> <span class="mi">123</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">func_with_output</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="n">my_str</span><span class="p">)</span>
+<span class="n">Processing</span><span class="p">:</span> <span class="mi">100</span><span class="o">%|</span><span class="err">██████████████████</span><span class="o">|</span> <span class="mi">10</span><span class="o">/</span><span class="mi">10</span> <span class="p">[</span><span class="mo">00</span><span class="p">:</span><span class="mo">01</span><span class="o">&lt;</span><span class="mo">00</span><span class="p">:</span><span class="mo">00</span><span class="p">,</span>  <span class="mf">9.71</span><span class="n">it</span><span class="o">/</span><span class="n">s</span><span class="p">]</span>
+</pre></div>
+
+
+<p>This is <em>okay</em>, but the progress bar look silly and it makes it more difficult to tell what's input and what's output. However, there is actually another syntax highlighter specifically for this case: <code>pycon</code> (instead of <code>python</code>). it highlights lines that start with the Python prompt (<code>&gt;&gt;&gt;</code>), but doesn't highlight output lines which don't have any prompt, leaving us with:</p>
+<div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">my_str</span> <span class="o">=</span> <span class="s2">&quot;hello&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">some_int</span> <span class="o">=</span> <span class="mi">123</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">func_with_output</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="n">my_str</span><span class="p">)</span>
+<span class="go">Processing: 100%|██████████████████| 10/10 [00:01&lt;00:00,  9.71it/s]</span>
+</pre></div>
+
+
+<p>As a bonus, for shell sessions (which usually have a less obvious prompt, making it more important to distinguish input from output), you can do the same thing using the <code>console</code> highlighter!</p>
+<div class="highlight"><pre><span></span><span class="gp">$</span> <span class="nb">echo</span> <span class="s2">&quot;output colored differently&quot;</span>
+<span class="go">output colored differently</span>
+</pre></div>
+
+
+<p>Perfection.</p>
+  </div>
+  <div class="tag-cloud">
+    <p>
+      <a href="https://johnpaton.net/tag/snippets.html">snippets</a>
+      <a href="https://johnpaton.net/tag/open-source.html">open source</a>
+    </p>
+  </div>
+
+
+
+    <div class="addthis_relatedposts_inline">
+
+
+<!-- Disqus -->
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_shortname = 'johnpatonblog';
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>
+        Please enable JavaScript to view comments.
+
+</noscript>
+<!-- End Disqus -->
+</article>
+
+    <footer>
+<p>&copy; John Paton 2020</p>
+<p>    Powered by <a href="http://getpelican.com" target="_blank">Pelican</a> - Theme <a href="https://github.com/JohnPaton/flex-mod" target="_blank">modified</a> from <a href="http://alexandrevicenzi.com" target="_blank">Alexandre Vicenzi</a>'s <a href="https://github.com/alexandrevicenzi/flex" target="_blank">Flex</a>
+</p>    </footer>
+  </main>
+
+<!-- Google Analytics -->
+<script type="text/javascript">
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-92349567-1', 'auto');
+  ga('send', 'pageview');
+</script>
+<!-- End Google Analytics -->
+
+
+
+<script type="application/ld+json">
+{
+  "@context" : "http://schema.org",
+  "@type" : "Blog",
+  "name": " John Paton ",
+  "url" : "https://johnpaton.net",
+  "image": "/images/headshot2.jpg",
+  "description": "John's deep musings and cheap tricks for Python, data science, machine learning, and more."
+}
+</script>
+
+</body>
+</html>
