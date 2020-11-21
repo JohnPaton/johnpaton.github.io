@@ -31,7 +31,7 @@ We would like to spruce this up a bit with some syntax highlighting. If we start
 Processing: 100%|██████████████████| 10/10 [00:01<00:00,  9.71it/s]
 ```
 
-This is _okay_, but the progress bar look silly and it makes it more difficult to tell what's input and what's output. However, there is actually another syntax highlighter specifically for this case: `pycon` (instead of `python`). it highlights lines that start with the Python prompt (`>>>`), but doesn't highlight output lines which don't have any prompt, leaving us with:
+This is _okay_, but the progress bar looks silly and it makes it more difficult to tell what's input and what's output. However, there is actually another syntax highlighter specifically for this case: `pycon` (instead of `python`). it highlights lines that start with the Python prompt (`>>>`), but doesn't highlight output lines which don't have any prompt, leaving us with:
 
 ```pycon
 >>> my_str = "hello"
