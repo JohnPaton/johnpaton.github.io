@@ -8,4 +8,8 @@ I am a data scientist and machine learning engineer at [Catawiki](https://www.ca
 
 I have a background in theoretical physics, but these days I mostly think about how to apply machine learning to practical problems, how to keep models fresh and up to date in the face of changing preferences, how to integrate best with Catawiki's tech stack, and generally how to get the most out of our data. I'm also very interested in the automation of the technical but non-data-science tasks that data scientists do: model deployments, maintaining single sources of truth, compute resource provisioning, code formatting, whatever.
 
+Outside of work, I love board/card games (especially strategic ones) and bad jokes (check out the [collection](https://johnpaton.net/grapyahs) that I maintain with my sister), and books (find me on [Goodreads](https://www.goodreads.com/user/show/114287121-john-paton)). Besides that, I have more phases than hobbies, which have recently included running, cooking, and bouldering. 
+
 Born in the UK, I lived as a child in Scotland, England, a [German exclave in Switzerland](http://en.wikipedia.org/wiki/Buesingen), the USA, and, for my teenage years, in Calgary, Alberta, Canada. I completed my bachelor's in physics in Amsterdam, the Netherlands, and my master's in theoretical physics in Uppsala, Sweden, writing theses on [nuclear fusion energy](/static/Paton_Capstone.pdf) and [string theory](http://uu.diva-portal.org/smash/record.jsf?pid=diva2%3A937707&dswid=9140). In November 2016 I began working as a Data Scientist and Consultant at KPMG, returning to live in the Netherlands with my wife, Lisette. I joined Catawiki in January 2019.
+
+![Catawiki headshot](/images/headshot_wide2.jpg)
