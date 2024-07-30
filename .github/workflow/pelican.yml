@@ -17,4 +17,3 @@ jobs:
       python: "3.9"
       siteurl: "https://johnpaton.net"
       feed_domain: "https://johnpaton.net"
-
