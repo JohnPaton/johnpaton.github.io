@@ -18,6 +18,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          submodules: 'true'
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
@@ -37,8 +39,7 @@ jobs:
           cmd = "pelican"
           cmd += " --settings publishconf.py"
           cmd += " --output output/"
-          cmd += " --theme-path .theme"
-
+g
           subprocess.run(cmd, shell=True, check=True)
       - name: Fix permissions
         run: |
