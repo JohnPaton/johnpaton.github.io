@@ -111,7 +111,6 @@ STATIC_PATHS = [
     'styles',
     'static',
     'posts/*',
-    'README.md',
     '.well-known',
     '_config.yml',
     'images/favicon.ico',
