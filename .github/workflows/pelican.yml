@@ -3,17 +3,60 @@ on:
   push:
     branches: ["dev"]
   workflow_dispatch:
+
+# Workflow for publishing to GitHub Pages.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
 jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.9"
+      - name: Checkout theme
+        run: git clone 'https://github.com/johnpaton/flex-mod.git' .theme
+      - name: Configure GitHub Pages
+        id: pages
+        uses: actions/configure-pages@v5
+      - name: Install requirements
+        run: pip install -r requirements.txt
+      - name: Build Pelican site
+        shell: python
+        run: |
+          import subprocess
+
+          cmd = "pelican"
+          cmd += " --settings publishconf.py"
+          cmd += " --extra-settings"
+          cmd += " --output output/"
+          cmd += " --theme-path .theme"
+
+          subprocess.run(cmd, shell=True, check=True)
+      - name: Fix permissions
+        run: |
+          chmod -c -R +rX "output/" | while read line; do
+            echo "::warning title=Invalid file permissions automatically fixed::$line"
+          done
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: output/
   deploy:
-    uses: "getpelican/pelican/.github/workflows/github_pages.yml@main"
-    permissions:
-      contents: "read"
-      pages: "write"
-      id-token: "write"
-    with:
-      settings: "publishconf.py"
-      requirements: "-r requirements.txt"
-      theme: "https://github.com/johnpaton/flex-mod.git"
-      python: "3.9"
-      siteurl: "https://johnpaton.net"
-      feed_domain: "https://johnpaton.net"
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
