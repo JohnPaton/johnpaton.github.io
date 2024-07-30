@@ -115,7 +115,8 @@ STATIC_PATHS = [
     '.well-known',
     '_config.yml',
     'images/favicon.ico',
-    'CNAME'
+    'CNAME',
+    '.nojekyll',
 ]
 
 EXTRA_PATH_METADATA = {
