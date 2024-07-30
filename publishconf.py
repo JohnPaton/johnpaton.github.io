@@ -16,8 +16,6 @@ RELATIVE_URLS = False
 GOOGLE_ANALYTICS = 'UA-92349567-1'
 DISQUS_SITENAME = 'johnpatonblog'
 
-
-
 FEED_ALL_ATOM = 'feeds/all.atom.xml'
 FEED_ALL_RSS = 'feeds/all.rss.xml'
 

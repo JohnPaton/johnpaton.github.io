@@ -61,11 +61,6 @@ GITHUB_URL = 'http://www.github.com/johnpaton/johnpaton.github.io'
 
 MAIN_MENU = False
 
-
-#EXTRA_PATH_METADATA = {
-#    'styles/custom.css': {'path': 'static/custom.css'},
-#}
-
 CUSTOM_CSS = 'styles/custom.css'
 
 # Feed generation is usually not desired when developing
@@ -111,7 +106,22 @@ PAGE_SAVE_AS = '{slug}/index.html'
 
 DEFAULT_PAGINATION = 25
 
-STATIC_PATHS = ['images','styles','static', 'posts/*']
+STATIC_PATHS = [
+    'images', 
+    'styles',
+    'static',
+    'posts/*',
+    'README.md',
+    '.well-known',
+    '_config.yml',
+    'images/favicon.ico',
+    'CNAME'
+]
+
+EXTRA_PATH_METADATA = {
+   'images/favicon.ico': {'path': '/favicon.ico'},
+}
+
 ARTICLE_EXCLUDES  = STATIC_PATHS
 
 # Uncomment following line if you want document-relative URLs when developing
