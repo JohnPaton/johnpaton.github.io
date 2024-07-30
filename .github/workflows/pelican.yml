@@ -36,7 +36,6 @@ jobs:
 
           cmd = "pelican"
           cmd += " --settings publishconf.py"
-          cmd += " --extra-settings"
           cmd += " --output output/"
           cmd += " --theme-path .theme"
 
