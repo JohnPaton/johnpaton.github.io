@@ -39,7 +39,7 @@ jobs:
           cmd = "pelican"
           cmd += " --settings publishconf.py"
           cmd += " --output output/"
-g
+
           subprocess.run(cmd, shell=True, check=True)
       - name: Fix permissions
         run: |
