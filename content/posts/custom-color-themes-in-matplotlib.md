@@ -1,6 +1,6 @@
 title: Custom color schemes in Matplotlib
 slug: custom-color-schemes-in-matplotlib
-date: 2017-05-011 20:00:00 UTC+01:00
+date: 2017-05-01 20:00:00 UTC+01:00
 tags: python, dataviz, matplotlib
 category: 
 cover: images/colors.png
