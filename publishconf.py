@@ -7,23 +7,24 @@ from __future__ import unicode_literals
 
 import os
 import sys
-sys.path.append(os.curdir)
-from pelicanconf import *
 
-SITEURL = 'https://johnpaton.net'
+sys.path.append(os.curdir)
+from pelicanconf import *  # noqa: F403
+
+SITEURL = "https://johnpaton.net"
 RELATIVE_URLS = False
 
-GOOGLE_ANALYTICS = 'UA-92349567-1'
-DISQUS_SITENAME = 'johnpatonblog'
+GOOGLE_ANALYTICS = "UA-92349567-1"
+DISQUS_SITENAME = "johnpatonblog"
 
-FEED_ALL_ATOM = 'feeds/all.atom.xml'
-FEED_ALL_RSS = 'feeds/all.rss.xml'
+FEED_ALL_ATOM = "feeds/all.atom.xml"
+FEED_ALL_RSS = "feeds/all.rss.xml"
 
-#CATEGORY_FEED_ATOM = 'feeds/%s.atom.xml'
+# CATEGORY_FEED_ATOM = 'feeds/%s.atom.xml'
 
 DELETE_OUTPUT_DIRECTORY = True
 
 # Following items are often useful when publishing
 
-#DISQUS_SITENAME = ""
-#GOOGLE_ANALYTICS = ""
+# DISQUS_SITENAME = ""
+# GOOGLE_ANALYTICS = ""
