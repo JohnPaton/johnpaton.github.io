@@ -119,7 +119,7 @@ STATIC_PATHS = [
 ]
 
 EXTRA_PATH_METADATA = {
-   'images/favicon.ico': {'path': '/favicon.ico'},
+   'images/favicon.ico': {'path': 'favicon.ico'},
 }
 
 ARTICLE_EXCLUDES  = STATIC_PATHS
@@ -129,7 +129,9 @@ RELATIVE_URLS = False
 
 # Plugins
 PLUGIN_PATHS = ['plugins/pelican-plugins']
-PLUGINS=['sitemap', 'render_math', 'post_stats']
+PLUGINS=['sitemap', 'render_math', 'post_stats', 'deadlinks']
+
+DEADLINK_VALIDATE=True
 
 SITEMAP = {
     'format': 'xml',
