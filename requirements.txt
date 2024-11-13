@@ -1,0 +1,16 @@
+beautifulsoup4==4.7.1
+blinker==1.4
+bs4==0.0.1
+docutils==0.13.1
+feedgenerator==1.9
+Jinja2==2.10.1
+Markdown==2.6.8
+MarkupSafe==1.*
+pelican==3.7.1
+Pygments==2.2.0
+python-dateutil==2.6.1
+pytz==2017.2
+six==1.10.0
+soupsieve==1.9
+tornado==6.0.2
+Unidecode==0.4.21

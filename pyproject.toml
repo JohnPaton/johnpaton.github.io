@@ -8,12 +8,25 @@ authors = [
 ]
 requires-python = ">=3.9"
 dependencies = [
-    "beautifulsoup4>=4.12.3",
-    "markdown>=3.7",
-    "pelican-tailwindcss>=0.2.0",  # for tailwind theme
-    "pelican>=4.10.1",
+    "beautifulsoup4==4.7.1",
+    "blinker==1.4",
+    "bs4==0.0.1",
+    "docutils==0.13.1",
+    "feedgenerator==1.9",
+    "jinja2==2.10.1",
+    "markdown==2.6.8",
+    "markupsafe==1.*",
+    # for tailwind theme
+    "pelican==3.7.1",
+    "pygments==2.2.0",
     "pytailwindcss>=0.2.0",
+    "python-dateutil==2.6.1",
+    "pytz==2017.2",
     "requests>=2.32.3",
+    "six==1.10.0",
+    "soupsieve==1.9",
+    "tornado==6.0.2",
+    "unidecode==0.4.21",
     # for pelican-deadlinks
 ]
 
@@ -27,6 +40,10 @@ index-url = "https://pypi.org/simple"
 dev-dependencies = [
     "pre-commit>=4.0.1",
     "ruff>=0.7.3",
+]
+constraint-dependencies = [
+    "jinja2<3",
+#    "MarkupSafe==2.0.1"
 ]
 
 [tool.ruff]
