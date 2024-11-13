@@ -3,13 +3,18 @@ on: [push]
 concurrency:
   group: "pages"
   cancel-in-progress: false
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
-          submodules: recursive
+          submodules: true
+      - name: Update pelican-plugins submodules
+        run: |
+          cd plugins/pelican-plugins
+          git submodule update --init deadlinks
       - name: Setup uv
         id: setup-uv
         uses: astral-sh/setup-uv@v3
