@@ -10,8 +10,11 @@ requires-python = ">=3.9"
 dependencies = [
     "beautifulsoup4>=4.12.3",
     "markdown>=3.7",
+    "pelican-tailwindcss>=0.2.0",  # for tailwind theme
     "pelican>=4.10.1",
     "pytailwindcss>=0.2.0",
+    "requests>=2.32.3",
+    # for pelican-deadlinks
 ]
 
 [dependency-groups]

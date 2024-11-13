@@ -130,7 +130,9 @@ RELATIVE_URLS = False
 
 # Plugins
 PLUGIN_PATHS = ['plugins/pelican-plugins']
-PLUGINS=['sitemap', 'render_math', 'post_stats']
+PLUGINS=['sitemap', 'render_math', 'post_stats', 'deadlinks']
+
+DEADLINK_VALIDATE=True
 
 SITEMAP = {
     'format': 'xml',
