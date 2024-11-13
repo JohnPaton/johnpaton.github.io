@@ -119,7 +119,7 @@ STATIC_PATHS = [
 ]
 
 EXTRA_PATH_METADATA = {
-   'images/favicon.ico': {'path': '/favicon.ico'},
+   'images/favicon.ico': {'path': 'favicon.ico'},
 }
 
 ARTICLE_EXCLUDES  = STATIC_PATHS
