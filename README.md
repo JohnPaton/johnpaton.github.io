@@ -1,4 +1,7 @@
 [![Deploy to GitHub Pages](https://github.com/JohnPaton/johnpaton.github.io/actions/workflows/build.yml/badge.svg)](https://github.com/JohnPaton/johnpaton.github.io/actions/workflows/build.yml)
+[![uv](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/uv/main/assets/badge/v0.json)](https://github.com/astral-sh/uv)
+[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+
 
 # johnpaton.net
 

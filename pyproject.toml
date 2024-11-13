@@ -24,3 +24,10 @@ dev = [
 
 [tool.uv]
 index-url = "https://pypi.org/simple"
+dev-dependencies = [
+    "pre-commit>=4.0.1",
+]
+
+[tool.ruff]
+exclude = [".venv", "themes", "plugins", "output"]
+
