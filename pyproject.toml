@@ -1,0 +1,23 @@
+[project]
+name = "johnpaton-github-io"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "JohnPaton", email = "john@johnpaton.net" }
+]
+requires-python = ">=3.9"
+dependencies = [
+    "beautifulsoup4>=4.12.3",
+    "markdown>=3.7",
+    "pelican>=4.10.1",
+    "pytailwindcss>=0.2.0",
+]
+
+[dependency-groups]
+dev = [
+    "livereload>=2.7.0",
+]
+
+[tool.uv]
+index-url = "https://pypi.org/simple"
