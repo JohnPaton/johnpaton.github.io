@@ -50,7 +50,6 @@ BROWSER_COLOR = '#3aa500'
 SUMMARY_MAX_LENGTH = 50
 
 THEME = 'themes/flex-mod'
-# THEME = "themes/johnpaton"
 USE_LESS = False
 
 #GOOGLE_ANALYTICS = 'UA-92349567-1'
