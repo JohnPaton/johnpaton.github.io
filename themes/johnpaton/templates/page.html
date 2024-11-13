@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}{{ page.title }} - {{ SITE_NAME }}{% endblock %}
+{% block content %}
+  <article class="prose max-w-3xl mx-auto">
+    <h1 class="text-4xl font-bold">{{ page.title }}</h1>
+    <div class="mt-6">
+      {{ page.content }}
+    </div>
+  </article>
+{% endblock %}
