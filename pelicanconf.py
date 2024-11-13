@@ -46,12 +46,6 @@ DEFAULT_LANG = "English"
 
 # TYPOGRIFY = True
 PYGMENTS_STYLE = "monokai"
-# MARKDOWN = {
-#     'extension_configs': {
-#         'markdown.extensions.codehilite': {
-#             'css_class': 'pygments'
-#         }
-# }}
 
 BROWSER_COLOR = "#3aa500"
 
