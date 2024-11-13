@@ -4,16 +4,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Enable caching and define a custom cache key suffix
+        with:
+          submodules: true
+      - name: Setup uv
         id: setup-uv
         uses: astral-sh/setup-uv@v3
         with:
           enable-cache: true
-      - name: sync dependencies
+      - name: Sync dependencies
         run: uv sync
-      - name: build output
-        run: make publish
-      - name: upload artifacts
+      - name: Build output
+        run: uv run pelican content/ -o output/ -s publishconf.py
+      - name: Upload artifacts
         id: deployment
         uses: actions/upload-pages-artifact@v3
         with:
