@@ -51,7 +51,7 @@ help:
 theme:
 	cd themes/johnpaton && uv run tailwindcss -i ./styles.css -o ./static/css/output.css
 
-html: theme
+html:
 	uv run "$(PELICAN)" "$(INPUTDIR)" -o "$(OUTPUTDIR)" -s "$(CONFFILE)" $(PELICANOPTS)
 
 clean:
