@@ -1,4 +1,4 @@
-[![Deploy to GitHub Pages](https://github.com/JohnPaton/johnpaton.github.io/actions/workflows/pelican.yml/badge.svg)](https://github.com/JohnPaton/johnpaton.github.io/actions/workflows/pelican.yml)
+[![Deploy to GitHub Pages](https://github.com/JohnPaton/johnpaton.github.io/actions/workflows/build.yml/badge.svg)](https://github.com/JohnPaton/johnpaton.github.io/actions/workflows/build.yml)
 
 # johnpaton.net
 
