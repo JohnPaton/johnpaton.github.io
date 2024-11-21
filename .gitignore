@@ -86,7 +86,7 @@ ENV/
 .ropeproject
 
 # custom
-output/*
+output
 cache
 *.pid
 .project
