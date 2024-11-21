@@ -42,9 +42,9 @@ PATH = "content"
 
 TIMEZONE = "Europe/Amsterdam"
 
-DEFAULT_LANG = "English"
+DEFAULT_LANG = "en"
 
-# TYPOGRIFY = True
+TYPOGRIFY = True
 PYGMENTS_STYLE = "monokai"
 
 BROWSER_COLOR = "#3aa500"

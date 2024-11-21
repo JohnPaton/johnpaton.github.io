@@ -205,6 +205,7 @@ dependencies = [
     { name = "pelican" },
     { name = "pygments" },
     { name = "requests" },
+    { name = "typogrify" },
 ]
 
 [package.dev-dependencies]
@@ -223,6 +224,7 @@ requires-dist = [
     { name = "pelican", specifier = "~=4.5" },
     { name = "pygments", specifier = "~=2.3.0" },
     { name = "requests", specifier = ">=2.32.3" },
+    { name = "typogrify", specifier = ">=2.0.7" },
 ]
 
 [package.metadata.requires-dev]
@@ -455,6 +457,14 @@ wheels = [
 ]
 
 [[package]]
+name = "smartypants"
+version = "2.0.1"
+source = { registry = "https://pypi.org/simple" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/da/ed/1da76d11aa858ee23dac5b52d9ac2db7df02b89f7679d5d8970bcd44b59c/smartypants-2.0.1-py2.py3-none-any.whl", hash = "sha256:8db97f7cbdf08d15b158a86037cd9e116b4cf37703d24e0419a0d64ca5808f0d", size = 9875 },
+]
+
+[[package]]
 name = "soupsieve"
 version = "2.6"
 source = { registry = "https://pypi.org/simple" }
@@ -480,6 +490,15 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/4b/3e/a8124c21cc0bbf144d7903d2a0cadab15cadaf683fa39a0f92bc567f0d4d/tornado-6.4.1-cp38-abi3-win32.whl", hash = "sha256:d9a566c40b89757c9aa8e6f032bcdb8ca8795d7c1a9762910c722b1635c9de4d", size = 438092 },
     { url = "https://files.pythonhosted.org/packages/d9/2f/3f2f05e84a7aff787a96d5fb06821323feb370fe0baed4db6ea7b1088f32/tornado-6.4.1-cp38-abi3-win_amd64.whl", hash = "sha256:b24b8982ed444378d7f21d563f4180a2de31ced9d8d84443907a0a64da2072e7", size = 438532 },
 ]
+
+[[package]]
+name = "typogrify"
+version = "2.0.7"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "smartypants" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/8a/bf/64959d6187d42472acb846bcf462347c9124952c05bd57e5769d5f28f9a6/typogrify-2.0.7.tar.gz", hash = "sha256:8be4668cda434163ce229d87ca273a11922cb1614cb359970b7dc96eed13cb38", size = 12903 }
 
 [[package]]
 name = "unidecode"

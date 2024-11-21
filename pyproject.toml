@@ -11,14 +11,15 @@ dependencies = [
     # main requirements
     "pelican~=4.5",
     # markdown/pygments compatibility
-    "markdown~=3.2.0",  # See https://github.com/Python-Markdown/markdown/blob/master/docs/changelog.md#codehilite-now-always-wraps-with-code-tags
-    "pygments~=2.3.0",  # See https://github.com/alexandrevicenzi/Flex/issues/119#issuecomment-303151588
+    "markdown~=3.2.0", # See https://github.com/Python-Markdown/markdown/blob/master/docs/changelog.md#codehilite-now-always-wraps-with-code-tags
+    "pygments~=2.3.0", # See https://github.com/alexandrevicenzi/Flex/issues/119#issuecomment-303151588
     # markupsafe/jinja compatibility
     "jinja2~=2.11",
     "MarkupSafe~=1.1",
     # for plugins
     "requests>=2.32.3", # deadlinks
     "beautifulsoup4>=4.12.3", # deadlinks & post_statks
+    "typogrify>=2.0.7",
 ]
 
 [dependency-groups]
