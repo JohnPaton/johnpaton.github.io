@@ -12,5 +12,5 @@ python-dateutil==2.6.1
 pytz==2017.2
 six==1.10.0
 soupsieve==1.9
-tornado==6.0.2
+tornado==6.4.2
 Unidecode==0.4.21
