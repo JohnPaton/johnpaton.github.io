@@ -20,6 +20,7 @@ dependencies = [
     "requests>=2.32.3", # deadlinks
     "beautifulsoup4>=4.12.3", # deadlinks & post_statks
     "typogrify>=2.0.7",
+    "pelican-redirect-url>=0.1.1",
 ]
 
 [dependency-groups]
