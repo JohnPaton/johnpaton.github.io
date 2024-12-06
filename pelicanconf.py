@@ -133,7 +133,7 @@ RELATIVE_URLS = False
 
 # Plugins
 PLUGIN_PATHS = ["plugins/pelican-plugins"]
-PLUGINS = ["sitemap", "render_math", "post_stats", "deadlinks"]
+PLUGINS = ["sitemap", "render_math", "post_stats", "deadlinks", "redirect_url"]
 
 DEADLINK_VALIDATE = True
 

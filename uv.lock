@@ -224,6 +224,7 @@ dependencies = [
     { name = "markdown" },
     { name = "markupsafe" },
     { name = "pelican" },
+    { name = "pelican-redirect-url" },
     { name = "pygments" },
     { name = "requests" },
     { name = "typogrify" },
@@ -244,6 +245,7 @@ requires-dist = [
     { name = "markdown", specifier = "~=3.2.0" },
     { name = "markupsafe", specifier = "~=1.1" },
     { name = "pelican", specifier = "~=4.5" },
+    { name = "pelican-redirect-url", specifier = ">=0.1.1" },
     { name = "pygments", specifier = "~=2.3.0" },
     { name = "requests", specifier = ">=2.32.3" },
     { name = "typogrify", specifier = ">=2.0.7" },
@@ -320,6 +322,15 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/a2/c6/bacae09ee5de27d253aa9b7b2460d77ce33e09034e1733521740422e995d/pelican-4.5.0.tar.gz", hash = "sha256:d08119a3ed3eb7d3f2d0a9a5b929be648ad3c84d018b19517ecc608383b824e6", size = 418605 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/0f/71/4d99d3197c787fdd3be85bd6a7adea07d7c6dcad6603e2f85da61f9fe635/pelican-4.5.0-py2.py3-none-any.whl", hash = "sha256:2c5c721bc95caa406673d74a5b906f42289930dabee598b41930a18cf98742a5", size = 673528 },
+]
+
+[[package]]
+name = "pelican-redirect-url"
+version = "0.1.1"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/3b/88/c6377f172084b8ec4a04581b4e07ea9e2d4a73e121914a9abb9c8f1805a1/pelican-redirect-url-0.1.1.tar.gz", hash = "sha256:fc309a186e120c593f4059ea769d41743ede700c5f84fccdfaf9d37994092abf", size = 15825 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/c1/02/d173b9202681794bc55d0c61b5400ee9d7e90fc166c961051eca3fe92379/pelican_redirect_url-0.1.1-py3-none-any.whl", hash = "sha256:fb0dae49f9f3f2cf12f829956732652092054bf1e85f287796695248a2051cc1", size = 15347 },
 ]
 
 [[package]]
