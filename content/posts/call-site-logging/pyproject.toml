@@ -1,0 +1,14 @@
+[project]
+name = "call-site-logging"
+version = "0.1.0"
+description = "Call-site aware logging utility"
+readme = "../call-site-logging.md"
+authors = [
+    { name = "JohnPaton", email = "john@johnpaton.net" }
+]
+requires-python = ">=3.11"
+dependencies = []
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
