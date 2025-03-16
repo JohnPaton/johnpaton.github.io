@@ -1,4 +1,3 @@
-import logging
 import call_site_logging as cslogging
 
 module_logger = cslogging.getLogger()
@@ -20,8 +19,8 @@ class MyClass:
 
 
 def main():
-    logging.basicConfig(
-        level=logging.INFO, format="%(levelname)s - %(name)s - %(message)s"
+    cslogging.basicConfig(
+        level=cslogging.INFO, format="%(levelname)s - %(name)s - %(message)s"
     )
 
     module_logger.info("Message from module level")
